@@ -484,6 +484,11 @@ namespace PathFinder
 
             }
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //CObsSpace cObsSpace = new CObsSpace2d(obsMatrix);
+        }
     }
     public class SimulationData
     {

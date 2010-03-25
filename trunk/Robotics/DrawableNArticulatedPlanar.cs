@@ -8,30 +8,31 @@ using Simples.Robotics.Camera;
 
 namespace Simples.Robotics.Mechanisms
 {
-    public class DrawableN_ArticulatedPlanar2: N_ArticulatedPlanar2
+    public class DrawableNArticulatedPlanar
     {
+        private NArticulatedPlanar _NArticulatedPlanar;
+        public Mechanism Mechanism
+        {
+            get { return _NArticulatedPlanar.Mechanism; }
+        }
         private ICamera _camera;
 
         private Model _linkModel;
 
-        public DrawableN_ArticulatedPlanar2(Vector3 linkTranslation, int linkCount, Matrix world, Model linkModel, ICamera camera)
-            : base(linkTranslation, linkCount, world)
+        public DrawableNArticulatedPlanar(Vector3 linkTranslation, int linkCount, Matrix world, Model linkModel, ICamera camera)
         {
+            this._NArticulatedPlanar = new NArticulatedPlanar(linkTranslation, linkCount, world);
             this._linkModel = linkModel;
             this._camera = camera;
-
-            Matrix[] transforms = new Matrix[_linkModel.Bones.Count];
-            _linkModel.CopyBoneTransformsTo(transforms);
-
         }
 
     
 
         public void Draw(GameTime gameTime)
         {
-            for (int i = 0; i < Links.Count; i++)
+            for (int i = 0; i < _NArticulatedPlanar.Mechanism.Links.Count; i++)
             {
-                DrawLink(Links[i].Transform);
+                DrawLink(_NArticulatedPlanar.Mechanism.Links[i].Transform);
             }
         }
 

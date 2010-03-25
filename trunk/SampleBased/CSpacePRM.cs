@@ -75,7 +75,7 @@ namespace SampleBased
 
                 }
 
-                if (!((cObsSpace != null) && (cObsSpace.checkCollision(p))))
+                if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
                 {
                     sampleList.Add(p);
                 }
@@ -99,7 +99,7 @@ namespace SampleBased
                     p[j] = rand.Next(dimensionSize[j] - 1);
                 }
 
-                if (!((cObsSpace != null) && (cObsSpace.checkCollision(p))))
+                if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
                 {
                     sampleList.Add(p);
                 }

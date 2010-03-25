@@ -71,6 +71,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
@@ -137,9 +138,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mechanisms\Mechanisms.csproj">
+      <Project>{20ED3525-A99F-4225-8B9B-C4E356455480}</Project>
+      <Name>Mechanisms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Robotics\Robotics.csproj">
       <Project>{7AC66D35-83D2-4C38-8208-A5810B3B4188}</Project>
       <Name>Robotics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SampleBased\SampleBased.csproj">
+      <Project>{C727D54D-3FBD-4572-9652-49AB1B59916F}</Project>
+      <Name>SampleBased</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
