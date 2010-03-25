@@ -69,6 +69,7 @@ namespace WindowsGame1
             _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
 
             _camera = new OrbitCamera();
+            _camera.cameraAngleX = -90f;
             scene = new SceneBoxes(cube, _camera);
 
             Debug.Assert(linkModel.Bones.Count == 2);
@@ -271,7 +272,7 @@ namespace WindowsGame1
                     
                 }
             }
-            teste.Save("c:\\teste.bmp");
+            teste.Save("teste.bmp");
         }
 
         private void calc()
