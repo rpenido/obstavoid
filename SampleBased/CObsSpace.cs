@@ -8,8 +8,8 @@ namespace SampleBased
 
     public class CObsSpace
     {
-        private int dimensionCount;
-        private int[] dimensionSize;
+        protected int _dimensionCount;
+        protected int[] _dimensionSize;
 
         public CObsSpace(int dimensionCount, int[] dimensionSize)
         {
@@ -22,20 +22,20 @@ namespace SampleBased
                 new Exception("The dimensionSize must have the same length of the dimensionCount value");
             }
 
-            this.dimensionCount = dimensionCount;
-            this.dimensionSize = dimensionSize;
+            this._dimensionCount = dimensionCount;
+            this._dimensionSize = dimensionSize;
 
         }
 
-        public virtual bool checkCollision(int[] p)
+        public virtual bool CheckCollision(int[] p)
         {
-            if (p.Length != dimensionCount)
+            if (p.Length != _dimensionCount)
             {
                 new Exception("The dimensionCount of p and CObsSpace msut be the same");
             }
-            for (int i = 0; i < dimensionCount; i++)
+            for (int i = 0; i < _dimensionCount; i++)
             {
-                if (p[i] >= dimensionSize[i])
+                if (p[i] >= _dimensionSize[i])
                 {
                     new Exception("p is out of bounds of CObsSpace");
                 }
@@ -69,7 +69,7 @@ namespace SampleBased
                     p[j] = (int)dimValue;
                 }
 
-                collision = checkCollision(p);
+                collision = CheckCollision(p);
 
                 if (collision)
                 {

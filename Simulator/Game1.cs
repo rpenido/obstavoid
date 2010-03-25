@@ -15,6 +15,8 @@ using Simples.Robotics.Camera;
 using Simples.Robotics.Scene;
 using Simples.Robotics.Mechanisms;
 using Simples.Robotics.Collision;
+using SampleBased;
+using System.Drawing;
 
 namespace WindowsGame1
 {
@@ -35,12 +37,16 @@ namespace WindowsGame1
         
         private Model cube;
 
-        private DrawableN_ArticulatedPlanar2 mechanism;
+        private DrawableNArticulatedPlanar robot;
 
         private SceneBoxes scene;
 
         bool reset = true;
         private float oldMouseX, oldMouseY;
+
+        private int[] origin = new int[2];
+        private int[] dest = new int[2];
+        bool flag;
 
         public Game1()
         {
@@ -66,7 +72,7 @@ namespace WindowsGame1
             scene = new SceneBoxes(cube, _camera);
 
             Debug.Assert(linkModel.Bones.Count == 2);
-            mechanism = new DrawableN_ArticulatedPlanar2(new Vector3(100, 0, 0), 5, _world, linkModel,
+            robot = new DrawableNArticulatedPlanar(new Vector3(100, 0, 0), 2, _world, linkModel,
                 _camera);
         }
 
@@ -112,7 +118,15 @@ namespace WindowsGame1
 
         private bool isColliding()
         {
-            return scene.isColliding(mechanism);
+            return scene.isColliding(robot.Mechanism);
+        }
+
+        private void setPending(int index, List<Joint> joints)
+        {
+            for (int i = index; i < joints.Count; i++)
+            {
+                joints[i].setPending();
+            }
         }
 
         private void UpdateGamePad()
@@ -124,47 +138,61 @@ namespace WindowsGame1
 
             if (state.IsKeyDown(Keys.D1))
             {
-                mechanism.stepJointAngle(0, _STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle += _STEP;
+                setPending(0, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D2))
             {
-                mechanism.stepJointAngle(0, -_STEP);
+
+                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle -= _STEP;
+                setPending(0, robot.Mechanism.Joints);
+
             }
 
             if (state.IsKeyDown(Keys.D3))
             {
-                mechanism.stepJointAngle(1, _STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle += _STEP;
+                setPending(1, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D4))
             {
-                mechanism.stepJointAngle(1, -_STEP);
+
+                ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle -= _STEP;
+                setPending(1, robot.Mechanism.Joints);
+
             }
 
             if (state.IsKeyDown(Keys.D5))
             {
-                mechanism.stepJointAngle(2, _STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[2]).Angle += _STEP;
+                setPending(2, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D6))
             {
-                mechanism.stepJointAngle(2, -_STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[2]).Angle -= _STEP;
+                setPending(2, robot.Mechanism.Joints);
             }
 
             if (state.IsKeyDown(Keys.D7))
             {
-                mechanism.stepJointAngle(3, _STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[3]).Angle += _STEP;
+                setPending(3, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D8))
             {
-                mechanism.stepJointAngle(3, -_STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[3]).Angle -= _STEP;
+                setPending(3, robot.Mechanism.Joints);
             }
 
             if (state.IsKeyDown(Keys.D9))
             {
-                mechanism.stepJointAngle(4, _STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[4]).Angle += _STEP;
+                setPending(4, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D0))
             {
-                mechanism.stepJointAngle(4, -_STEP);
+                ((RevoluteJoint)robot.Mechanism.Joints[4]).Angle -= _STEP;
+                setPending(4, robot.Mechanism.Joints);
             }
 
             if (reset)
@@ -187,8 +215,95 @@ namespace WindowsGame1
                 oldMouseY = mState.Y;
             }
 
+            if (state.IsKeyDown(Keys.F1))
+            {
+                origin[0] = (int)((RevoluteJoint)robot.Mechanism.Joints[0]).Angle;
+                origin[1] = (int)((RevoluteJoint)robot.Mechanism.Joints[1]).Angle;
+            }
+            if (state.IsKeyDown(Keys.F2))
+            {
+                dest[0] = (int)((RevoluteJoint)robot.Mechanism.Joints[0]).Angle;
+                dest[1] = (int)((RevoluteJoint)robot.Mechanism.Joints[1]).Angle;
+            }
+            if (state.IsKeyDown(Keys.F5))
+            {
+                if (flag == false)
+                {
+                    flag = true;
+                    calc();
+                }
+            }
+            else
+            {
+                flag = false;
+            }
+
+            if (state.IsKeyDown(Keys.F9))
+            {
+                if (flag == false)
+                {
+                    flag = true;
+                    obs();
+                }
+            }
+            else
+            {
+                flag = false;
+            }
+
+        }
+        private void obs()
+        {
+            Bitmap teste = new System.Drawing.Bitmap(360, 360);
+
+            for (int i = 0; i < 360; i++)
+            {
+                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle = i;
+                robot.Mechanism.Joints[0].setPending();
+                for (int j = 0; j < 360; j++)
+                {
+                    ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle = j;
+                    robot.Mechanism.Joints[1].setPending();
+                    if (scene.isColliding(robot.Mechanism))
+                    {
+                        teste.SetPixel(i, j, System.Drawing.Color.Black);
+                    }
+                    
+                }
+            }
+            teste.Save("c:\\teste.bmp");
         }
 
+        private void calc()
+        {
+
+            CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
+
+            // Inicializa parâmetros
+            int k = 15;
+            int N = 200;
+
+            CSpacePRM tst = new CSpacePRM(2, new int[] {360, 360}, cObsSpace, N, k, PRMSampleMethod.Random);
+
+            Node originNode;
+            Node destNode;
+
+            // Chamada á função do algoritmo
+            tst.generatePath(origin, dest, k, out originNode, out destNode);
+
+
+            Node previousNode = destNode;
+            Node currentNode = destNode.aCameFrom;
+
+            List<Vector2> list = new List<Vector2>();
+            while (currentNode != null)
+            {
+                list.Add(new Vector2(currentNode.p[0], currentNode.p[1]));
+                previousNode = currentNode;
+                currentNode = currentNode.aCameFrom;
+            }
+
+        }
         private void DrawModel(Model m, Matrix matrix)
         {
 
@@ -202,18 +317,18 @@ namespace WindowsGame1
         {
             if (isColliding())
             {
-                GraphicsDevice.Clear(Color.Yellow);
+                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
             }
             else
             {
-                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Black);
             }
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
 
             scene.Draw(gameTime);
-            mechanism.Draw(gameTime);
+            robot.Draw(gameTime);
             Matrix[] transforms = new Matrix[linkModel.Bones.Count];
             linkModel.CopyBoneTransformsTo(transforms);
             /*

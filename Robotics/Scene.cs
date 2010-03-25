@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace WindowsGame1
+namespace Simples.Robotics.Scene
 {
     public class Scene
     {            

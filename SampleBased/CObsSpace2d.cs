@@ -14,7 +14,7 @@ namespace SampleBased
             this.obsMatrix = obsMatrix;
         }
 
-        public override Boolean checkCollision(int[] p)
+        public override Boolean CheckCollision(int[] p)
         {
             return obsMatrix[p[0], p[1]];
 
