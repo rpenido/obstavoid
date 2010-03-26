@@ -139,60 +139,60 @@ namespace WindowsGame1
 
             if (state.IsKeyDown(Keys.D1))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle += _STEP;
+                robot.Mechanism.Joints[0].Value += _STEP;
                 setPending(0, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D2))
             {
 
-                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle -= _STEP;
+                robot.Mechanism.Joints[0].Value -= _STEP;
                 setPending(0, robot.Mechanism.Joints);
 
             }
 
             if (state.IsKeyDown(Keys.D3))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle += _STEP;
+                robot.Mechanism.Joints[1].Value += _STEP;
                 setPending(1, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D4))
             {
 
-                ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle -= _STEP;
+                robot.Mechanism.Joints[1].Value -= _STEP;
                 setPending(1, robot.Mechanism.Joints);
 
             }
 
             if (state.IsKeyDown(Keys.D5))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[2]).Angle += _STEP;
+                robot.Mechanism.Joints[2].Value += _STEP;
                 setPending(2, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D6))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[2]).Angle -= _STEP;
+                robot.Mechanism.Joints[2].Value -= _STEP;
                 setPending(2, robot.Mechanism.Joints);
             }
 
             if (state.IsKeyDown(Keys.D7))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[3]).Angle += _STEP;
+                robot.Mechanism.Joints[3].Value += _STEP;
                 setPending(3, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D8))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[3]).Angle -= _STEP;
+                robot.Mechanism.Joints[3].Value -= _STEP;
                 setPending(3, robot.Mechanism.Joints);
             }
 
             if (state.IsKeyDown(Keys.D9))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[4]).Angle += _STEP;
+                robot.Mechanism.Joints[4].Value += _STEP;
                 setPending(4, robot.Mechanism.Joints);
             }
             if (state.IsKeyDown(Keys.D0))
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[4]).Angle -= _STEP;
+                robot.Mechanism.Joints[4].Value -= _STEP;
                 setPending(4, robot.Mechanism.Joints);
             }
 
@@ -218,13 +218,13 @@ namespace WindowsGame1
 
             if (state.IsKeyDown(Keys.F1))
             {
-                origin[0] = (int)((RevoluteJoint)robot.Mechanism.Joints[0]).Angle;
-                origin[1] = (int)((RevoluteJoint)robot.Mechanism.Joints[1]).Angle;
+                origin[0] = (int)robot.Mechanism.Joints[0].Value;
+                origin[1] = (int)robot.Mechanism.Joints[1].Value;
             }
             if (state.IsKeyDown(Keys.F2))
             {
-                dest[0] = (int)((RevoluteJoint)robot.Mechanism.Joints[0]).Angle;
-                dest[1] = (int)((RevoluteJoint)robot.Mechanism.Joints[1]).Angle;
+                dest[0] = (int)robot.Mechanism.Joints[0].Value;
+                dest[1] = (int)robot.Mechanism.Joints[1].Value;
             }
             if (state.IsKeyDown(Keys.F5))
             {
@@ -259,11 +259,11 @@ namespace WindowsGame1
 
             for (int i = 0; i < 360; i++)
             {
-                ((RevoluteJoint)robot.Mechanism.Joints[0]).Angle = i;
+                robot.Mechanism.Joints[0].Value = i;
                 robot.Mechanism.Joints[0].setPending();
                 for (int j = 0; j < 360; j++)
                 {
-                    ((RevoluteJoint)robot.Mechanism.Joints[1]).Angle = j;
+                    robot.Mechanism.Joints[1].Value = j;
                     robot.Mechanism.Joints[1].setPending();
                     if (scene.isColliding(robot.Mechanism))
                     {
