@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using SampleBased;
+using Simples.SampledBased.ObstacleSpace;
+using Simples.SampledBased.ConfigurationSpace;
+using Simples.SampledBased.Util;
 
 namespace PathFinder
 {

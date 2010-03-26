@@ -12,25 +12,36 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using Simples.Robotics.Collision;
+using Simples.Robotics.Mechanisms;
+using Simples.Scene.Camera;
 
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Simulation.Planar2D
 {
-    public class NArticulatedPlanar
+    public class NArticulatedPlanar: DrawableGameComponent
     {
+
+        private ICamera _camera;
+
+        private Model _linkModel;
+
+
+        #region Property:Mechanism
         private Mechanism _mechanism;
         public Mechanism Mechanism
         {
             get { return _mechanism; }
         }
+        #endregion
 
         private Matrix _world;
-      
         private Vector3 _linkTranslation;
 
-        public NArticulatedPlanar(Vector3 linkTranslation, int linkCount, Matrix world)
+        public NArticulatedPlanar(Game game, Vector3 linkTranslation, int linkCount, Matrix world, ICamera camera)
+            :base(game)
         {
+            this._linkModel = game.Content.Load<Model>("model1");
+            this._camera = camera;
             this._mechanism = new Mechanism();
             this._world = world;
             this._linkTranslation = linkTranslation;
@@ -51,5 +62,35 @@ namespace Simples.Robotics.Mechanisms
                 }                
             }
         }
+
+        public void Draw(GameTime gameTime)
+        {
+            for (int i = 0; i < Mechanism.Links.Count; i++)
+            {
+                DrawLink(Mechanism.Links[i].Transform);
+            }
+        }
+
+        private void DrawLink(Matrix matrix)
+        {
+            Matrix[] transforms = new Matrix[_linkModel.Bones.Count];
+            _linkModel.CopyBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in _linkModel.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = _camera.View;
+                    effect.Projection = _camera.Projection;
+                    effect.World = transforms[mesh.ParentBone.Index] *
+                        matrix;
+                }
+                mesh.Draw();
+            }
+
+        }
+
     }
 }

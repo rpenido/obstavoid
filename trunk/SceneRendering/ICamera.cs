@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Simples.Robotics.Camera
+namespace Simples.Scene.Camera
 {
     public interface ICamera
     {

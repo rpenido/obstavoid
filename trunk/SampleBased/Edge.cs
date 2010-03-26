@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SampleBased
+namespace Simples.SampledBased.Util
 {
     class EdgeComparer : IComparer<Edge>
     {
