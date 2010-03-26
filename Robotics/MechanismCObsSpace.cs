@@ -31,7 +31,7 @@ namespace Simples.Robotics.Mechanisms
             base.CheckCollision(p);
             for (int i = 0; i < p.Length; i++)
             {
-                ((RevoluteJoint)_mechanism.Joints[i]).Angle = p[i];
+                _mechanism.Joints[i].Value = p[i];
             }
             return _scene.isColliding(_mechanism);
         }

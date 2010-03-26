@@ -11,10 +11,24 @@ namespace Simples.Robotics.Mechanisms
         protected Matrix _world;
         protected Link _parentLink;
         protected Vector3 _position;
-        protected Matrix _transform;
+        
         protected bool _calcPending;
-    
+        
+        #region Property:Value
+        protected float _value;
+        public float Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                setPending();
+            }
+        }
+        #endregion
 
+        #region Property:Transform
+        protected Matrix _transform;
         public Matrix Transform
         {
             get { return getTransform();}
@@ -36,6 +50,7 @@ namespace Simples.Robotics.Mechanisms
             }
             return _transform;
         }
+        #endregion
 
         public Joint(Link parentLink, Vector3 position)
         {
