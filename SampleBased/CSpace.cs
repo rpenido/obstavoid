@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Simples.SampledBased.ObstacleSpace;
+using Simples.SampledBased.Util;
 
-namespace SampleBased
+namespace Simples.SampledBased.ConfigurationSpace
 {
     public abstract class CSpace
     {

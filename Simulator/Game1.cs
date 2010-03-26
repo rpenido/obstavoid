@@ -11,12 +11,13 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
-using Simples.Robotics.Camera;
-using Simples.Robotics.Scene;
+using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-using Simples.Robotics.Collision;
-using SampleBased;
 using System.Drawing;
+using Simples.SampledBased.ConfigurationSpace;
+using Simples.SampledBased.ObstacleSpace;
+using Simples.SampledBased.Util;
+using Simples.Simulation.Planar2D;
 
 namespace WindowsGame1
 {
@@ -31,13 +32,13 @@ namespace WindowsGame1
 
         Matrix _world;
         private OrbitCamera _camera;
-        private Model linkModel;
+        //private Model linkModel;
 
         private static float _STEP = 1;
         
-        private Model cube;
+        //private Model cube;
 
-        private DrawableNArticulatedPlanar robot;
+        private NArticulatedPlanar robot;
 
         private SceneBoxes scene;
 
@@ -70,11 +71,10 @@ namespace WindowsGame1
 
             _camera = new OrbitCamera();
             _camera.cameraAngleX = -90f;
-            scene = new SceneBoxes(cube, _camera);
+            scene = new SceneBoxes(this, _camera);
 
-            Debug.Assert(linkModel.Bones.Count == 2);
-            robot = new DrawableNArticulatedPlanar(new Vector3(100, 0, 0), 2, _world, linkModel,
-                _camera);
+            //Debug.Assert(linkModel.Bones.Count == 2);
+            robot = new NArticulatedPlanar(this, new Vector3(100, 0, 0), 2, _world, _camera);
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace WindowsGame1
 
             // TODO: use this.Content to load your game content here
 
-            linkModel = Content.Load<Model>("model1");
-            cube = Content.Load<Model>("cube");
+            //linkModel = Content.Load<Model>("model1");
+            //cube = Content.Load<Model>("cube");
         }
 
         /// <summary>
@@ -330,9 +330,10 @@ namespace WindowsGame1
 
             scene.Draw(gameTime);
             robot.Draw(gameTime);
+            /*
             Matrix[] transforms = new Matrix[linkModel.Bones.Count];
             linkModel.CopyBoneTransformsTo(transforms);
-            /*
+            
             foreach (OrientedBoundingBox Bb in mechanism.BoundingBoxList)
             {
                 

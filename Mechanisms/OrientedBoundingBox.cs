@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Simples.Robotics.Collision
+namespace Simples.Robotics.Mechanisms
 {
     public class OrientedBoundingBox
     {

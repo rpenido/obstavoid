@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Simples.Robotics.Camera;
-using Simples.Robotics.Collision;
+using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
 
-namespace Simples.Robotics.Scene
+namespace Simples.Simulation.Planar2D
 {
-    public class SceneBoxes
+    public class SceneBoxes: DrawableGameComponent
     {
         private ICamera _camera;
 
@@ -19,9 +18,10 @@ namespace Simples.Robotics.Scene
         private Model _boxModel;
         
 
-        public SceneBoxes(Model boxModel, ICamera camera)
+        public SceneBoxes(Game game, ICamera camera)
+            :base(game)
         {
-            this._boxModel = boxModel;
+            this._boxModel = game.Content.Load<Model>("cube"); ;
             this._camera = camera;
 
             _obstacleList = new List<OrientedBoundingBox>();

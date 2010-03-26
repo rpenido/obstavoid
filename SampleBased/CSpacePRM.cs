@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Simples.SampledBased.Util;
+using Simples.SampledBased.ObstacleSpace;
 
-namespace SampleBased
+namespace Simples.SampledBased.ConfigurationSpace
 {
     public enum PRMSampleMethod { Random, Lattice }
 

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Simples.Robotics.Mechanisms;
 
-namespace Simples.Robotics.Collision
+namespace Simples.Scene.Rendering
 {
     /// <summary>
     /// Provides a set of methods for the rendering BoundingBoxs.

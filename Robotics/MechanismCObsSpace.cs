@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Simples.Robotics.Mechanisms;
-using Simples.Robotics.Scene;
-using SampleBased;
+using Simples.SampledBased.ObstacleSpace;
 
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Simulation.Planar2D
 {
     public class MechanismCObsSpace : CObsSpace
     {
