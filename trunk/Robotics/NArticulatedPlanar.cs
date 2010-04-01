@@ -18,9 +18,10 @@ using Simples.Scene.Camera;
 
 namespace Simples.Simulation.Planar2D
 {
-    public class NArticulatedPlanar: DrawableGameComponent
+    public class NArticulatedPlanar
     {
 
+        private ContentManager _content;
         private ICamera _camera;
 
         private Model _linkModel;
@@ -37,10 +38,10 @@ namespace Simples.Simulation.Planar2D
         private Matrix _world;
         private Vector3 _linkTranslation;
 
-        public NArticulatedPlanar(Game game, Vector3 linkTranslation, int linkCount, Matrix world, ICamera camera)
-            :base(game)
+        public NArticulatedPlanar(IServiceProvider service, Vector3 linkTranslation, int linkCount, Matrix world, ICamera camera)
         {
-            this._linkModel = game.Content.Load<Model>("model1");
+            this._content = new ContentManager(service, "Content");
+            this._linkModel = _content.Load<Model>("model1");
             this._camera = camera;
             this._mechanism = new Mechanism();
             this._world = world;

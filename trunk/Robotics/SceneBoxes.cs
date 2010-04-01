@@ -27,11 +27,11 @@ namespace Simples.Simulation.Planar2D
             _obstacleList = new List<OrientedBoundingBox>();
             _boxes = new List<Matrix>();
 
-            createBox(80, 0, 0);
-            createBox(120, 0, 50);
-            createBox(150, 0, -80);
-            createBox(-100, 0, 100);
-            createBox(-40, 0, -100);
+            createBox(180, 0, 10);
+            createBox(100, 0, 10);
+            createBox(150, 0, -150);
+            createBox(-100, 0, 120);
+            createBox(-200, 0, -100);
 
         }
 

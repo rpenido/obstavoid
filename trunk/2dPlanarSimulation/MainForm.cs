@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace WinFormsGraphicsDevice
+namespace _2dPlanarSimulation
 {
     // System.Drawing and the XNA Framework both define Color types.
     // To avoid conflicts, we define shortcut names for them both.
@@ -41,13 +41,12 @@ namespace WinFormsGraphicsDevice
         public MainForm()
         {
             InitializeComponent();
-
             _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
 
             _camera = new OrbitCamera();
             _camera.cameraAngleX = -90f;
 
-            _robot = new NArticulatedPlanar(_game, new Vector3(100, 0, 0), 2, _world,
+            _robot = new NArticulatedPlanar(spinningTriangleControl.Services, new Vector3(100, 0, 0), 2, _world,
                 _camera);
 
         }

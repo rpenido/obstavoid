@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace WinFormsGraphicsDevice
+namespace _2dPlanarSimulation
 {
     /// <summary>
     /// Example control inherits from GraphicsDeviceControl, which allows it to

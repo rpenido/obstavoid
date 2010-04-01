@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WinFormsGraphicsDevice;
 using Simples.Simulation.Planar2D;
 using Microsoft.Xna.Framework;
 using Simples.Scene.Camera;
 
-namespace Planar2dSimulation
+namespace _2dPlanarSimulation
 {
     class SceneView : GraphicsDeviceControl
     {
         private Matrix _world;
         private SceneBoxes _scene;
-        private OrbitCamera _camera;
         private NArticulatedPlanar _robot;
 
         public SceneView(NArticulatedPlanar robot, SceneBoxes scene, Matrix world)

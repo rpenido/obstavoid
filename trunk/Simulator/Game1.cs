@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-using System.Drawing;
+//using System.Drawing;
 using Simples.SampledBased.ConfigurationSpace;
 using Simples.SampledBased.ObstacleSpace;
 using Simples.SampledBased.Util;
@@ -41,6 +41,7 @@ namespace WindowsGame1
         private NArticulatedPlanar robot;
 
         private SceneBoxes scene;
+        private Texture2D cSpace;
 
         bool reset = true;
         private float oldMouseX, oldMouseY;
@@ -53,7 +54,9 @@ namespace WindowsGame1
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-     
+            
+            graphics.PreferredBackBufferHeight = 1000;            
+            graphics.PreferredBackBufferWidth = 1200;
         }
 
         /// <summary>
@@ -65,16 +68,19 @@ namespace WindowsGame1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+
             base.Initialize();
+
 
             _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
 
             _camera = new OrbitCamera();
             _camera.cameraAngleX = -90f;
             scene = new SceneBoxes(this, _camera);
-
+            cSpace = new Texture2D(GraphicsDevice, 360, 360, 0, TextureUsage.None, SurfaceFormat.Color);
             //Debug.Assert(linkModel.Bones.Count == 2);
-            robot = new NArticulatedPlanar(this, new Vector3(100, 0, 0), 2, _world, _camera);
+            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 2, _world, _camera);
         }
 
         /// <summary>
@@ -137,12 +143,12 @@ namespace WindowsGame1
 
             _camera.Zoom = 2500 + mState.ScrollWheelValue;
 
-            if (state.IsKeyDown(Keys.D1))
+            if (state.IsKeyDown(Keys.D1) || state.IsKeyDown(Keys.Down))
             {
                 robot.Mechanism.Joints[0].Value += _STEP;
                 setPending(0, robot.Mechanism.Joints);
             }
-            if (state.IsKeyDown(Keys.D2))
+            if (state.IsKeyDown(Keys.D2) || state.IsKeyDown(Keys.Up))
             {
 
                 robot.Mechanism.Joints[0].Value -= _STEP;
@@ -150,12 +156,12 @@ namespace WindowsGame1
 
             }
 
-            if (state.IsKeyDown(Keys.D3))
+            if (state.IsKeyDown(Keys.D3) || state.IsKeyDown(Keys.Right))
             {
                 robot.Mechanism.Joints[1].Value += _STEP;
                 setPending(1, robot.Mechanism.Joints);
             }
-            if (state.IsKeyDown(Keys.D4))
+            if (state.IsKeyDown(Keys.D4) || state.IsKeyDown(Keys.Left))
             {
 
                 robot.Mechanism.Joints[1].Value -= _STEP;
@@ -251,12 +257,15 @@ namespace WindowsGame1
             {
                 flag = false;
             }
+            aa();
 
         }
         private void obs()
         {
-            Bitmap teste = new System.Drawing.Bitmap(360, 360);
-
+            //Bitmap teste = new System.Drawing.Bitmap(360, 360);
+            Color[] colorData = new Color[360 * 360]; 
+            cSpace.GetData<Color>(colorData); 
+            
             for (int i = 0; i < 360; i++)
             {
                 robot.Mechanism.Joints[0].Value = i;
@@ -267,14 +276,34 @@ namespace WindowsGame1
                     robot.Mechanism.Joints[1].setPending();
                     if (scene.isColliding(robot.Mechanism))
                     {
-                        teste.SetPixel(i, j, System.Drawing.Color.Black);
+                        colorData[i*360+j] = Color.Black;
+                        //teste.SetPixel(i, j, System.Drawing.Color.Black);
+                    }
+                    else
+                    {
+                        colorData[i*360+j] = Color.White;
                     }
                     
                 }
             }
-            teste.Save("teste.bmp");
-        }
+            GraphicsDevice.Textures[0] = null;
+            cSpace.SetData<Color>(colorData);
 
+            //teste.Save("teste.bmp");
+        }
+        private void aa()
+        {
+            Color[] colorData = new Color[360 * 360];
+            cSpace.GetData<Color>(colorData);
+
+            
+            int x = Math.Abs((int)robot.Mechanism.Joints[0].Value % 360);
+            int y = Math.Abs((int)robot.Mechanism.Joints[1].Value % 360);
+            colorData[x * 360 + y] = Color.Blue;
+
+            GraphicsDevice.Textures[0] = null;
+            cSpace.SetData<Color>(colorData);
+        }
         private void calc()
         {
 
@@ -305,10 +334,6 @@ namespace WindowsGame1
             }
 
         }
-        private void DrawModel(Model m, Matrix matrix)
-        {
-
-        }
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -330,7 +355,11 @@ namespace WindowsGame1
 
             scene.Draw(gameTime);
             robot.Draw(gameTime);
+            spriteBatch.Begin();
+            spriteBatch.Draw(cSpace, new Vector2(0,0), Color.White);
+            spriteBatch.End();
             /*
+             * 
             Matrix[] transforms = new Matrix[linkModel.Bones.Count];
             linkModel.CopyBoneTransformsTo(transforms);
             
