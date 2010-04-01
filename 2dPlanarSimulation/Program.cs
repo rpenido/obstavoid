@@ -12,7 +12,7 @@ using System;
 using System.Windows.Forms;
 #endregion
 
-namespace WinFormsGraphicsDevice
+namespace _2dPlanarSimulation
 {
     /// <summary>
     /// The main entry point for the application.

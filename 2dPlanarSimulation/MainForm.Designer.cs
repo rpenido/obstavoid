@@ -1,4 +1,4 @@
-namespace WinFormsGraphicsDevice
+namespace _2dPlanarSimulation
 {
     partial class MainForm
     {
@@ -29,7 +29,7 @@ namespace WinFormsGraphicsDevice
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.spinningTriangleControl = new WinFormsGraphicsDevice.SpinningTriangleControl();
+            this.spinningTriangleControl = new SpinningTriangleControl();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
