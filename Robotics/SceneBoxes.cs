@@ -33,6 +33,8 @@ namespace Simples.Simulation.Planar2D
             createBox(-100, 0, 120);
             createBox(-200, 0, -100);
 
+            createBox(100, 0, 100);
+
         }
 
         public List<OrientedBoundingBox> BoundingBoxList

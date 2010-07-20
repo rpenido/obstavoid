@@ -15,15 +15,21 @@ namespace Simples.Robotics.Mechanisms
         protected bool _calcPending;
         
         #region Property:Value
-        protected float _value;
+        protected float value;
+
+        protected virtual void setValue(float value)
+        {
+            this.value = value;
+            setPending();
+        }        
+        protected float getValue()
+        {
+            return value;
+        }
         public float Value
         {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                setPending();
-            }
+            get { return getValue(); }
+            set { setValue(value); }
         }
         #endregion
 
