@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-//using System.Drawing;
 using Simples.SampledBased.ConfigurationSpace;
 using Simples.SampledBased.ObstacleSpace;
 using Simples.SampledBased.Util;
@@ -26,9 +25,10 @@ namespace WindowsGame1
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDevice mainGraphicDevice;
+
+        ShowResultForm resultForm;
 
         Matrix _world;
         private OrbitCamera _camera;
@@ -41,13 +41,12 @@ namespace WindowsGame1
         private NArticulatedPlanar robot;
 
         private SceneBoxes scene;
-        private Texture2D cSpace;
 
         bool reset = true;
         private float oldMouseX, oldMouseY;
 
-        private int[] origin = new int[2];
-        private int[] dest = new int[2];
+        private int[] origin = new int[2] { 271, 104};
+        private int[] dest = new int[2] { 22, 344 };
         bool flag;
 
         public Game1()
@@ -57,6 +56,9 @@ namespace WindowsGame1
             
             graphics.PreferredBackBufferHeight = 1000;            
             graphics.PreferredBackBufferWidth = 1200;
+
+            mainGraphicDevice = GraphicsDevice;
+            
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace WindowsGame1
             _camera = new OrbitCamera();
             _camera.cameraAngleX = -90f;
             scene = new SceneBoxes(this, _camera);
-            cSpace = new Texture2D(GraphicsDevice, 360, 360, 0, TextureUsage.None, SurfaceFormat.Color);
+
             //Debug.Assert(linkModel.Bones.Count == 2);
             robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 2, _world, _camera);
         }
@@ -90,7 +92,7 @@ namespace WindowsGame1
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
 
@@ -226,11 +228,19 @@ namespace WindowsGame1
             {
                 origin[0] = (int)robot.Mechanism.Joints[0].Value;
                 origin[1] = (int)robot.Mechanism.Joints[1].Value;
+                if (resultForm != null)
+                {
+                    resultForm.Origin = origin;
+                }
             }
             if (state.IsKeyDown(Keys.F2))
             {
                 dest[0] = (int)robot.Mechanism.Joints[0].Value;
                 dest[1] = (int)robot.Mechanism.Joints[1].Value;
+                if (resultForm != null)
+                {
+                    resultForm.Dest = dest;
+                }
             }
             if (state.IsKeyDown(Keys.F5))
             {
@@ -262,10 +272,18 @@ namespace WindowsGame1
         }
         private void obs()
         {
-            //Bitmap teste = new System.Drawing.Bitmap(360, 360);
-            Color[] colorData = new Color[360 * 360]; 
-            cSpace.GetData<Color>(colorData); 
-            
+            Color[] colorData = new Color[360 * 360];
+            if (resultForm == null)
+            {
+                resultForm = new ShowResultForm(360, 360);
+                resultForm.Show();
+                resultForm.graphicsDevice.Textures[0] = null;    
+            }
+
+            resultForm.Origin = origin;
+            resultForm.Dest = dest;
+            resultForm.CSpace.GetData<Color>(colorData);
+
             for (int i = 0; i < 360; i++)
             {
                 robot.Mechanism.Joints[0].Value = i;
@@ -277,7 +295,6 @@ namespace WindowsGame1
                     if (scene.isColliding(robot.Mechanism))
                     {
                         colorData[i*360+j] = Color.Black;
-                        //teste.SetPixel(i, j, System.Drawing.Color.Black);
                     }
                     else
                     {
@@ -286,13 +303,14 @@ namespace WindowsGame1
                     
                 }
             }
-            GraphicsDevice.Textures[0] = null;
-            cSpace.SetData<Color>(colorData);
-
-            //teste.Save("teste.bmp");
+            resultForm.GraphicsDevice.Textures[0] = null;
+            resultForm.CSpace.SetData<Color>(colorData);
+            
         }
+
         private void aa()
         {
+            /*
             Color[] colorData = new Color[360 * 360];
             cSpace.GetData<Color>(colorData);
 
@@ -303,6 +321,7 @@ namespace WindowsGame1
 
             GraphicsDevice.Textures[0] = null;
             cSpace.SetData<Color>(colorData);
+             * */
         }
         private void calc()
         {
@@ -310,29 +329,63 @@ namespace WindowsGame1
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
-            int k = 15;
-            int N = 200;
+            int k = 4000;
 
-            CSpacePRM tst = new CSpacePRM(2, new int[] {360, 360}, cObsSpace, N, k, PRMSampleMethod.Random);
+            CSpaceRRT tst = new CSpaceRRT(2, new int[] {360, 360}, cObsSpace, k);
 
             Node originNode;
             Node destNode;
 
             // Chamada á função do algoritmo
-            tst.generatePath(origin, dest, k, out originNode, out destNode);
+            tst.generatePath(origin, dest, out originNode, out destNode);
 
 
             Node previousNode = destNode;
             Node currentNode = destNode.aCameFrom;
 
-            List<Vector2> list = new List<Vector2>();
+            resultForm.ClearEdges();
+
+            foreach (Edge edge in tst.goalTree.edgeList)
+            {
+                resultForm.AddEdge(edge.node1.p, edge.node2.p, Color.LimeGreen);
+            }
+
+            foreach (Edge edge in tst.startTree.edgeList)
+            {
+                resultForm.AddEdge(edge.node1.p, edge.node2.p, Color.Red);
+            }
+
+            //List<Vector2> list = new List<Vector2>();
+            resultForm.AddPointToPath(dest, Color.Blue);
             while (currentNode != null)
             {
-                list.Add(new Vector2(currentNode.p[0], currentNode.p[1]));
+                //list.Add(new Vector2(currentNode.p[0], currentNode.p[1]));
+                resultForm.AddPointToPath(currentNode.p, Color.Blue);
                 previousNode = currentNode;
                 currentNode = currentNode.aCameFrom;
             }
 
+            
+            Color[] colorData = new Color[360 * 360];
+            resultForm.CSpace.GetData<Color>(colorData);
+            /*
+            foreach (Node node in tst.goalTree.nodeList)
+            {
+                int i = node.p[0];
+                int j = node.p[1];
+                colorData[i*360+j] = Color.Red;
+            }
+
+            foreach (Node node in tst.startTree.nodeList)
+            {
+                int i = node.p[0];
+                int j = node.p[1];
+                colorData[i * 360 + j] = Color.Red;
+            }
+             */
+            resultForm.GraphicsDevice.Textures[0] = null;
+            resultForm.CSpace.SetData<Color>(colorData);
+            resultForm.Draw();
         }
 
         /// <summary>
@@ -355,9 +408,10 @@ namespace WindowsGame1
 
             scene.Draw(gameTime);
             robot.Draw(gameTime);
-            spriteBatch.Begin();
-            spriteBatch.Draw(cSpace, new Vector2(0,0), Color.White);
-            spriteBatch.End();
+            /*
+            if (resultForm != null)
+                resultForm.Draw(gameTime);
+            */
             /*
              * 
             Matrix[] transforms = new Matrix[linkModel.Bones.Count];
