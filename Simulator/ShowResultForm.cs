@@ -41,6 +41,7 @@ namespace WindowsGame1
 
         public void AddPointToPath(int[] p1, Color color)
         {
+            return;
             color.A = 100;
             vertices.Add(new VertexPositionColor(new Vector3(p1[1], p1[0], -0.5f), color));
         }
@@ -58,7 +59,7 @@ namespace WindowsGame1
             set
             {
                 dest = new VertexPositionColor[1];
-                dest[0] = new VertexPositionColor(new Vector3(value[1], value[0], 0), Color.Blue);
+                dest[0] = new VertexPositionColor(new Vector3(value[1]+180, value[0], 0), Color.Blue);
             }
         }
 

@@ -19,7 +19,7 @@ namespace Simples.Robotics.Mechanisms
         #region Property:Value (Override)
         protected override void setValue(float value)
         {
-            base.setValue((360+value) % 360);
+            base.setValue((360 + value) % 360);
         }      
         #endregion
 

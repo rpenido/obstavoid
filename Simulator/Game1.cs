@@ -294,11 +294,11 @@ namespace WindowsGame1
                     robot.Mechanism.Joints[1].setPending();
                     if (scene.isColliding(robot.Mechanism))
                     {
-                        colorData[i*360+j] = Color.Black;
+                        colorData[(i)*360+j] = Color.Black;
                     }
                     else
                     {
-                        colorData[i*360+j] = Color.White;
+                        colorData[(i) * 360 + j] = Color.White;
                     }
                     
                 }
@@ -329,7 +329,7 @@ namespace WindowsGame1
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
-            int k = 4000;
+            int k = 100;
 
             CSpaceRRT tst = new CSpaceRRT(2, new int[] {360, 360}, cObsSpace, k);
 
