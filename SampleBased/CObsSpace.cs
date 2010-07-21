@@ -51,7 +51,7 @@ namespace Simples.SampledBased.ObstacleSpace
         {
             Boolean collision = false;
             dist = node1.calcDist(node2);
-            int step = 5;
+            int step = 1;
             int[] p = new int[node1.p.Length];
             int[] lastP = new int[node1.p.Length];
 

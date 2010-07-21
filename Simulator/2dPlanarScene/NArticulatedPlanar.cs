@@ -51,8 +51,12 @@ namespace Simples.Simulation.Planar2D
             _mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
-                Vector3 min = new Vector3(-10, -5, -10);
-                Vector3 max = new Vector3(120, 5, 10);
+                //Vector3 min = new Vector3(-10, -5, -10);
+                //Vector3 max = new Vector3(120, 5, 10);
+
+                Vector3 min = new Vector3(-13, -8, -13);
+                Vector3 max = new Vector3(123, 8, 13);
+
                 OrientedBoundingBox obb = new OrientedBoundingBox(min, max);
                 Link link = new Link(nextJoint, obb);
                 _mechanism.Links.Add(link);

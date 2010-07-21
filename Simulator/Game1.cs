@@ -30,6 +30,8 @@ namespace WindowsGame1
 
         ShowResultForm resultForm;
 
+        NArticulatedPlanarController controller;
+
         Matrix _world;
         private OrbitCamera _camera;
         //private Model linkModel;
@@ -45,7 +47,7 @@ namespace WindowsGame1
         bool reset = true;
         private float oldMouseX, oldMouseY;
 
-        private int[] origin = new int[2] { 271, 104};
+        private int[] origin = new int[2] { 258, 113};
         private int[] dest = new int[2] { 22, 344 };
         bool flag;
 
@@ -123,6 +125,11 @@ namespace WindowsGame1
             // TODO: Add your update logic here            
             base.Update(gameTime);
             UpdateGamePad();
+
+            if (controller != null)
+            {
+                controller.Update(gameTime);
+            }
         }
 
         private bool isColliding()
@@ -325,11 +332,12 @@ namespace WindowsGame1
         }
         private void calc()
         {
+            controller = new NArticulatedPlanarController(robot);
 
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
-            int k = 100;
+            int k = 400;
 
             CSpaceRRT tst = new CSpaceRRT(2, new int[] {360, 360}, cObsSpace, k);
 
@@ -355,15 +363,20 @@ namespace WindowsGame1
                 resultForm.AddEdge(edge.node1.p, edge.node2.p, Color.Red);
             }
 
+            controller.Clear();
+            robot.Mechanism.Joints[0].Value = dest[0];
+            robot.Mechanism.Joints[1].Value = dest[1];
             //List<Vector2> list = new List<Vector2>();
             resultForm.AddPointToPath(dest, Color.Blue);
             while (currentNode != null)
             {
                 //list.Add(new Vector2(currentNode.p[0], currentNode.p[1]));
-                resultForm.AddPointToPath(currentNode.p, Color.Blue);
+                //resultForm.AddPointToPath(currentNode.p, Color.Blue);
+                controller.AddPoint(currentNode.p);
                 previousNode = currentNode;
                 currentNode = currentNode.aCameFrom;
             }
+            controller.running = true;
 
             
             Color[] colorData = new Color[360 * 360];
@@ -386,6 +399,7 @@ namespace WindowsGame1
             resultForm.GraphicsDevice.Textures[0] = null;
             resultForm.CSpace.SetData<Color>(colorData);
             resultForm.Draw();
+
         }
 
         /// <summary>
