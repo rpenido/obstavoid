@@ -164,10 +164,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Robotics\2dPlanarScene.csproj">
-      <Project>{7AC66D35-83D2-4C38-8208-A5810B3B4188}</Project>
-      <Name>2dPlanarScene</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SceneRendering\Scene.csproj">
       <Project>{06183F45-933B-4017-8A43-1554D3B4F43E}</Project>
       <Name>Scene</Name>
