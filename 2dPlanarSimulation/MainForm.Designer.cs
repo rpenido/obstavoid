@@ -29,7 +29,7 @@ namespace _2dPlanarSimulation
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.spinningTriangleControl = new _2dPlanarSimulation.SpinningTriangleControl();
+            this.spinningTriangleControl = new SpinningTriangleControl();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +55,6 @@ namespace _2dPlanarSimulation
             this.spinningTriangleControl.Size = new System.Drawing.Size(392, 573);
             this.spinningTriangleControl.TabIndex = 1;
             this.spinningTriangleControl.Text = "spinningTriangleControl";
-            this.spinningTriangleControl.Click += new System.EventHandler(this.spinningTriangleControl_Click);
             // 
             // MainForm
             // 

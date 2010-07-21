@@ -33,8 +33,6 @@ namespace Simples.Simulation.Planar2D
             createBox(-100, 0, 120);
             createBox(-200, 0, -100);
 
-            createBox(100, 0, 100);
-
         }
 
         public List<OrientedBoundingBox> BoundingBoxList
@@ -72,7 +70,7 @@ namespace Simples.Simulation.Planar2D
             return false;
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             foreach (Matrix b in _boxes)
             {

@@ -19,6 +19,7 @@ namespace _2dPlanarSimulation
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
 
         public Game1()
         {
@@ -46,7 +47,7 @@ namespace _2dPlanarSimulation
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            //spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }

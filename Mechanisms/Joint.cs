@@ -8,33 +8,27 @@ namespace Simples.Robotics.Mechanisms
 {
     public class Joint
     {
-        protected Matrix world;
-        protected Link parentLink;
-        protected Vector3 position;
+        protected Matrix _world;
+        protected Link _parentLink;
+        protected Vector3 _position;
         
-        protected bool calcPending;
+        protected bool _calcPending;
         
         #region Property:Value
-        protected float value;
-
-        protected virtual void setValue(float value)
-        {
-            this.value = value;
-            setPending();
-        }        
-        protected float getValue()
-        {
-            return value;
-        }
+        protected float _value;
         public float Value
         {
-            get { return getValue(); }
-            set { setValue(value); }
+            get { return _value; }
+            set
+            {
+                _value = value;
+                setPending();
+            }
         }
         #endregion
 
         #region Property:Transform
-        protected Matrix transform;
+        protected Matrix _transform;
         public Matrix Transform
         {
             get { return getTransform();}
@@ -42,42 +36,42 @@ namespace Simples.Robotics.Mechanisms
 
         protected virtual Matrix getTransform()
         {
-            if (calcPending)
+            if (_calcPending)
             {
-                if (parentLink != null)
+                if (_parentLink != null)
                 {
-                    transform = Matrix.CreateTranslation(position) * parentLink.Transform;
+                    _transform = Matrix.CreateTranslation(_position) * _parentLink.Transform;
                 }
                 else
                 {
-                    transform = world;
+                    _transform = _world;
                 }
-                calcPending = false;
+                _calcPending = false;
             }
-            return transform;
+            return _transform;
         }
         #endregion
 
         public Joint(Link parentLink, Vector3 position)
         {
-            this.parentLink = parentLink;
-            this.position = position;
-            if (parentLink == null)
+            this._parentLink = parentLink;
+            this._position = position;
+            if (_parentLink == null)
             {
                 
             }
-            calcPending = true;
+            _calcPending = true;
         }
 
         public Joint(Matrix world)
         {
-            this.position = world.Translation;
-            this.world = world;
+            this._position = world.Translation;
+            this._world = world;
         }
 
         public void setPending()
         {
-            calcPending = true;
+            _calcPending = true;
         }
     }
 }

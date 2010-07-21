@@ -50,10 +50,5 @@ namespace _2dPlanarSimulation
                 _camera);
 
         }
-
-        private void spinningTriangleControl_Click(object sender, System.EventArgs e)
-        {
-
-        }
     }
 }

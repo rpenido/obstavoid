@@ -489,15 +489,7 @@ namespace PathFinder
 
         private void button6_Click(object sender, EventArgs e)
         {
-            float a = -10;
-            MessageBox.Show((a % 360).ToString());
             //CObsSpace cObsSpace = new CObsSpace2d(obsMatrix);
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            float a = -10;
-            MessageBox.Show((a % 360).ToString());
         }
     }
     public class SimulationData
