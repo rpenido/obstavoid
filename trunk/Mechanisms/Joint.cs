@@ -8,11 +8,11 @@ namespace Simples.Robotics.Mechanisms
 {
     public class Joint
     {
-        protected Matrix _world;
-        protected Link _parentLink;
-        protected Vector3 _position;
+        protected Matrix world;
+        protected Link parentLink;
+        protected Vector3 position;
         
-        protected bool _calcPending;
+        protected bool calcPending;
         
         #region Property:Value
         protected float value;
@@ -34,7 +34,7 @@ namespace Simples.Robotics.Mechanisms
         #endregion
 
         #region Property:Transform
-        protected Matrix _transform;
+        protected Matrix transform;
         public Matrix Transform
         {
             get { return getTransform();}
@@ -42,42 +42,42 @@ namespace Simples.Robotics.Mechanisms
 
         protected virtual Matrix getTransform()
         {
-            if (_calcPending)
+            if (calcPending)
             {
-                if (_parentLink != null)
+                if (parentLink != null)
                 {
-                    _transform = Matrix.CreateTranslation(_position) * _parentLink.Transform;
+                    transform = Matrix.CreateTranslation(position) * parentLink.Transform;
                 }
                 else
                 {
-                    _transform = _world;
+                    transform = world;
                 }
-                _calcPending = false;
+                calcPending = false;
             }
-            return _transform;
+            return transform;
         }
         #endregion
 
         public Joint(Link parentLink, Vector3 position)
         {
-            this._parentLink = parentLink;
-            this._position = position;
-            if (_parentLink == null)
+            this.parentLink = parentLink;
+            this.position = position;
+            if (parentLink == null)
             {
                 
             }
-            _calcPending = true;
+            calcPending = true;
         }
 
         public Joint(Matrix world)
         {
-            this._position = world.Translation;
-            this._world = world;
+            this.position = world.Translation;
+            this.world = world;
         }
 
         public void setPending()
         {
-            _calcPending = true;
+            calcPending = true;
         }
     }
 }
