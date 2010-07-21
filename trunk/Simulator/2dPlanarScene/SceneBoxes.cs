@@ -72,7 +72,7 @@ namespace Simples.Simulation.Planar2D
             return false;
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             foreach (Matrix b in _boxes)
             {
