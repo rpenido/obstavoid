@@ -42,12 +42,30 @@ namespace Simples.SampledBased.ConfigurationSpace
         {
             double[] pVector = new double[p.Length];
             double sum = 0;
+            double sum2 = 0;
             for (int i = 0; i < p.Length; i++)
             {
                 pVector[i] = (p[i] - edge.node1.p[i]) * edge.vector[i];
                 sum = sum + Math.Pow(pVector[i], 2);
+                sum2 += (p[i] - edge.node1.p[i]) * edge.vector[i];
             }
-            return Math.Sqrt(sum);
+            /*
+                        double tst = 0;
+                        bool equals;
+                        for (int i = 0; i < p.Length; i++)
+                        {
+                            tst = pVector[i] / sum;
+                            if (tst == edge.vector[i])
+                            {
+                                return Math.Sqrt(sum);
+                            }
+                            else
+                            {
+                                return -Math.Sqrt(sum);
+                            }
+                        }
+             */
+            return sum2;
         }
 
         public Node getNearestNode(Node a)
@@ -212,12 +230,12 @@ namespace Simples.SampledBased.ConfigurationSpace
 
             Node qs;
             Node qs2;
-            qs = growTree(startTree, destNode);
+            //qs = growTree(startTree, destNode);
 
-            if (qs == destNode)
-            {
-                return;
-            }
+            //if (qs == destNode)
+            //{
+            //    return;
+            //}
 
             ExplorationTree T1 = startTree;
             ExplorationTree T2 = goalTree;

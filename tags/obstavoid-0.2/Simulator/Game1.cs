@@ -337,7 +337,7 @@ namespace WindowsGame1
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
-            int k = 400;
+            int k = 100;
 
             CSpaceRRT tst = new CSpaceRRT(2, new int[] {360, 360}, cObsSpace, k);
 
