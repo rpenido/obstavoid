@@ -47,8 +47,11 @@ namespace WindowsGame1
         bool reset = true;
         private float oldMouseX, oldMouseY;
 
-        private int[] origin = new int[2] { 258, 113};
-        private int[] dest = new int[2] { 22, 344 };
+        //private int[] origin = new int[3] { 258, 113 , 0};
+        //private int[] dest = new int[3] { 22, 344, 0};
+
+        private int[] origin = new int[3] { 34, 334, 48 };
+        private int[] dest = new int[3] { 90, 328, 24 };
         bool flag;
 
         public Game1()
@@ -84,7 +87,7 @@ namespace WindowsGame1
             scene = new SceneBoxes(this, _camera);
 
             //Debug.Assert(linkModel.Bones.Count == 2);
-            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 2, _world, _camera);
+            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 3, _world, _camera);
         }
 
         /// <summary>
@@ -235,6 +238,7 @@ namespace WindowsGame1
             {
                 origin[0] = (int)robot.Mechanism.Joints[0].Value;
                 origin[1] = (int)robot.Mechanism.Joints[1].Value;
+                origin[2] = (int)robot.Mechanism.Joints[2].Value;
                 if (resultForm != null)
                 {
                     resultForm.Origin = origin;
@@ -244,6 +248,7 @@ namespace WindowsGame1
             {
                 dest[0] = (int)robot.Mechanism.Joints[0].Value;
                 dest[1] = (int)robot.Mechanism.Joints[1].Value;
+                dest[2] = (int)robot.Mechanism.Joints[2].Value;
                 if (resultForm != null)
                 {
                     resultForm.Dest = dest;
@@ -337,9 +342,9 @@ namespace WindowsGame1
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
-            int k = 400;
+            int k = 50;
 
-            CSpaceRRT tst = new CSpaceRRT(2, new int[] {360, 360}, cObsSpace, k);
+            CSpaceRRT tst = new CSpaceRRT(3, new int[] {360, 360, 360}, cObsSpace, k);
 
             Node originNode;
             Node destNode;
@@ -366,6 +371,7 @@ namespace WindowsGame1
             controller.Clear();
             robot.Mechanism.Joints[0].Value = dest[0];
             robot.Mechanism.Joints[1].Value = dest[1];
+            robot.Mechanism.Joints[2].Value = dest[2];
             //List<Vector2> list = new List<Vector2>();
             resultForm.AddPointToPath(dest, Color.Blue);
             while (currentNode != null)
