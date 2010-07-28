@@ -27,18 +27,7 @@ namespace Simples.SampledBased.ConfigurationSpace
             nodeList.Add(node);
         }
 
-        /*        public Node addNode(Node node)
-                {
-                    nodeList.Add(node);
-                    return connectNode(node);
-                }
-        
-                public Node connectNode(Node node)
-                {
-                    return new Node(new int[2]);
-                }
-        */
-        public static double getProjection(int[] p, Edge edge)
+        public static double getProjection(double[] p, Edge edge)
         {
             double[] pVector = new double[p.Length];
             double sum = 0;
@@ -101,11 +90,11 @@ namespace Simples.SampledBased.ConfigurationSpace
                 }
                 else
                 {
-                    int[] edgeP = new int[a.p.Length];
+                    double[] edgeP = new double[a.p.Length];
 
                     for (int i = 0; i < edgeP.Length; i++)
                     {
-                        edgeP[i] = edge.node1.p[i] + (int)Math.Round(scalarProjection * edge.vector[i]);
+                        edgeP[i] = edge.node1.p[i] + scalarProjection * edge.vector[i];
                     }
 
                     edgeNode = new Node(edgeP);
@@ -158,16 +147,16 @@ namespace Simples.SampledBased.ConfigurationSpace
     public class CSpaceRRT : CSpace
     {
         Random rand = new Random();
-        public List<int[]> sampleList;
+        public List<double[]> sampleList;
         public ExplorationTree startTree;
         public ExplorationTree goalTree;
         int k;
 
-        public CSpaceRRT(int dimensionCount, int[] dimensionSize, CObsSpace cObsSpace, int k)
+        public CSpaceRRT(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace, int k)
             : base(dimensionCount, dimensionSize, cObsSpace)
         {
             this.k = k;
-            this.sampleList = new List<int[]>();
+            this.sampleList = new List<double[]>();
         }
 
         public Node growTree(ExplorationTree T, Node a)
@@ -209,17 +198,17 @@ namespace Simples.SampledBased.ConfigurationSpace
 
         public Node growTree(ExplorationTree T)
         {
-            int[] p = new int[dimensionCount];
+            double[] p = new double[dimensionCount];
 
             for (int j = 0; j < dimensionCount; j++)
             {
-                p[j] = rand.Next(dimensionSize[j] - 1);
+                p[j] = rand.NextDouble() * dimensionSize[j];
             }
 
             return growTree(T, new Node(p));
         }
 
-        public void generatePath(int[] origin, int[] dest,
+        public void generatePath(double[] origin, double[] dest,
             out Node originNode, out Node destNode)
         {
             originNode = new Node(origin);

@@ -10,9 +10,9 @@ namespace Simples.SampledBased.ObstacleSpace
     public class CObsSpace
     {
         protected int _dimensionCount;
-        protected int[] _dimensionSize;
+        protected double[] _dimensionSize;
 
-        public CObsSpace(int dimensionCount, int[] dimensionSize)
+        public CObsSpace(int dimensionCount, double[] dimensionSize)
         {
             if (dimensionCount != 2)
             {
@@ -28,7 +28,7 @@ namespace Simples.SampledBased.ObstacleSpace
 
         }
 
-        public virtual bool CheckCollision(int[] p)
+        public virtual bool CheckCollision(double[] p)
         {
             if (p.Length != _dimensionCount)
             {
@@ -52,8 +52,8 @@ namespace Simples.SampledBased.ObstacleSpace
             Boolean collision = false;
             dist = node1.calcDist(node2);
             int step = 1;
-            int[] p = new int[node1.p.Length];
-            int[] lastP = new int[node1.p.Length];
+            double[] p = new double[node1.p.Length];
+            double[] lastP = new double[node1.p.Length];
 
             for (int j = 0; j < p.Length; j++)
             {

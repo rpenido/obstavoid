@@ -15,18 +15,18 @@ namespace Simples.Robotics.Mechanisms
         protected bool calcPending;
         
         #region Property:Value
-        protected float value;
+        protected double value;
 
-        protected virtual void setValue(float value)
+        protected virtual void setValue(double value)
         {
             this.value = value;
             setPending();
         }        
-        protected float getValue()
+        protected double getValue()
         {
             return value;
         }
-        public float Value
+        public double Value
         {
             get { return getValue(); }
             set { setValue(value); }

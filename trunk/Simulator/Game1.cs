@@ -50,8 +50,8 @@ namespace WindowsGame1
         //private int[] origin = new int[3] { 258, 113 , 0};
         //private int[] dest = new int[3] { 22, 344, 0};
 
-        private int[] origin = new int[3] { 34, 334, 48 };
-        private int[] dest = new int[3] { 90, 328, 24 };
+        private double[] origin = new double[3] { 34, 334, 48 };
+        private double[] dest = new double[3] { 90, 328, 24 };
         bool flag;
 
         public Game1()
@@ -236,9 +236,9 @@ namespace WindowsGame1
 
             if (state.IsKeyDown(Keys.F1))
             {
-                origin[0] = (int)robot.Mechanism.Joints[0].Value;
-                origin[1] = (int)robot.Mechanism.Joints[1].Value;
-                origin[2] = (int)robot.Mechanism.Joints[2].Value;
+                origin[0] = robot.Mechanism.Joints[0].Value;
+                origin[1] = robot.Mechanism.Joints[1].Value;
+                origin[2] = robot.Mechanism.Joints[2].Value;
                 if (resultForm != null)
                 {
                     resultForm.Origin = origin;
@@ -344,7 +344,7 @@ namespace WindowsGame1
             // Inicializa parâmetros
             int k = 50;
 
-            CSpaceRRT tst = new CSpaceRRT(3, new int[] {360, 360, 360}, cObsSpace, k);
+            CSpaceRRT tst = new CSpaceRRT(3, new double[] {360, 360, 360}, cObsSpace, k);
 
             Node originNode;
             Node destNode;

@@ -33,33 +33,62 @@ namespace WindowsGame1
             vertices.Clear();
             path.Clear();
         }
-        public void AddEdge(int[] p1, int[] p2, Color color)
+        public void AddEdge(double[] p1, double[] p2, Color color)
         {
-            vertices.Add(new VertexPositionColor(new Vector3(p1[1], p1[0], 0), color));
-            vertices.Add(new VertexPositionColor(new Vector3(p2[1], p2[0], 0), color));
+            vertices.Add(
+                new VertexPositionColor(
+                    new Vector3(
+                        Convert.ToSingle(p1[1]),
+                        Convert.ToSingle(p1[0]),
+                        0f),
+                    color));
+
+            vertices.Add(
+                new VertexPositionColor(
+                    new Vector3(
+                        Convert.ToSingle(p2[1]),
+                        Convert.ToSingle(p2[0]),
+                        0f),
+                    color));
         }
 
-        public void AddPointToPath(int[] p1, Color color)
+        public void AddPointToPath(double[] p1, Color color)
         {
             return;
             color.A = 100;
-            vertices.Add(new VertexPositionColor(new Vector3(p1[1], p1[0], -0.5f), color));
+            vertices.Add(
+                new VertexPositionColor(
+                    new Vector3(
+                        Convert.ToSingle(p1[1]),
+                        Convert.ToSingle(p1[0]),
+                        -0.5f),
+                    color));
         }
 
-        public int[] Origin
+        public double[] Origin
         {
             set {
                 origin = new VertexPositionColor[1];
-                origin[0] = new VertexPositionColor(new Vector3(value[1], value[0], 0), Color.Blue);
+                origin[0] = new VertexPositionColor(
+                    new Vector3(
+                        Convert.ToSingle(value[1]),
+                        Convert.ToSingle(value[0]),
+                        0),
+                    Color.Blue);
             }
         }
-        
-        public int[] Dest
+
+        public double[] Dest
         {
             set
             {
                 dest = new VertexPositionColor[1];
-                dest[0] = new VertexPositionColor(new Vector3(value[1]+180, value[0], 0), Color.Blue);
+                dest[0] = new VertexPositionColor(
+                    new Vector3(
+                        Convert.ToSingle(value[1]+180),
+                        Convert.ToSingle(value[0]),
+                        0),
+                    Color.Blue);
             }
         }
 

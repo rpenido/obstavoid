@@ -10,14 +10,14 @@ namespace Simples.Simulation.Planar2D
 {
     public class MechanismCObsSpace : CObsSpace
     {
-        Mechanism _mechanism;
+        Mechanism mechanism;
+        SceneBoxes scene;
 
-        SceneBoxes _scene;
         public MechanismCObsSpace(Mechanism mechanism, SceneBoxes scene)
-            :base(mechanism.Joints.Count, new int[mechanism.Joints.Count])
+            :base(mechanism.Joints.Count, new double[mechanism.Joints.Count])
         {
-            this._mechanism = mechanism;
-            this._scene = scene;
+            this.mechanism = mechanism;
+            this.scene = scene;
 
             for (int i = 0; i < _dimensionCount; i++)
             {
@@ -25,14 +25,14 @@ namespace Simples.Simulation.Planar2D
             }
         }
 
-        public override bool CheckCollision(int[] p)
+        public override bool CheckCollision(double[] p)
         {
             base.CheckCollision(p);
             for (int i = 0; i < p.Length; i++)
             {
-                _mechanism.Joints[i].Value = p[i];
+                mechanism.Joints[i].Value = p[i];
             }
-            return _scene.isColliding(_mechanism);
+            return scene.isColliding(mechanism);
         }
 
     }
