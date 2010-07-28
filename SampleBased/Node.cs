@@ -18,13 +18,13 @@ namespace Simples.SampledBased.Util
 
     public class Node
     {
-        public int[] p;
+        public double[] p;
         public List<Edge> childs;
         public double aDist;
         public double aTotalDist;
         public Node aCameFrom = null;
 
-        public Node(int[] p)
+        public Node(double[] p)
         {
             childs = new List<Edge>();
             this.p = p;

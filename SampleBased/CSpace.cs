@@ -10,10 +10,10 @@ namespace Simples.SampledBased.ConfigurationSpace
     public abstract class CSpace
     {
         protected int dimensionCount;
-        protected int[] dimensionSize;
+        protected double[] dimensionSize;
         protected CObsSpace cObsSpace;
 
-        protected CSpace(int dimensionCount, int[] dimensionSize, CObsSpace cObsSpace)
+        protected CSpace(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace)
         {
             if (dimensionCount != 2)
             {

@@ -17,11 +17,17 @@ namespace Simples.Robotics.Mechanisms
         #endregion
 
         #region Property:Value (Override)
-        protected override void setValue(float value)
+        protected override void setValue(double value)
         {
             base.setValue((360 + value) % 360);
         }      
         #endregion
+
+
+        public double RadiansValue
+        {
+            get { return Math.PI * Value / 180.0; }
+        }
 
         public RevoluteJoint(Link parentLink, Vector3 position, float angle, Vector3 axis)
             : base(parentLink, position)
@@ -39,7 +45,8 @@ namespace Simples.Robotics.Mechanisms
 
         protected override Matrix getTransform()
         {
-            return Matrix.CreateFromAxisAngle(axis, MathHelper.ToRadians(Value)) * base.getTransform();
+            
+            return Matrix.CreateFromAxisAngle(axis, Convert.ToSingle(RadiansValue)) * base.getTransform();
         }
     }
 }

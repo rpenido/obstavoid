@@ -9,14 +9,14 @@ namespace Simples.SampledBased.ObstacleSpace
     {
         private Boolean[,] obsMatrix;
         public CObsSpace2d(Boolean[,] obsMatrix)
-            : base(2, new int[2] { obsMatrix.GetLength(0), obsMatrix.GetLength(1) })
+            : base(2, new double[2] { obsMatrix.GetLength(0), obsMatrix.GetLength(1) })
         {
             this.obsMatrix = obsMatrix;
         }
 
-        public override Boolean CheckCollision(int[] p)
+        public override Boolean CheckCollision(double[] p)
         {
-            return obsMatrix[p[0], p[1]];
+            return obsMatrix[(int)Math.Round(p[0]), (int)Math.Round(p[1])];
 
         }
 

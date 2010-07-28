@@ -15,14 +15,14 @@ namespace Simples.SampledBased.ConfigurationSpace
         public int k;
         public PRMSampleMethod sampleMethod;
 
-        public List<int[]> sampleList;
+        public List<double[]> sampleList;
         public List<Node> nodeList;
         public List<Edge> edgeList;
 
 
         public Boolean pathed = false;
 
-        public CSpacePRM(int dimensionCount, int[] dimensionSize, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
+        public CSpacePRM(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
             : base(dimensionCount, dimensionSize, cObsSpace)
         {
             this.N = N;
@@ -55,25 +55,25 @@ namespace Simples.SampledBased.ConfigurationSpace
         }
 
 
-        public List<int[]> generateSample()
+        public List<double[]> generateSample()
         {
             double a = (Math.Sqrt(5) + 1) / 2;
 
-            sampleList = new List<int[]>();
+            sampleList = new List<double[]>();
 
 
             for (int i = 1; i <= N; i++)
             {
-                int[] p = new int[dimensionCount];
-                double coord = (double)i / (double)N * ((double)dimensionSize[0] - 1);
+                double[] p = new double[dimensionCount];
+                double coord = (double)i / (double)N * (dimensionSize[0] - 1);
 
-                p[0] = (int)Math.Round(coord);
+                p[0] = coord;
                 for (int j = 1; j < dimensionCount; j++)
                 {
                     double fnb = Math.Pow(a, j);
 
-                    coord = (i * fnb - Math.Floor(i * fnb)) * ((double)dimensionSize[j] - 1);
-                    p[j] = (int)Math.Round(coord);
+                    coord = (i * fnb - Math.Floor(i * fnb)) * (dimensionSize[j] - 1);
+                    p[j] = coord;
 
                 }
 
@@ -87,18 +87,19 @@ namespace Simples.SampledBased.ConfigurationSpace
 
         }
 
-        public List<int[]> generateRandomSample()
+        public List<double[]> generateRandomSample()
         {
-            sampleList = new List<int[]>();
+            sampleList = new List<double[]>();
             Random rand = new Random();
 
             for (int i = 1; i <= N; i++)
             {
-                int[] p = new int[dimensionCount];
+                double[] p = new double[dimensionCount];
 
                 for (int j = 0; j < dimensionCount; j++)
                 {
-                    p[j] = rand.Next(dimensionSize[j] - 1);
+
+                    p[j] = rand.NextDouble() * dimensionSize[j];
                 }
 
                 if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
@@ -113,7 +114,7 @@ namespace Simples.SampledBased.ConfigurationSpace
 
         private void generateCFreeSpace()
         {
-            foreach (int[] p in sampleList)
+            foreach (double[] p in sampleList)
             {
                 Node node = new Node(p);
                 addNode(node, k);
@@ -163,7 +164,7 @@ namespace Simples.SampledBased.ConfigurationSpace
         }
 
 
-        public void generatePath(int[] origin, int[] dest, int k,
+        public void generatePath(double[] origin, double[] dest, int k,
             out Node originNode, out Node destNode)
         {
             if (sampleList == null)
