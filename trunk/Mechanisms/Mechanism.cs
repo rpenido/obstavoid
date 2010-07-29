@@ -15,22 +15,22 @@ namespace Simples.Robotics.Mechanisms
 {
     public class Mechanism
     {
-        private List<Joint> _jointList;
+        private List<Joint> jointList;
         public List<Joint> Joints
         {
-            get { return _jointList; }
+            get { return jointList; }
         }
 
-        private List<Link> _linkList;
+        private List<Link> linkList;
         public List<Link> Links
         {
-            get { return _linkList; }
+            get { return linkList; }
         }
 
         public Mechanism()
         {
-            _jointList = new List<Joint>();
-            _linkList = new List<Link>();
+            jointList = new List<Joint>();
+            linkList = new List<Link>();
         }
     }
 }
