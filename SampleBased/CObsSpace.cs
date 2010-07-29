@@ -9,8 +9,8 @@ namespace Simples.SampledBased.ObstacleSpace
 
     public class CObsSpace
     {
-        protected int _dimensionCount;
-        protected double[] _dimensionSize;
+        protected int dimensionCount;
+        protected double[] dimensionSize;
 
         public CObsSpace(int dimensionCount, double[] dimensionSize)
         {
@@ -23,20 +23,20 @@ namespace Simples.SampledBased.ObstacleSpace
                 new Exception("The dimensionSize must have the same length of the dimensionCount value");
             }
 
-            this._dimensionCount = dimensionCount;
-            this._dimensionSize = dimensionSize;
+            this.dimensionCount = dimensionCount;
+            this.dimensionSize = dimensionSize;
 
         }
 
         public virtual bool CheckCollision(double[] p)
         {
-            if (p.Length != _dimensionCount)
+            if (p.Length != dimensionCount)
             {
                 new Exception("The dimensionCount of p and CObsSpace msut be the same");
             }
-            for (int i = 0; i < _dimensionCount; i++)
+            for (int i = 0; i < dimensionCount; i++)
             {
-                if (p[i] >= _dimensionSize[i])
+                if (p[i] >= dimensionSize[i])
                 {
                     new Exception("p is out of bounds of CObsSpace");
                 }

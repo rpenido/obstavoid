@@ -19,9 +19,9 @@ namespace Simples.Simulation.Planar2D
             this.mechanism = mechanism;
             this.scene = scene;
 
-            for (int i = 0; i < _dimensionCount; i++)
+            for (int i = 0; i < dimensionCount; i++)
             {
-                _dimensionSize[i] = 359;
+                dimensionSize[i] = 359;
             }
         }
 

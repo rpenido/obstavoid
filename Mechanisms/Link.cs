@@ -8,27 +8,30 @@ namespace Simples.Robotics.Mechanisms
 {
     public class Link
     {
-        private OrientedBoundingBox _boundingBox;
+        #region Property:BoundingBox
+        private OrientedBoundingBox boundingBox;
+
         public OrientedBoundingBox BoundingBox
         {
             get
             {
-                _boundingBox.Transforms = Transform;
-                return _boundingBox;
+                boundingBox.Transforms = Transform;
+                return boundingBox;
             }
         }
+        #endregion
 
-        protected Joint _joint;
+        protected Joint joint;
 
         public Matrix Transform
         {
-            get { return _joint.Transform; }
+            get { return joint.Transform; }
         }
 
         public Link(Joint joint, OrientedBoundingBox boudingBox)
         {
-            this._joint = joint;
-            this._boundingBox = boudingBox;
+            this.joint = joint;
+            this.boundingBox = boudingBox;
         }
     }
 }

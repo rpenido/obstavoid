@@ -13,12 +13,12 @@ namespace Simples.Scene.Camera
         public float cameraAngleY = 0f;
 
         public float Zoom = 2500;
-        private Matrix _projection = Matrix.CreateOrthographic(1000, 1000, 0, 10000);
+        private Matrix projection = Matrix.CreateOrthographic(1000, 1000, 0, 10000);
 
         private Matrix getView()
         {
             Vector3 point = new Vector3(0.0f, 0.0f, Zoom);
-
+            
             Vector3 cameraPosition = Vector3.Transform(point,
                 Matrix.CreateRotationX(MathHelper.ToRadians(cameraAngleX)) *
                 Matrix.CreateRotationY(MathHelper.ToRadians(cameraAngleY)));
@@ -30,7 +30,7 @@ namespace Simples.Scene.Camera
 
         private Matrix getProjection()
         {
-            return _projection;
+            return projection;
         }
 
 

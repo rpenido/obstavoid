@@ -21,34 +21,34 @@ namespace Simples.Simulation.Planar2D
     public class NArticulatedPlanar
     {
 
-        private ContentManager _content;
-        private ICamera _camera;
+        private ContentManager content;
+        private ICamera camera;
 
-        private Model _linkModel;
+        private Model linkModel;
 
 
         #region Property:Mechanism
-        private Mechanism _mechanism;
+        private Mechanism mechanism;
         public Mechanism Mechanism
         {
-            get { return _mechanism; }
+            get { return mechanism; }
         }
         #endregion
 
-        private Matrix _world;
-        private Vector3 _linkTranslation;
+        private Matrix world;
+        private Vector3 linkTranslation;
 
         public NArticulatedPlanar(IServiceProvider service, Vector3 linkTranslation, int linkCount, Matrix world, ICamera camera)
         {
-            this._content = new ContentManager(service, "Content");
-            this._linkModel = _content.Load<Model>("model1");
-            this._camera = camera;
-            this._mechanism = new Mechanism();
-            this._world = world;
-            this._linkTranslation = linkTranslation;
+            this.content = new ContentManager(service, "Content");
+            this.linkModel = content.Load<Model>("model1");
+            this.camera = camera;
+            this.mechanism = new Mechanism();
+            this.world = world;
+            this.linkTranslation = linkTranslation;
 
             RevoluteJoint nextJoint = new RevoluteJoint(world, 0, world.Up);
-            _mechanism.Joints.Add(nextJoint);
+            mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
                 //Vector3 min = new Vector3(-10, -5, -10);
@@ -59,11 +59,11 @@ namespace Simples.Simulation.Planar2D
 
                 OrientedBoundingBox obb = new OrientedBoundingBox(min, max);
                 Link link = new Link(nextJoint, obb);
-                _mechanism.Links.Add(link);
+                mechanism.Links.Add(link);
                 if (i != linkCount - 1)
                 {
-                    nextJoint = new RevoluteJoint(link, _linkTranslation, 0, world.Up);
-                    _mechanism.Joints.Add(nextJoint);
+                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, world.Up);
+                    mechanism.Joints.Add(nextJoint);
                 }                
             }
         }
@@ -78,17 +78,17 @@ namespace Simples.Simulation.Planar2D
 
         private void DrawLink(Matrix matrix)
         {
-            Matrix[] transforms = new Matrix[_linkModel.Bones.Count];
-            _linkModel.CopyBoneTransformsTo(transforms);
+            Matrix[] transforms = new Matrix[linkModel.Bones.Count];
+            linkModel.CopyBoneTransformsTo(transforms);
 
-            foreach (ModelMesh mesh in _linkModel.Meshes)
+            foreach (ModelMesh mesh in linkModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
 
-                    effect.View = _camera.View;
-                    effect.Projection = _camera.Projection;
+                    effect.View = camera.View;
+                    effect.Projection = camera.Projection;
                     effect.World = transforms[mesh.ParentBone.Index] *
                         matrix;
                 }
