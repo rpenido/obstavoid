@@ -45,14 +45,14 @@ namespace Simples.Robotics.Mechanisms
             this.Value = angle;
             this.axis = axis;
         }
-        
+        /*
         public RevoluteJoint(Matrix world, float angle, Vector3 axis)
             : base(world)
         {
             this.Value = angle;
             this.axis = axis;
         }
-
+        */
         protected override Matrix getTransform()
         {
             

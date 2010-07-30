@@ -12,19 +12,34 @@ namespace Simples.Robotics.Mechanisms
     [Serializable]
     public class Link
     {
-
-        
         private List<OrientedBoundingBox> boundingBoxList;
 
         protected Joint joint;
 
+        private Matrix transform;
         public Matrix Transform
         {
-            get { return joint.Transform; }
+            get
+            {
+                if (joint != null)
+                {
+                    return joint.Transform;
+                }
+                else
+                {
+                    return transform;
+                }
+            }
         }
 
-        public Link()
+        private Link()
         {
+            this.boundingBoxList = new List<OrientedBoundingBox>();
+        }
+
+        public Link(Matrix transform)
+        {
+            this.transform = transform;
             this.boundingBoxList = new List<OrientedBoundingBox>();
         }
 

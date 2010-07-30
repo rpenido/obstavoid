@@ -10,7 +10,7 @@ namespace Simples.Robotics.Mechanisms
     [Serializable]
     public class Joint
     {
-        protected Matrix world;
+        //protected Matrix world;
         protected Link parentLink;
         protected Vector3 position;
         
@@ -50,14 +50,14 @@ namespace Simples.Robotics.Mechanisms
         {
             if (calcPending)
             {
-                if (parentLink != null)
-                {
+                //if (parentLink != null)
+                //{
                     transform = Matrix.CreateTranslation(position) * parentLink.Transform;
-                }
-                else
-                {
-                    transform = world;
-                }
+                //}
+                //else
+                //{
+                //    transform = world;
+                //}
                 calcPending = false;
             }
             return transform;
@@ -72,18 +72,15 @@ namespace Simples.Robotics.Mechanisms
         {
             this.parentLink = parentLink;
             this.position = position;
-            if (parentLink == null)
-            {
-                
-            }
             calcPending = true;
         }
-
+        /*
         public Joint(Matrix world)
         {
             this.position = world.Translation;
             this.world = world;
         }
+        */
 
 
     }

@@ -57,9 +57,9 @@ namespace Simples.Simulation.Planar2D
             FileStream fs = new FileStream("c:\\teste.xml", FileMode.Open);
             this.mechanism = bf.Deserialize(fs) as Mechanism;    
             */
-            
 
-            RevoluteJoint nextJoint = new RevoluteJoint(world, 0, world.Up);
+            Link baseLink = new Link(world);
+            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, world.Up);
             mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
