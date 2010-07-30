@@ -13,15 +13,19 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Simples.Robotics.Mechanisms
 {
+    [Serializable]
     public class Mechanism
     {
+        
         private List<Joint> jointList;
+        
         public List<Joint> Joints
         {
             get { return jointList; }
         }
-
+         
         private List<Link> linkList;
+        
         public List<Link> Links
         {
             get { return linkList; }

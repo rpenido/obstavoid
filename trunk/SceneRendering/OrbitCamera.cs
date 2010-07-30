@@ -18,7 +18,7 @@ namespace Simples.Scene.Camera
         private Matrix getView()
         {
             Vector3 point = new Vector3(0.0f, 0.0f, Zoom);
-            
+             
             Vector3 cameraPosition = Vector3.Transform(point,
                 Matrix.CreateRotationX(MathHelper.ToRadians(cameraAngleX)) *
                 Matrix.CreateRotationY(MathHelper.ToRadians(cameraAngleY)));

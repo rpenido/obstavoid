@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Xml;
+using System.Xml.Serialization;
+using JigLibX.Geometry;
 
 namespace Simples.Robotics.Mechanisms
 {
+    [Serializable]
     public class Link
     {
-        #region Property:BoundingBox
-        private OrientedBoundingBox boundingBox;
 
-        public OrientedBoundingBox BoundingBox
-        {
-            get
-            {
-                boundingBox.Transforms = Transform;
-                return boundingBox;
-            }
-        }
-        #endregion
+        
+        private List<OrientedBoundingBox> boundingBoxList;
 
         protected Joint joint;
 
@@ -28,10 +23,31 @@ namespace Simples.Robotics.Mechanisms
             get { return joint.Transform; }
         }
 
-        public Link(Joint joint, OrientedBoundingBox boudingBox)
+        public Link()
+        {
+            this.boundingBoxList = new List<OrientedBoundingBox>();
+        }
+
+        public Link(Joint joint)
         {
             this.joint = joint;
-            this.boundingBox = boudingBox;
+            this.boundingBoxList = new List<OrientedBoundingBox>();
+        }
+
+        public void AddBoundingBox(OrientedBoundingBox boudingBox)
+        {
+            boundingBoxList.Add(boudingBox);
+        }
+
+        public bool Intersects(OrientedBoundingBox other)
+        {
+            foreach (OrientedBoundingBox obb in boundingBoxList)
+            {
+                obb.Transforms = Transform * obb.BoxTransform;
+                if (obb.Intersects(other))
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Simples.Robotics.Mechanisms
 {
+    [Serializable]
     public class RevoluteJoint: Joint
     {
         #region Property:Axis
