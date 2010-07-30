@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
+using JigLibX.Geometry;
+using JigLibX.Collision;
 
 namespace Simples.Simulation.Planar2D
 {
@@ -13,7 +15,7 @@ namespace Simples.Simulation.Planar2D
     {
         private ICamera _camera;
 
-        private List<OrientedBoundingBox> _obstacleList;
+        private List<OrientedBoundingBox> obstacleList;
         private List<Matrix> _boxes;
         private Model _boxModel;
         
@@ -24,7 +26,7 @@ namespace Simples.Simulation.Planar2D
             this._boxModel = game.Content.Load<Model>("cube"); ;
             this._camera = camera;
 
-            _obstacleList = new List<OrientedBoundingBox>();
+            obstacleList = new List<OrientedBoundingBox>();
             _boxes = new List<Matrix>();
 
             createBox(180, 0, 10);
@@ -39,7 +41,7 @@ namespace Simples.Simulation.Planar2D
 
         public List<OrientedBoundingBox> BoundingBoxList
         {
-            get { return _obstacleList; }
+            get { return obstacleList; }
         }
 
         private void createBox(float X, float Y, float Z)
@@ -48,22 +50,22 @@ namespace Simples.Simulation.Planar2D
             
             Matrix matrix = Matrix.CreateWorld(origin, Vector3.Backward, Vector3.Up);
             _boxes.Add(matrix);
-
+            
             Vector3 min = new Vector3(0, 0, -50);
             Vector3 max = new Vector3(50, 50, 0);
 
             OrientedBoundingBox bb = new OrientedBoundingBox(min, max);
             bb.Transforms = matrix;
-            _obstacleList.Add(bb);
+            obstacleList.Add(bb);
         }
 
         public bool isColliding(Mechanism mechanism)
         {
             foreach (Link link in mechanism.Links)
             {
-                foreach (OrientedBoundingBox sceneBb in _obstacleList)
+                foreach (OrientedBoundingBox sceneBb in obstacleList)
                 {
-                    if (link.BoundingBox.Intersects(sceneBb))
+                    if (link.Intersects(sceneBb))
                     {
                         return true;
                     }

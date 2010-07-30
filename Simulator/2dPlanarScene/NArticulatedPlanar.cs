@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -12,8 +14,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using System.Runtime.Serialization;
 using Simples.Robotics.Mechanisms;
 using Simples.Scene.Camera;
+
 
 
 namespace Simples.Simulation.Planar2D
@@ -43,9 +47,17 @@ namespace Simples.Simulation.Planar2D
             this.content = new ContentManager(service, "Content");
             this.linkModel = content.Load<Model>("model1");
             this.camera = camera;
-            this.mechanism = new Mechanism();
+            
             this.world = world;
             this.linkTranslation = linkTranslation;
+
+            this.mechanism = new Mechanism();
+            /*
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream("c:\\teste.xml", FileMode.Open);
+            this.mechanism = bf.Deserialize(fs) as Mechanism;    
+            */
+            
 
             RevoluteJoint nextJoint = new RevoluteJoint(world, 0, world.Up);
             mechanism.Joints.Add(nextJoint);
@@ -57,8 +69,9 @@ namespace Simples.Simulation.Planar2D
                 Vector3 min = new Vector3(-13, -8, -13);
                 Vector3 max = new Vector3(123, 8, 13);
 
+                Link link = new Link(nextJoint);
                 OrientedBoundingBox obb = new OrientedBoundingBox(min, max);
-                Link link = new Link(nextJoint, obb);
+                link.AddBoundingBox(obb);
                 mechanism.Links.Add(link);
                 if (i != linkCount - 1)
                 {
@@ -66,6 +79,12 @@ namespace Simples.Simulation.Planar2D
                     mechanism.Joints.Add(nextJoint);
                 }                
             }
+            
+            FileStream fs = new FileStream("c:\\3planar.rob", FileMode.Create);
+            BinaryFormatter bf = new BinaryFormatter();
+
+            bf.Serialize(fs, mechanism);
+            fs.Close();
         }
 
         public void Draw(GameTime gameTime)

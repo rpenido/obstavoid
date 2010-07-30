@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Simples.Robotics.Mechanisms
 {
+    [Serializable]
     public class OrientedBoundingBox
     {
 
@@ -25,6 +26,7 @@ namespace Simples.Robotics.Mechanisms
         protected Vector3 center;
         protected Vector3 extents;
         protected Matrix transforms = Matrix.Identity;
+        protected Matrix boxTransform = Matrix.Identity;
 
         public OrientedBoundingBox()
         {
@@ -66,6 +68,12 @@ namespace Simples.Robotics.Mechanisms
         {
             get { return transforms; }
             set { transforms = value; }
+        }
+
+        public Matrix BoxTransform
+        {
+            get { return boxTransform; }
+            set { boxTransform = value; }
         }
 
         //======================================================================

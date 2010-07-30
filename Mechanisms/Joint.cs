@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Xml.Serialization;
 
 namespace Simples.Robotics.Mechanisms
 {
+    [Serializable]
     public class Joint
     {
         protected Matrix world;
@@ -13,7 +15,11 @@ namespace Simples.Robotics.Mechanisms
         protected Vector3 position;
         
         protected bool calcPending;
-        
+        public void setPending()
+        {
+            calcPending = true;
+        }
+
         #region Property:Value
         protected double value;
 
@@ -58,6 +64,10 @@ namespace Simples.Robotics.Mechanisms
         }
         #endregion
 
+        public Joint()
+        {
+        }
+
         public Joint(Link parentLink, Vector3 position)
         {
             this.parentLink = parentLink;
@@ -75,9 +85,6 @@ namespace Simples.Robotics.Mechanisms
             this.world = world;
         }
 
-        public void setPending()
-        {
-            calcPending = true;
-        }
+
     }
 }
