@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampledBased.Util;
-using Simples.SampledBased.ObstacleSpace;
+using Simples.SampledBased;
 
-namespace Simples.SampledBased.ConfigurationSpace
+namespace Simples.SampledBased
 {
 
     public class ExplorationTree
@@ -25,6 +24,20 @@ namespace Simples.SampledBased.ConfigurationSpace
             this.edgeList = new List<Edge>();
 
             nodeList.Add(node);
+        }
+
+        ~ExplorationTree()
+        {
+            foreach (Node node in nodeList)
+            {
+                node.Dispose();
+            }
+
+            foreach (Edge edge in edgeList)
+            {
+                edge.Dispose();
+            }
+
         }
 
         public static double getProjection(double[] p, Edge edge)
@@ -208,7 +221,7 @@ namespace Simples.SampledBased.ConfigurationSpace
             return growTree(T, new Node(p));
         }
 
-        public void generatePath(double[] origin, double[] dest,
+        public int generatePath(double[] origin, double[] dest,
             out Node originNode, out Node destNode)
         {
             originNode = new Node(origin);
@@ -229,8 +242,8 @@ namespace Simples.SampledBased.ConfigurationSpace
 
             ExplorationTree T1 = startTree;
             ExplorationTree T2 = goalTree;
-
-            for (int i = 0; i < k; i++)
+            int i;
+            for (i = 0; i < k; i++)
             {
                 qs = growTree(T1);
                 qs2 = growTree(T2, qs);
@@ -251,6 +264,7 @@ namespace Simples.SampledBased.ConfigurationSpace
 
 
             A_Star(originNode, destNode);
+            return i;
         }
 
     }

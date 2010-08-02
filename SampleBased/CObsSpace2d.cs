@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Simples.SampledBased.ObstacleSpace
+namespace Simples.SampledBased
 {
     public class CObsSpace2d : CObsSpace
     {

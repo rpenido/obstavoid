@@ -8,7 +8,7 @@
     <ProjectGuid>{C727D54D-3FBD-4572-9652-49AB1B59916F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SampleBased</RootNamespace>
+    <RootNamespace>Simples.SampleBased</RootNamespace>
     <AssemblyName>SampleBased</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,6 +53,7 @@
     <Compile Include="Edge.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RRTOptimizer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

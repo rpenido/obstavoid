@@ -13,9 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-using Simples.SampledBased.ConfigurationSpace;
-using Simples.SampledBased.ObstacleSpace;
-using Simples.SampledBased.Util;
+using Simples.SampledBased;
 using Simples.Simulation.Planar2D;
 
 namespace WindowsGame1
@@ -254,6 +252,19 @@ namespace WindowsGame1
                     resultForm.Dest = dest;
                 }
             }
+            if (state.IsKeyDown(Keys.F3))
+            {
+                if (flag == false)
+                {
+                    flag = true;
+                    optmize();
+                }
+            }
+            else
+            {
+                flag = false;
+            }
+
             if (state.IsKeyDown(Keys.F5))
             {
                 if (flag == false)
@@ -266,6 +277,20 @@ namespace WindowsGame1
             {
                 flag = false;
             }
+
+            if (state.IsKeyDown(Keys.F4))
+            {
+                if (flag == false)
+                {
+                    flag = true;
+                    move();
+                }
+            }
+            else
+            {
+                flag = false;
+            }
+          
 
             if (state.IsKeyDown(Keys.F9))
             {
@@ -335,6 +360,46 @@ namespace WindowsGame1
             cSpace.SetData<Color>(colorData);
              * */
         }
+        private void optmize()
+        {
+            CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
+            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest);
+        }
+
+        private void move()
+        {
+            controller = new NArticulatedPlanarController(robot);
+            controller.Clear();
+            robot.Mechanism.Joints[0].Value = dest[0];
+            robot.Mechanism.Joints[1].Value = dest[1];
+            robot.Mechanism.Joints[2].Value = dest[2];
+            //controller.AddPoint(new double[] {90, 328, 24});
+            
+            controller.AddPoint(new double[] { 121.16, 316.06, 19.78 });
+            controller.AddPoint(new double[] { 143, 233.87, 127.61 });
+            controller.AddPoint(new double[] { 124, 191, 99 });
+            controller.AddPoint(new double[] { 116, 184, 61 });
+            controller.AddPoint(new double[] { 64, 287, 50 });
+            controller.AddPoint(new double[] { 62, 292, 48 });
+            controller.AddPoint(new double[] { 61, 293, 48 });
+            controller.AddPoint(new double[] { 61, 295, 47 });
+            controller.AddPoint(new double[] { 34, 334, 48 });
+            
+            controller.AddPoint(new double[] { 90, 328, 24 });
+            controller.AddPoint(new double[] { 116.82, 272.72, 048.88 });
+            controller.AddPoint(new double[] { 155.69, 192.62, 084.94 });
+            controller.AddPoint(new double[] { 112, 171, 84 });
+            controller.AddPoint(new double[] { 46, 323, 55 });
+            controller.AddPoint(new double[] { 46, 324, 55 });
+            controller.AddPoint(new double[] { 41, 333, 52});
+            controller.AddPoint(new double[] { 41, 334, 53 });
+            controller.AddPoint(new double[] { 34, 334, 48 });
+            
+            
+            controller.running = true;
+
+       
+        }
         private void calc()
         {
             controller = new NArticulatedPlanarController(robot);
@@ -343,7 +408,7 @@ namespace WindowsGame1
 
             // Inicializa parâmetros
             int k = 50;
-
+            
             CSpaceRRT tst = new CSpaceRRT(3, new double[] {360, 360, 360}, cObsSpace, k);
 
             Node originNode;
