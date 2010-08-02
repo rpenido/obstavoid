@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Simples.Robotics.Mechanisms;
-using Simples.SampledBased.ObstacleSpace;
+using Simples.SampledBased;
 
 
 namespace Simples.Simulation.Planar2D

@@ -6,8 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-using JigLibX.Geometry;
-using JigLibX.Collision;
 
 namespace Simples.Simulation.Planar2D
 {

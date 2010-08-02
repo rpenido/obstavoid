@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml;
 using System.Xml.Serialization;
-using JigLibX.Geometry;
 
 namespace Simples.Robotics.Mechanisms
 {

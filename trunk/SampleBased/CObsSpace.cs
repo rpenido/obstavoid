@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampledBased.Util;
+using Simples.SampledBased;
 
-namespace Simples.SampledBased.ObstacleSpace
+namespace Simples.SampledBased
 {
 
     public class CObsSpace

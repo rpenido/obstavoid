@@ -80,11 +80,11 @@ namespace Simples.Simulation.Planar2D
                 }                
             }
             
-            FileStream fs = new FileStream("c:\\3planar.rob", FileMode.Create);
-            BinaryFormatter bf = new BinaryFormatter();
+            //FileStream fs = new FileStream("c:\\3planar.rob", FileMode.Create);
+            //BinaryFormatter bf = new BinaryFormatter();
 
-            bf.Serialize(fs, mechanism);
-            fs.Close();
+            //bf.Serialize(fs, mechanism);
+            //fs.Close();
         }
 
         public void Draw(GameTime gameTime)
