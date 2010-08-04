@@ -7,7 +7,7 @@ using Simples.SampledBased;
 namespace Simples.SampledBased
 {
 
-    public class CObsSpace
+    public abstract class CObsSpace: ICloneable
     {
         protected int dimensionCount;
         protected double[] dimensionSize;
@@ -107,7 +107,7 @@ namespace Simples.SampledBased
             return new Edge(node1, node2, dist, state);
         }
 
-
+        public abstract object Clone();
     }
 
 

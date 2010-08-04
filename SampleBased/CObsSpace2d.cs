@@ -20,5 +20,10 @@ namespace Simples.SampledBased
 
         }
 
+        public override object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
