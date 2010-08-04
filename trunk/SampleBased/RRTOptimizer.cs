@@ -30,7 +30,7 @@ namespace Simples.SampledBased
 
         private double minDist = double.PositiveInfinity;
         private ExplorationTree t1, t2;
-        private Node bestDestNode;
+        public Node bestDestNode;
         private int threadCount;
         private Semaphore semaphore;
 
@@ -83,14 +83,17 @@ namespace Simples.SampledBased
         {
             while (true)
             {
-                if (semaphore.WaitOne(500))
+                if (stopEvent.WaitOne(0))
+                {
+                    break;
+                }
+                else if (semaphore.WaitOne(0))
                 {
                     ThreadPool.QueueUserWorkItem(new WaitCallback(Calc));
                 }
-
-                if (stopEvent.WaitOne(500))
+                else
                 {
-                    break;
+                    Thread.Sleep(500);
                 }
             }
         }
@@ -121,10 +124,11 @@ namespace Simples.SampledBased
                         bestDestNode = destNode;
                         t1 = RRT.startTree;
                         t2 = RRT.goalTree;
+                        //sw.WriteLine(iterations.ToString() + ";" + distance.ToString());
+                        //sw.Flush();
                     }
                     //results.Add(new Result(iterations, distance));
-                    sw.WriteLine(iterations.ToString() + ";" + distance.ToString());
-                    sw.Flush();
+
                 }
             }
 
@@ -132,6 +136,7 @@ namespace Simples.SampledBased
             {
                 mechanismStack.Push(cObsSpace);
             }
+          
             int tst = semaphore.Release();
             tst += 0;
          
@@ -140,6 +145,7 @@ namespace Simples.SampledBased
 
         public void Start()
         {
+            loopThread = new Thread(calcLoop);
             loopThread.Start();
         }
 
@@ -151,7 +157,7 @@ namespace Simples.SampledBased
                 semaphore.WaitOne();
             }
             loopThread.Join();
-            semaphore.Release(3);
+            semaphore.Release(threadCount);
             stopEvent.Reset();
         }
 

@@ -50,7 +50,8 @@ namespace WindowsGame1
 
         private double[] origin = new double[3] { 34, 334, 48 };
         private double[] dest = new double[3] { 90, 328, 24 };
-        bool flag;
+        bool flagOptmize;
+        bool flagMove;
 
         public Game1()
         {
@@ -189,7 +190,7 @@ namespace WindowsGame1
                 robot.Mechanism.Joints[2].Value -= _STEP;
                 setPending(2, robot.Mechanism.Joints);
             }
-
+            /*
             if (state.IsKeyDown(Keys.D7))
             {
                 robot.Mechanism.Joints[3].Value += _STEP;
@@ -211,7 +212,7 @@ namespace WindowsGame1
                 robot.Mechanism.Joints[4].Value -= _STEP;
                 setPending(4, robot.Mechanism.Joints);
             }
-
+            */
             if (reset)
             {
                 oldMouseX = mState.X;
@@ -255,30 +256,30 @@ namespace WindowsGame1
              */
             if (state.IsKeyDown(Keys.F3))
             {
-                if (flag == false)
+                if (flagOptmize == false)
                 {
-                    flag = true;
+                    flagOptmize = true;
                     optmize();
                 }
             }
             else
             {
-                flag = false;
+                flagOptmize = false;
             }
             /*
             if (state.IsKeyDown(Keys.F4))
             {
-                if (flag == false)
+                if (flagMove == false)
                 {
-                    flag = true;
+                    flagMove = true;
                     move();
                 }
             }
             else
             {
-                flag = false;
+                flagMove = false;
             }
-
+            
             if (state.IsKeyDown(Keys.F5))
             {
                 if (flag == false)
@@ -364,9 +365,9 @@ namespace WindowsGame1
         private void optmize()
         {
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest, 4);
-
-            OptmizeForm form = new OptmizeForm(opt);
+            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest, 10);
+            controller = new NArticulatedPlanarController(robot);
+            OptmizeForm form = new OptmizeForm(opt, controller);
             form.Show();
         }
 

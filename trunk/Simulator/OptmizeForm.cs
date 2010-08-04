@@ -8,44 +8,36 @@ using System.Text;
 using System.Windows.Forms;
 using AForge.Controls;
 using Simples.SampledBased;
+using Simples.Simulation.Planar2D;
 
 namespace WindowsGame1
 {
     public partial class OptmizeForm : Form
     {
         private RRTOptimizer optmizer;
-        double[,] values = new double[50, 2];
-        
-        public OptmizeForm(RRTOptimizer optmizer)
+        private List<double> results;
+        private NArticulatedPlanarController controller;
+
+        public OptmizeForm(RRTOptimizer optmizer, NArticulatedPlanarController controller)
         {
             this.optmizer = optmizer;
+            results = new List<double>();
+            this.controller = controller;
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-          
-      
         }
 
         private void OptmizeForm_Load(object sender, EventArgs e)
         {
-            chart1.AddDataSeries("Test", Color.Blue, Chart.SeriesType.ConnectedDots, 2, false);
-            for (int i = 0; i < 50; i++)
-            {
-                values[i, 0] = i;
-               
-            }
-            chart1.RangeX.Max = 50;
-            chart1.RangeX.Min = 0;
+            chart1.AddDataSeries("Test", Color.Blue, Chart.SeriesType.Line, 1, false);
+     
             chart1.RangeY.Max = 1200;
-            chart1.RangeY.Min = 0;
+            chart1.RangeY.Min = 400;
 
-            chart1.UpdateDataSeries("Test", values);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            results.Clear();
             optmizer.Start();
             btnStart.Enabled = false;
             btnStop.Enabled = true;
@@ -62,14 +54,42 @@ namespace WindowsGame1
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            double minDist = optmizer.MinDist;
             
-            for (int i = 1; i < values.Length/2; i++)
-            {
-                values[i - 1,1] = values[i,1];
-            }
+            results.Add(Math.Min(minDist, 1000));
+            double[,] values = new double[results.Count, 2];
 
-            values[49, 1] = Math.Min(optmizer.MinDist, 1000);
+            for (int i = 0; i < results.Count; i++)
+            {
+                values[i,0] = i;
+                values[i,1] = results[i];
+            }
+            chart1.RangeX.Max = results.Count;
+            
+            label1.Text = minDist.ToString("0.00");
+
+            
             chart1.UpdateDataSeries("Test", values);
+        }
+
+        private void OptmizeForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            optmizer.Stop();            
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            Node previousNode;
+            Node currentNode = optmizer.bestDestNode;
+
+            controller.Clear();
+            while (currentNode != null)
+            {
+                controller.AddPoint(currentNode.p);
+                previousNode = currentNode;
+                currentNode = currentNode.aCameFrom;
+            }
+            controller.running = true;
         }
     }
 }
