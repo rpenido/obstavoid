@@ -231,7 +231,7 @@ namespace WindowsGame1
                 oldMouseX = mState.X;
                 oldMouseY = mState.Y;
             }
-
+            /*
             if (state.IsKeyDown(Keys.F1))
             {
                 origin[0] = robot.Mechanism.Joints[0].Value;
@@ -252,12 +252,26 @@ namespace WindowsGame1
                     resultForm.Dest = dest;
                 }
             }
+             */
             if (state.IsKeyDown(Keys.F3))
             {
                 if (flag == false)
                 {
                     flag = true;
                     optmize();
+                }
+            }
+            else
+            {
+                flag = false;
+            }
+            /*
+            if (state.IsKeyDown(Keys.F4))
+            {
+                if (flag == false)
+                {
+                    flag = true;
+                    move();
                 }
             }
             else
@@ -278,20 +292,6 @@ namespace WindowsGame1
                 flag = false;
             }
 
-            if (state.IsKeyDown(Keys.F4))
-            {
-                if (flag == false)
-                {
-                    flag = true;
-                    move();
-                }
-            }
-            else
-            {
-                flag = false;
-            }
-          
-
             if (state.IsKeyDown(Keys.F9))
             {
                 if (flag == false)
@@ -305,6 +305,7 @@ namespace WindowsGame1
                 flag = false;
             }
             aa();
+            */
 
         }
         private void obs()
@@ -363,7 +364,10 @@ namespace WindowsGame1
         private void optmize()
         {
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest);
+            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest, 4);
+
+            OptmizeForm form = new OptmizeForm(opt);
+            form.Show();
         }
 
         private void move()

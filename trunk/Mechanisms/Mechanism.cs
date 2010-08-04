@@ -48,7 +48,6 @@ namespace Simples.Robotics.Mechanisms
             MemoryStream ms = new MemoryStream();
             bf.Serialize(ms, this);
             ms.Seek(0, SeekOrigin.Begin);
-            ms.Close();
             return bf.Deserialize(ms);               
         }
 

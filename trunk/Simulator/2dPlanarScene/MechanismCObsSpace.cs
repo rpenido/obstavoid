@@ -35,5 +35,12 @@ namespace Simples.Simulation.Planar2D
             return scene.isColliding(mechanism);
         }
 
+        public override object Clone()
+        {
+            Mechanism cloneMechanism = (Mechanism)mechanism.Clone();
+            MechanismCObsSpace cObsSpace = new MechanismCObsSpace(cloneMechanism, scene);
+            return cObsSpace;
+        }
+
     }
 }
