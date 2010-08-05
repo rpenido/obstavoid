@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampledBased;
+using Simples.SampleBased;
 
-namespace Simples.SampledBased
+namespace Simples.SampleBased
 {
 
     public abstract class CObsSpace: ICloneable
@@ -67,7 +67,7 @@ namespace Simples.SampledBased
                 for (int j = 0; j < p.Length; j++)
                 {
                     double dimValue = node1.p[j] + (node2.p[j] - node1.p[j]) * stepPercent;
-                    p[j] = (int)dimValue;
+                    p[j] = dimValue;
                 }
 
                 collision = CheckCollision(p);

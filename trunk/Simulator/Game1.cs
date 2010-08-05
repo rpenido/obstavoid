@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
 using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
-using Simples.SampledBased;
+using Simples.SampleBased;
 using Simples.Simulation.Planar2D;
 
 namespace WindowsGame1

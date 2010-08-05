@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Simples.SampledBased
+namespace Simples.SampleBased
 {
     class EdgeComparer : IComparer<Edge>
     {
@@ -56,10 +56,7 @@ namespace Simples.SampledBased
             this.state = state;
 
             this.vector = new double[node1.p.Length];
-            for (int i = 0; i < node1.p.Length; i++)
-            {
-                vector[i] = (node2.p[i] - node1.p[i]) / dist;
-            }
+            calcVector();
 
             double check0 = Math.Sqrt(Math.Pow(node1.p[0] - node2.p[0], 2) + Math.Pow(node1.p[1] - node2.p[1], 2));
             double check = Math.Sqrt(Math.Pow(vector[0], 2) + Math.Pow(vector[1], 2));
@@ -70,6 +67,18 @@ namespace Simples.SampledBased
         {
             node1 = null;
             node2 = null;
+
+        }
+        public void calcVector()
+        {
+            for (int i = 0; i < node1.p.Length; i++)
+            {
+                vector[i] = (node2.p[i] - node1.p[i]) / dist;
+                if (double.IsNaN(vector[i]))
+                {
+                    vector[i] = -1;
+                }
+            }
 
         }
 

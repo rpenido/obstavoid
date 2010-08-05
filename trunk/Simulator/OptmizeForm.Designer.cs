@@ -35,6 +35,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.btnRun = new System.Windows.Forms.Button();
+            this.btnSmooth = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // chart1
@@ -44,14 +45,14 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.chart1.Location = new System.Drawing.Point(12, 12);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(260, 191);
+            this.chart1.Size = new System.Drawing.Size(464, 193);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStart.Location = new System.Drawing.Point(116, 227);
+            this.btnStart.Location = new System.Drawing.Point(12, 229);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 3;
@@ -63,7 +64,7 @@
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(197, 227);
+            this.btnStop.Location = new System.Drawing.Point(93, 229);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 4;
@@ -87,7 +88,7 @@
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(12, 227);
+            this.btnRun.Location = new System.Drawing.Point(401, 229);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 6;
@@ -95,11 +96,22 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
+            // btnSmooth
+            // 
+            this.btnSmooth.Location = new System.Drawing.Point(174, 229);
+            this.btnSmooth.Name = "btnSmooth";
+            this.btnSmooth.Size = new System.Drawing.Size(75, 23);
+            this.btnSmooth.TabIndex = 7;
+            this.btnSmooth.Text = "Suavizar";
+            this.btnSmooth.UseVisualStyleBackColor = true;
+            this.btnSmooth.Click += new System.EventHandler(this.btnSmooth_Click);
+            // 
             // OptmizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(488, 264);
+            this.Controls.Add(this.btnSmooth);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnStop);
@@ -122,5 +134,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.Button btnSmooth;
     }
 }
