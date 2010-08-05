@@ -36,7 +36,7 @@ namespace WindowsGame1
 
         private static float _STEP = 1;
         
-        //private Model cube;
+        private Model teste;
 
         private NArticulatedPlanar robot;
 
@@ -102,6 +102,7 @@ namespace WindowsGame1
 
             //linkModel = Content.Load<Model>("model1");
             //cube = Content.Load<Model>("cube");
+            teste = Content.Load<Model>("Teste");
         }
 
         /// <summary>
@@ -495,9 +496,27 @@ namespace WindowsGame1
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
-
             scene.Draw(gameTime);
             robot.Draw(gameTime);
+
+
+            Matrix[] transforms = new Matrix[teste.Bones.Count];
+            teste.CopyBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in teste.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = _camera.View;
+
+                    effect.Projection = _camera.Projection;
+                    effect.World = transforms[mesh.ParentBone.Index];
+                }
+                mesh.Draw();
+            }        
+
             /*
             if (resultForm != null)
                 resultForm.Draw(gameTime);

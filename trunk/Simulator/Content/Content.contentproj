@@ -58,6 +58,19 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ContentPipelineSTLImporter\ContentPipelineSTLImporter.csproj">
+      <Project>{F06CCA90-B3CC-452C-B7A5-A80B119F827D}</Project>
+      <Name>ContentPipelineSTLImporter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Teste.stl">
+      <Name>Teste</Name>
+      <Importer>STLImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
