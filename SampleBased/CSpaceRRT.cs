@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampledBased;
+using Simples.SampleBased;
 
-namespace Simples.SampledBased
+namespace Simples.SampleBased
 {
 
     public class ExplorationTree

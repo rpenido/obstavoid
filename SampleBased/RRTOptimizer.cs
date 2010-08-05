@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO;
-using Simples.SampledBased;
+using Simples.SampleBased;
 
-namespace Simples.SampledBased
+namespace Simples.SampleBased
 {
     struct Result
     {
@@ -29,6 +29,7 @@ namespace Simples.SampledBased
         private double[] dest;
 
         private double minDist = double.PositiveInfinity;
+        private int noResultCount = 0;
         private ExplorationTree t1, t2;
         public Node bestDestNode;
         private int threadCount;
@@ -36,6 +37,11 @@ namespace Simples.SampledBased
         private ManualResetEvent stopEvent;
         private Thread[] threadPool;
         private CObsSpace[] mechanismPool;
+
+        public CObsSpace GetMechanism()
+        {
+            return mechanismPool[0];
+        }
 
         public double MinDist
         {
@@ -92,7 +98,6 @@ namespace Simples.SampledBased
             CSpaceRRT RRT = new CSpaceRRT(dimensionCount, dimensionSize, cObsSpace, maxIterations);
             
             Node originNode, destNode;
-
             int iterations = RRT.generatePath(origin, dest, out originNode, out destNode);
 
             double distance = destNode.aTotalDist;
@@ -104,6 +109,7 @@ namespace Simples.SampledBased
                     {
                         minDist = distance;
                         maxIterations = iterations;
+                        noResultCount = 0;
                         bestDestNode = destNode;
                         t1 = RRT.startTree;
                         t2 = RRT.goalTree;
@@ -112,6 +118,17 @@ namespace Simples.SampledBased
                     }
                     //results.Add(new Result(iterations, distance));
 
+                }
+            }
+            else
+            {
+                lock (sw)
+                {
+                    noResultCount++;
+                    if (noResultCount > 50)
+                    {
+                        maxIterations *= 2;
+                    }                    
                 }
             }
 
@@ -135,6 +152,7 @@ namespace Simples.SampledBased
             }
             stopEvent.Reset();
         }
+
 
         
     }

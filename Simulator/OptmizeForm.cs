@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using AForge.Controls;
-using Simples.SampledBased;
+using Simples.SampleBased;
 using Simples.Simulation.Planar2D;
 
 namespace WindowsGame1
@@ -90,6 +90,33 @@ namespace WindowsGame1
                 currentNode = currentNode.aCameFrom;
             }
             controller.running = true;
+        }
+
+        private void btnSmooth_Click(object sender, EventArgs e)
+        {
+            /*
+            double[] p1 = new double[2]{0,0};
+            double[] p2 = new double[2]{0,1};
+            double[] p3 = new double[2]{1,1};
+            //double[] p4 = new double[2]{1,0};
+
+            Node node1 = new Node(p1);
+            
+            Node node2 = new Node(p2);
+            node2.aCameFrom = node1;
+            
+            Node node3 = new Node(p3);
+            node3.aCameFrom = node2;
+            
+            List<Edge> edgeList = new List<Edge>();
+            edgeList.Add(new Edge(node1, node2, 1, EdgeState.Free));
+            edgeList.Add(new Edge(node2, node3, 1, EdgeState.Free));
+            */
+            for (int i = 0; i < 1000; i++)
+            {
+                PathSmoothing.Smooth(optmizer.bestDestNode, optmizer.GetMechanism());
+            }
+                label1.Text = optmizer.bestDestNode.aTotalDist.ToString("0.00");
         }
     }
 }
