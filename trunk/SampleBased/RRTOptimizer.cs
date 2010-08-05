@@ -32,11 +32,10 @@ namespace Simples.SampledBased
         private ExplorationTree t1, t2;
         public Node bestDestNode;
         private int threadCount;
-        private Semaphore semaphore;
 
         private ManualResetEvent stopEvent;
-        private Thread loopThread;
-        private Stack<CObsSpace> mechanismStack;
+        private Thread[] threadPool;
+        private CObsSpace[] mechanismPool;
 
         public double MinDist
         {
@@ -45,8 +44,6 @@ namespace Simples.SampledBased
                     return minDist;
             }
         }
-
-        //private List<Result> results = new List<Result>();
 
         private FileStream fs;
         private StreamWriter sw;
@@ -60,26 +57,21 @@ namespace Simples.SampledBased
             this.dest = dest;
 
             this.threadCount = threadCount;
-           
+            this.threadPool = new Thread[threadCount];
+            this.mechanismPool = new CObsSpace[threadCount];
 
             fs = new FileStream("result.csv", FileMode.Append);
             sw = new StreamWriter(fs);
 
-            mechanismStack = new Stack<CObsSpace>(threadCount);
+            stopEvent = new ManualResetEvent(false);
 
             for (int i = 0; i < threadCount; i++)
             {
-                mechanismStack.Push(cObsSpace.Clone() as CObsSpace);
+                mechanismPool[i] = cObsSpace.Clone() as CObsSpace;          
             }
-
-            stopEvent = new ManualResetEvent(false);
-            semaphore = new Semaphore(threadCount, threadCount);
-            loopThread = new Thread(calcLoop);
-         
-         
         }
 
-        private void calcLoop()
+        private void calcLoop(object cObsSpace)
         {
             while (true)
             {
@@ -87,24 +79,15 @@ namespace Simples.SampledBased
                 {
                     break;
                 }
-                else if (semaphore.WaitOne(0))
-                {
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(Calc));
-                }
                 else
                 {
-                    Thread.Sleep(500);
+                    calc(cObsSpace as CObsSpace);
                 }
             }
         }
 
-        private void Calc(Object stateInfo)
+        private void calc(CObsSpace cObsSpace)
         {
-            CObsSpace cObsSpace;
-            lock (mechanismStack)
-            {
-                cObsSpace = mechanismStack.Pop();
-            }
 
             CSpaceRRT RRT = new CSpaceRRT(dimensionCount, dimensionSize, cObsSpace, maxIterations);
             
@@ -132,21 +115,15 @@ namespace Simples.SampledBased
                 }
             }
 
-            lock (mechanismStack)
-            {
-                mechanismStack.Push(cObsSpace);
-            }
-          
-            int tst = semaphore.Release();
-            tst += 0;
-         
-
         }
 
         public void Start()
         {
-            loopThread = new Thread(calcLoop);
-            loopThread.Start();
+            for (int i = 0; i < threadCount; i++ )
+            {
+                threadPool[i] = new Thread(calcLoop);
+                threadPool[i].Start(mechanismPool[i]);
+            }
         }
 
         public void Stop()
@@ -154,10 +131,8 @@ namespace Simples.SampledBased
             stopEvent.Set();
             for (int i = 0; i < threadCount; i++)
             {
-                semaphore.WaitOne();
+                threadPool[i].Join();
             }
-            loopThread.Join();
-            semaphore.Release(threadCount);
             stopEvent.Reset();
         }
 
