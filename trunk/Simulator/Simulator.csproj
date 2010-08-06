@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="2dPlanarScene\GenericEnviroment.cs" />
     <Compile Include="2dPlanarScene\MechanismCObsSpace.cs" />
     <Compile Include="2dPlanarScene\NArticulatedPlanar.cs" />
     <Compile Include="2dPlanarScene\NArticulatedPlanarController.cs" />

@@ -1,31 +1,43 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Simples.Scene.Camera;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
+using Microsoft.Xna.Framework.Storage;
 using Simples.Robotics.Mechanisms;
-using System.Runtime.InteropServices;
+using Simples.Scene.Camera;
 
-namespace Simples.Simulation.Planar2D
+
+namespace Simples.Simulation
 {
-
-    public class SceneBoxes: DrawableGameComponent
+    [Serializable]
+    public class GenericEnviroment
     {
-        private ICamera _camera;
-
         private List<OrientedBoundingBox> obstacleList;
         private List<Matrix> _boxes;
-        private Model _boxModel;
-        
 
-        public SceneBoxes(Game game, ICamera camera)
-            :base(game)
+        [NonSerialized]
+        private Model sceneModel;
+
+        private string modelName;
+        public string ModelName
+        {
+            get { return modelName; }
+            set {
+                modelName = value;
+                //sceneModel =                     game.Content.Load<Model>(modelName); ;
+            }
+        }
+
+        public GenericEnviroment(Game game, string modelName)
         {
             
-            this._boxModel = game.Content.Load<Model>("teste"); ;
-            this._camera = camera;
 
             obstacleList = new List<OrientedBoundingBox>();
             _boxes = new List<Matrix>();
@@ -37,7 +49,6 @@ namespace Simples.Simulation.Planar2D
             createBox(-200, 0, -100);
 
             createBox(100, 0, 100);
-
         }
 
         public List<OrientedBoundingBox> BoundingBoxList
@@ -48,10 +59,10 @@ namespace Simples.Simulation.Planar2D
         private void createBox(float X, float Y, float Z)
         {
             Vector3 origin = new Vector3(X, Y, Z);
-            
+
             Matrix matrix = Matrix.CreateWorld(origin, Vector3.Backward, Vector3.Up);
             _boxes.Add(matrix);
-            
+
             Vector3 min = new Vector3(0, 0, -50);
             Vector3 max = new Vector3(50, 50, 0);
 
@@ -59,7 +70,6 @@ namespace Simples.Simulation.Planar2D
             bb.Transforms = matrix;
             obstacleList.Add(bb);
         }
-
         public bool isColliding(Mechanism mechanism)
         {
             foreach (Link link in mechanism.Links)
@@ -75,37 +85,33 @@ namespace Simples.Simulation.Planar2D
             return false;
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, ICamera camera)
         {
             foreach (Matrix b in _boxes)
             {
-                drawBox(b);
+                drawBox(b, camera);
             }
         }
 
-        private void drawBox(Matrix matrix)
+        private void drawBox(Matrix matrix, ICamera camera)
         {
-            Matrix[] transforms = new Matrix[_boxModel.Bones.Count];
-            _boxModel.CopyBoneTransformsTo(transforms);
-            
-            int sizeinbytes = _boxModel.Meshes[0].VertexBuffer.SizeInBytes;
-            int count = sizeinbytes/Marshal.SizeOf(Vector3.Zero);
-            Vector3[] vertices = new Vector3[count];
-            _boxModel.Meshes[0].VertexBuffer.GetData<Vector3>(vertices);
-            foreach (ModelMesh mesh in _boxModel.Meshes)
+            Matrix[] transforms = new Matrix[sceneModel.Bones.Count];
+            sceneModel.CopyBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in sceneModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
 
-                    effect.View = _camera.View;
+                    effect.View = camera.View;
 
-                    effect.Projection = _camera.Projection;
+                    effect.Projection = camera.Projection;
                     effect.World = transforms[mesh.ParentBone.Index] *
                         matrix;
                 }
                 mesh.Draw();
-            }        
+            }
         }
     }
 }

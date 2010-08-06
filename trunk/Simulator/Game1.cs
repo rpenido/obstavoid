@@ -102,7 +102,9 @@ namespace WindowsGame1
 
             //linkModel = Content.Load<Model>("model1");
             //cube = Content.Load<Model>("cube");
-            teste = Content.Load<Model>("Teste");
+            //teste = Content.Load<Model>("Teste");
+            OctreeNode oct = new OctreeNode(Vector3.Zero, Vector3.One, 0);
+            oct.Divide();
         }
 
         /// <summary>
@@ -261,6 +263,7 @@ namespace WindowsGame1
                 {
                     flagOptmize = true;
                     optmize();
+                    
                 }
             }
             else
@@ -485,21 +488,21 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (isColliding())
-            {
-                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
-            }
-            else
-            {
+            //if (isColliding())
+            //{
+            //    GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
+            //}
+            //else
+            //{
                 GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Black);
-            }
+            //}
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
             scene.Draw(gameTime);
             robot.Draw(gameTime);
 
-
+            /*
             Matrix[] transforms = new Matrix[teste.Bones.Count];
             teste.CopyBoneTransformsTo(transforms);
 
@@ -516,7 +519,7 @@ namespace WindowsGame1
                 }
                 mesh.Draw();
             }        
-
+            */
             /*
             if (resultForm != null)
                 resultForm.Draw(gameTime);
