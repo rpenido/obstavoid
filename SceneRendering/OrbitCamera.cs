@@ -13,7 +13,7 @@ namespace Simples.Scene.Camera
         public float cameraAngleY = 0f;
 
         public float Zoom = 2500;
-        private Matrix projection = Matrix.CreateOrthographic(1000, 1000, 0, 10000);
+        private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1, 1, 10000);
 
         private Matrix getView()
         {
@@ -29,7 +29,7 @@ namespace Simples.Scene.Camera
         }
 
         private Matrix getProjection()
-        {
+        {          
             return projection;
         }
 

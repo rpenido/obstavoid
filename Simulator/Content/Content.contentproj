@@ -65,8 +65,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Teste.stl">
-      <Name>Teste</Name>
+    <Compile Include="teste.stl">
+      <Name>teste</Name>
       <Importer>STLImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>

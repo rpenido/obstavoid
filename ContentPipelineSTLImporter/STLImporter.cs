@@ -36,32 +36,41 @@ namespace SceneRendering
             NodeContent root = new NodeContent();
             sr.ReadBytes(80);
             int faceCount = sr.ReadInt32();
-            
+            /***/
+            meshBuilder = MeshBuilder.StartMesh("");
+            meshBuilder.SwapWindingOrder = true;
+            /***/
+            int[] verticesIndex = new int[faceCount*3];                
             for (int i = 0; i < faceCount; i++)
-            {
-                meshBuilder = MeshBuilder.StartMesh("");
-                meshBuilder.SwapWindingOrder = true;
+            {                
+                
                 Vector3 normal = new Vector3(sr.ReadSingle(),
                     sr.ReadSingle(), sr.ReadSingle());
-                int[] verticesIndex = new int[3];                
-                for (int j = 0; j < 3; j++)
+                
+                for (int j = i*3; j < (i*3)+3; j++)
                 {
                     Vector3 vertice = new Vector3(sr.ReadSingle(),
                         sr.ReadSingle(), sr.ReadSingle());
 
-                    verticesIndex[j] = meshBuilder.CreatePosition(vertice);
-                    
+                    verticesIndex[j] = meshBuilder.CreatePosition(vertice);                    
                 }
-                for (int j = 0; j < 3; j++)
+                sr.ReadInt16();
+            }
+            for (int i = 0; i < faceCount; i++)
+            {
+                for (int j = i*3; j < (i*3)+3; j++)
                 {
                     meshBuilder.AddTriangleVertex(verticesIndex[j]);
                 }
-                
-                MeshContent mesh = meshBuilder.FinishMesh();
-                root.Children.Add(mesh);
 
-                sr.ReadInt16();
             }
+
+            MeshContent mesh = meshBuilder.FinishMesh();
+            root.Children.Add(mesh);
+
+
+                
+
 
            return root;
         }
