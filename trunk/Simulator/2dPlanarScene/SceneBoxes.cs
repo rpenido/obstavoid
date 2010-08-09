@@ -17,7 +17,7 @@ namespace Simples.Simulation.Planar2D
 
         private List<OrientedBoundingBox> obstacleList;
         private List<Matrix> _boxes;
-        private Model _boxModel;
+        public Model _boxModel;
         
 
         public SceneBoxes(Game game, ICamera camera)

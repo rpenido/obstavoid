@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using System.Collections;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Simples.Robotics.Mechanisms
 {
@@ -13,10 +14,12 @@ namespace Simples.Robotics.Mechanisms
     {
         private const int maxLevel = 1;
         private OctreeNode[] octree;
-        private List<Vector3> vertices;
+        public List<Vector3> vertices;
         private Vector3 min;
         private Vector3 max;
         private int level;
+
+        BasicEffect effect;
 
         public void AddVertice(Vector3 vertice)
         {
@@ -57,7 +60,7 @@ namespace Simples.Robotics.Mechanisms
                     }
                 }
             }
-            //
+            /*
             Vector3 childMin;
             Vector3 childMax;
             childMin = min;
@@ -129,7 +132,7 @@ namespace Simples.Robotics.Mechanisms
                 level + 1);
 
 
-
+            */
             Vector3 mid = (max + min) / 2;
             foreach (Vector3 vert in vertices)
             {
@@ -146,9 +149,73 @@ namespace Simples.Robotics.Mechanisms
             {
                 foreach (OctreeNode oct in octree)
                 {
-                    oct.Divide();
+                    //oct.Divide();
                 }
             }
+        }
+
+        public void Draw(Game game, Matrix projection, Matrix view)
+        {
+            int[] indices = new int[]
+            {
+                0, 1,
+                0, 2,
+                0, 3,
+                1, 6,
+                1, 5,
+                2, 4,
+                2, 5,
+                3, 6,
+                3, 4,
+                4, 7,
+                6, 7,
+                5, 7
+            };
+
+            VertexPositionColor[] corners = new VertexPositionColor[8];
+            corners[0] = new VertexPositionColor(min, Color.Beige);
+            corners[1] = new VertexPositionColor(new Vector3(max.X, min.Y, min.Z), Color.Red);
+            corners[2] = new VertexPositionColor(new Vector3(min.X, max.Y, min.Z), Color.Red);
+            corners[3] = new VertexPositionColor(new Vector3(min.X, min.Y, max.Z), Color.Red);
+
+            corners[4] = new VertexPositionColor(new Vector3(min.X, max.Y, max.Z), Color.Red);
+            corners[5] = new VertexPositionColor(new Vector3(max.X, max.Y, min.Z), Color.Red);
+
+            corners[6] = new VertexPositionColor(new Vector3(max.X, min.Y, max.Z), Color.Red);
+
+            corners[7] = new VertexPositionColor(max, Color.Red);
+
+            if (effect == null)
+            {
+                effect = new BasicEffect(game.GraphicsDevice, null);
+
+                effect.World = Matrix.Identity;
+                
+                effect.VertexColorEnabled = true;
+                effect.LightingEnabled = true;
+               
+            }
+            effect.View = view;
+            effect.Projection = projection;
+            VertexPositionColor[] edges = new VertexPositionColor[24];
+           
+            
+            
+            effect.Begin();
+            foreach (EffectPass p in effect.CurrentTechnique.Passes)
+            {
+                p.Begin();
+                game.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
+                                 PrimitiveType.LineList,
+                                 corners,
+                                 0,
+                                 8,
+                                 indices,
+                                 0,
+                                 indices.Length / 2);                    
+                p.End();
+            }
+            effect.End();
         }
 
 

@@ -15,6 +15,7 @@ using Simples.Scene.Camera;
 using Simples.Robotics.Mechanisms;
 using Simples.SampleBased;
 using Simples.Simulation.Planar2D;
+using System.Runtime.InteropServices;
 
 namespace WindowsGame1
 {
@@ -52,6 +53,7 @@ namespace WindowsGame1
         private double[] dest = new double[3] { 90, 328, 24 };
         bool flagOptmize;
         bool flagMove;
+        OctreeNode oct;
 
         public Game1()
         {
@@ -87,6 +89,19 @@ namespace WindowsGame1
 
             //Debug.Assert(linkModel.Bones.Count == 2);
             robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 3, _world, _camera);
+
+            oct = new OctreeNode(new Vector3(0, -500, -500), new Vector3(200, 500, 500), 0);
+            foreach (ModelMesh mesh in scene._boxModel.Meshes)
+            {
+                int count = mesh.VertexBuffer.SizeInBytes / Marshal.SizeOf(Vector3.Up);
+                Vector3[] vertices = new Vector3[count];
+                mesh.VertexBuffer.GetData<Vector3>(vertices);
+                for (int i = 0; i < vertices.Length; i = i + 2)
+                {
+                    oct.AddVertice(vertices[i]);
+                }
+            }
+            oct.Divide();
         }
 
         /// <summary>
@@ -103,8 +118,7 @@ namespace WindowsGame1
             //linkModel = Content.Load<Model>("model1");
             //cube = Content.Load<Model>("cube");
             //teste = Content.Load<Model>("Teste");
-            OctreeNode oct = new OctreeNode(Vector3.Zero, Vector3.One, 0);
-            oct.Divide();
+           
         }
 
         /// <summary>
@@ -494,13 +508,14 @@ namespace WindowsGame1
             //}
             //else
             //{
-                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Black);
+                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.BlueViolet);
             //}
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
             scene.Draw(gameTime);
             robot.Draw(gameTime);
+            oct.Draw(this, _camera.Projection, _camera.View);
 
             /*
             Matrix[] transforms = new Matrix[teste.Bones.Count];
