@@ -38,67 +38,52 @@ namespace Simples.Simulation.Planar2D
                 {
                     if (doNotInterpolate)
                     {
-                        robot.Mechanism.Joints[2].Value = pointList[0][2];
-                        robot.Mechanism.Joints[1].Value = pointList[0][1];
-                        robot.Mechanism.Joints[0].Value = pointList[0][0];
+                        for (int i = robot.Mechanism.Joints.Count - 1; i >= 0 ; i--)
+                        {
+                            robot.Mechanism.Joints[i].Value = pointList[0][i];
+                        }
                         pointList.RemoveAt(0);
                         doNotInterpolate = false;
                     }
                     else
                     {
-
-
-                        double delta1 = pointList[0][0] - robot.Mechanism.Joints[0].Value;
-                        double delta2 = pointList[0][1] - robot.Mechanism.Joints[1].Value;
-                        double delta3 = pointList[0][2] - robot.Mechanism.Joints[2].Value;
-                        double next1;
-                        double next2;
-                        double next3;
+                        double[] delta = new double[robot.Mechanism.Joints.Count];
+                        double[] next = new double[robot.Mechanism.Joints.Count];
+                        double max = double.NegativeInfinity;
+                        int maxIndex = -1;
+                        for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
+                        {
+                            delta[i] = pointList[0][i] - robot.Mechanism.Joints[i].Value;
+                            if (Math.Abs(delta[i]) > max)
+                            {
+                                max = Math.Abs(delta[i]);
+                                maxIndex = i;
+                            }
+                        }
+                        
 
                         double factor;
-                        double max = Math.Max(Math.Abs(delta1), Math.Abs(delta2));
-                        max = Math.Max(max, Math.Abs(delta3));
-                        if (max == Math.Abs(delta1))
+                        if (Math.Abs(delta[maxIndex]) > maxIncrement)
                         {
-                            next1 = Math.Sign(delta1) * Math.Min(maxIncrement, Math.Abs(delta1));
-                            factor = next1 / delta1;
-                            next2 = delta2 * factor;
-                            next3 = delta3 * factor;
-                        }
-                        else if (max == Math.Abs(delta2))
-                        {
-                            next2 = Math.Sign(delta2) * Math.Min(maxIncrement, Math.Abs(delta2));
-                            factor = next2 / delta2;
-                            next1 = delta1 * factor;
-                            next3 = delta3 * factor;
+                            next[maxIndex] = Math.Sign(delta[maxIndex]) * maxIncrement;
+                            factor = next[maxIndex] / delta[maxIndex];
                         }
                         else
                         {
-                            next3 = Math.Sign(delta3) * Math.Min(maxIncrement, Math.Abs(delta3));
-                            factor = next3 / delta3;
-                            next1 = delta1 * factor;
-                            next2 = delta2 * factor;
+                            next[maxIndex] = delta[maxIndex];
+                            factor = 1.0;
                         }
 
-                        if ((next1 == double.NaN) || (next2 == double.NaN) || (next3 == double.NaN))
+
+
+                        for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
                         {
-                            next1 = 0;
-                            next2 = 0;
-                            next3 = 0;
+                            next[i] = delta[i] * factor;
+                            robot.Mechanism.Joints[i].Value += next[i];
                         }
 
-                        robot.Mechanism.Joints[0].Value += next1;
-                        robot.Mechanism.Joints[1].Value += next2;
-                        robot.Mechanism.Joints[2].Value += next3;
-
-                        if ((Math.Abs(robot.Mechanism.Joints[0].Value - pointList[0][0]) < 0.1) &&
-                            (Math.Abs(robot.Mechanism.Joints[1].Value - pointList[0][1]) < 0.1) &&
-                            (Math.Abs(robot.Mechanism.Joints[2].Value - pointList[0][2]) < 0.1))
+                        if (factor == 1.0)
                         {
-                            robot.Mechanism.Joints[2].Value = pointList[0][2];
-                            robot.Mechanism.Joints[1].Value = pointList[0][1];
-                            robot.Mechanism.Joints[0].Value = pointList[0][0];
-
                             pointList.RemoveAt(0);
                         }
                     }

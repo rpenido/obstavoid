@@ -44,30 +44,13 @@ namespace Simples.SampleBased
         {
             double[] pVector = new double[p.Length];
             double sum = 0;
-            double sum2 = 0;
             for (int i = 0; i < p.Length; i++)
             {
                 pVector[i] = (p[i] - edge.node1.p[i]) * edge.vector[i];
-                sum = sum + Math.Pow(pVector[i], 2);
-                sum2 += (p[i] - edge.node1.p[i]) * edge.vector[i];
+                sum += (p[i] - edge.node1.p[i]) * edge.vector[i];
             }
-/*
-            double tst = 0;
-            bool equals;
-            for (int i = 0; i < p.Length; i++)
-            {
-                tst = pVector[i] / sum;
-                if (tst == edge.vector[i])
-                {
-                    return Math.Sqrt(sum);
-                }
-                else
-                {
-                    return -Math.Sqrt(sum);
-                }
-            }
- */
-            return sum2;
+
+            return sum;
             
         }
 
@@ -165,8 +148,8 @@ namespace Simples.SampleBased
         public ExplorationTree goalTree;
         int k;
 
-        public CSpaceRRT(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace, int k)
-            : base(dimensionCount, dimensionSize, cObsSpace)
+        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace, int k)
+            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, cObsSpace)
         {
             this.k = k;
             this.sampleList = new List<double[]>();
@@ -213,9 +196,9 @@ namespace Simples.SampleBased
         {
             double[] p = new double[dimensionCount];
 
-            for (int j = 0; j < dimensionCount; j++)
+            for (int i = 0; i < dimensionCount; i++)
             {
-                p[j] = rand.NextDouble() * dimensionSize[j];
+                p[i] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
             }
 
             return growTree(T, new Node(p));

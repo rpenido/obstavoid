@@ -16,12 +16,12 @@ namespace Simples.Robotics.Mechanisms
             get { return axis; }
         }
         #endregion
-
+        /*
         #region Property:Value (Override)
         protected override void setValue(double value)
         {
             double rem = value % 360;
-            if (rem > 0)
+            if (rem >= 0)
             {
                 base.setValue(value);
             }
@@ -32,15 +32,15 @@ namespace Simples.Robotics.Mechanisms
             
         }      
         #endregion
-
+        */
 
         public double RadiansValue
         {
             get { return Math.PI * Value / 180.0; }
         }
 
-        public RevoluteJoint(Link parentLink, Vector3 position, float angle, Vector3 axis)
-            : base(parentLink, position)
+        public RevoluteJoint(Link parentLink, Vector3 position, float angle, Vector3 axis, double minValue, double maxValue)
+            : base(parentLink, position, minValue, maxValue)
         {
             this.Value = angle;
             this.axis = axis;

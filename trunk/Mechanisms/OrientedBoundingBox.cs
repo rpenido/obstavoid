@@ -139,7 +139,7 @@ namespace Simples.Robotics.Mechanisms
 
             if (r > r01)
                 return false;
-
+            */
             //--- Test case 3 # 1            
             r = Math.Abs(separation.Z * rotations[0, 1] - separation.Y * rotations[0, 2]);
             r0 = extents.Y * absRotations[0, 2] + extents.Z * absRotations[0, 1];
@@ -220,7 +220,7 @@ namespace Simples.Robotics.Mechanisms
 
             if (r > r01)
                 return false;
-             */
+             
             
             return true;  // No separating axis, then we have intersection
         }
