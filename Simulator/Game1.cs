@@ -94,7 +94,7 @@ namespace WindowsGame1
             //Debug.Assert(linkModel.Bones.Count == 2);
             robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
 
-            oct = new OctreeNode(new Vector3(0, -500, -500), new Vector3(200, 500, 500), 0);
+            oct = new OctreeNode(new Vector3(-300, 0, -300), new Vector3(300, 100, 300), 0);
             foreach (ModelMesh mesh in scene._boxModel.Meshes)
             {
                 int count = mesh.VertexBuffer.SizeInBytes / Marshal.SizeOf(Vector3.Up);
