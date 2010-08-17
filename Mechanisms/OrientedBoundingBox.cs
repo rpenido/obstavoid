@@ -115,7 +115,7 @@ namespace Simples.Robotics.Mechanisms
 
             if (r > r01)
                 return false;
-
+            /*
             //--- Test case 2 - X axis            
             r = Math.Abs(Vector3.Dot(rotations.Row(0), separation));
             r0 = Vector3.Dot(extents, absRotations.Row(0));
@@ -220,7 +220,8 @@ namespace Simples.Robotics.Mechanisms
 
             if (r > r01)
                 return false;
-
+             */
+            
             return true;  // No separating axis, then we have intersection
         }
 
