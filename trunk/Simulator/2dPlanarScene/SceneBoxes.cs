@@ -55,7 +55,7 @@ namespace Simples.Simulation.Planar2D
         {
             Vector3 origin = new Vector3(X, Y, Z);
             
-            Matrix matrix = Matrix.CreateWorld(origin, Vector3.Backward, Vector3.Up);
+            Matrix matrix = Matrix.CreateWorld(origin, Vector3.Forward, Vector3.Up);
             _boxes.Add(matrix);
             
             Vector3 min = new Vector3(0, 0, -50);

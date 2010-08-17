@@ -12,7 +12,7 @@ namespace Simples.Robotics.Mechanisms
 
     public class OctreeNode
     {
-        private const int maxLevel = 1;
+        private const int maxLevel = 5;
         private OctreeNode[] octree;
         public List<Vector3> vertices;
         private Vector3 min;
@@ -30,11 +30,14 @@ namespace Simples.Robotics.Mechanisms
         {
             this.min = min;
             this.max = max;
+            this.level = level;
             vertices = new List<Vector3>();
         }
 
         public void Divide()
         {
+            if (vertices.Count == 0)
+                return;
             /*
             if (vertices.Count == 0)
             {
@@ -50,6 +53,8 @@ namespace Simples.Robotics.Mechanisms
                 {
                     for (float z = min.Z; z < max.Z; z += step.Z)
                     {
+                        if (quadIndex > 7)
+                            break;
                         Vector3 childMin2 = new Vector3(x, y, z);
                         Vector3 childMax2 = childMin2 + step;
                         octree[quadIndex] = new OctreeNode(
@@ -149,7 +154,7 @@ namespace Simples.Robotics.Mechanisms
             {
                 foreach (OctreeNode oct in octree)
                 {
-                    //oct.Divide();
+                    oct.Divide();
                 }
             }
         }
@@ -216,8 +221,16 @@ namespace Simples.Robotics.Mechanisms
                 p.End();
             }
             effect.End();
-        }
+            if (octree != null)
+            {
+                foreach (OctreeNode oct in octree)
+                {
+                    oct.Draw(game, projection, view);
+                }
+            }
 
+        }
+        
 
     }
 }
