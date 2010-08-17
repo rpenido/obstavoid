@@ -9,22 +9,28 @@ namespace Simples.SampleBased
     public abstract class CSpace
     {
         protected int dimensionCount;
-        protected double[] dimensionSize;
+        protected double[] dimensionLowLimit;
+        protected double[] dimensionHighLimit;
         protected CObsSpace cObsSpace;
 
-        protected CSpace(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace)
+        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace)
         {
             if (dimensionCount != 2)
             {
                 new Exception("The dimensionCount must be 2");
             }
-            else if (dimensionSize.Length != dimensionCount)
+            else if (dimensionLowLimit.Length != dimensionCount)
             {
-                new Exception("The dimensionSize must have the same length of the dimensionCount value");
+                new Exception("The dimensionLowLimit must have the same length of the dimensionCount value");
+            }
+            else if (dimensionHighLimit.Length != dimensionCount)
+            {
+                new Exception("The dimensionHighLimit must have the same length of the dimensionCount value");
             }
 
             this.dimensionCount = dimensionCount;
-            this.dimensionSize = dimensionSize;
+            this.dimensionLowLimit = dimensionLowLimit;
+            this.dimensionHighLimit = dimensionHighLimit;
             this.cObsSpace = cObsSpace;
 
         }

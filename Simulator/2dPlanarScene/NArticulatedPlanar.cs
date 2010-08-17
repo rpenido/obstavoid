@@ -59,15 +59,15 @@ namespace Simples.Simulation.Planar2D
             */
 
             Link baseLink = new Link(world);
-            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, world.Up);
+            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, world.Up, -180, 180);
             mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
-                //Vector3 min = new Vector3(-10, -5, -10);
-                //Vector3 max = new Vector3(120, 5, 10);
+                Vector3 min = new Vector3(-10, -5, -10);
+                Vector3 max = new Vector3(120, 5, 10);
 
-                Vector3 min = new Vector3(-13, -8, -13);
-                Vector3 max = new Vector3(123, 8, 13);
+                //Vector3 min = new Vector3(-13, -8, -13);
+                //Vector3 max = new Vector3(123, 8, 13);
 
                 Link link = new Link(nextJoint);
                 OrientedBoundingBox obb = new OrientedBoundingBox(min, max);
@@ -75,7 +75,7 @@ namespace Simples.Simulation.Planar2D
                 mechanism.Links.Add(link);
                 if (i != linkCount - 1)
                 {
-                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, world.Up);
+                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, world.Up, -180, +180);
                     mechanism.Joints.Add(nextJoint);
                 }                
             }

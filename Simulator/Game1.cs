@@ -49,8 +49,12 @@ namespace WindowsGame1
         //private int[] origin = new int[3] { 258, 113 , 0};
         //private int[] dest = new int[3] { 22, 344, 0};
 
-        private double[] origin = new double[3] { 34, 334, 48 };
-        private double[] dest = new double[3] { 90, 328, 24 };
+        //private double[] origin = new double[3] { 34, 334, 48 };
+        //private double[] dest = new double[3] { 90, 328, 24 };
+
+        private double[] origin;
+        private double[] dest;
+
         bool flagOptmize;
         bool flagMove;
         OctreeNode oct;
@@ -88,7 +92,7 @@ namespace WindowsGame1
             scene = new SceneBoxes(this, _camera);
 
             //Debug.Assert(linkModel.Bones.Count == 2);
-            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 3, _world, _camera);
+            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
 
             oct = new OctreeNode(new Vector3(0, -500, -500), new Vector3(200, 500, 500), 0);
             foreach (ModelMesh mesh in scene._boxModel.Meshes)
@@ -207,7 +211,7 @@ namespace WindowsGame1
                 robot.Mechanism.Joints[2].Value -= _STEP;
                 setPending(2, robot.Mechanism.Joints);
             }
-            /*
+            
             if (state.IsKeyDown(Keys.D7))
             {
                 robot.Mechanism.Joints[3].Value += _STEP;
@@ -218,7 +222,7 @@ namespace WindowsGame1
                 robot.Mechanism.Joints[3].Value -= _STEP;
                 setPending(3, robot.Mechanism.Joints);
             }
-
+            /*
             if (state.IsKeyDown(Keys.D9))
             {
                 robot.Mechanism.Joints[4].Value += _STEP;
@@ -249,28 +253,29 @@ namespace WindowsGame1
                 oldMouseX = mState.X;
                 oldMouseY = mState.Y;
             }
-            /*
+            
             if (state.IsKeyDown(Keys.F1))
             {
-                origin[0] = robot.Mechanism.Joints[0].Value;
-                origin[1] = robot.Mechanism.Joints[1].Value;
-                origin[2] = robot.Mechanism.Joints[2].Value;
+                origin = new double[robot.Mechanism.Joints.Count];
+                for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
+                {
+                    origin[i] = robot.Mechanism.Joints[i].Value;
+                }
                 if (resultForm != null)
                 {
                     resultForm.Origin = origin;
                 }
             }
+
             if (state.IsKeyDown(Keys.F2))
             {
-                dest[0] = (int)robot.Mechanism.Joints[0].Value;
-                dest[1] = (int)robot.Mechanism.Joints[1].Value;
-                dest[2] = (int)robot.Mechanism.Joints[2].Value;
-                if (resultForm != null)
+                dest = new double[robot.Mechanism.Joints.Count];
+                for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
                 {
-                    resultForm.Dest = dest;
+                    dest[i] = robot.Mechanism.Joints[i].Value;
                 }
             }
-             */
+            
             if (state.IsKeyDown(Keys.F3))
             {
                 if (flagOptmize == false)
@@ -383,7 +388,7 @@ namespace WindowsGame1
         private void optmize()
         {
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-            RRTOptimizer opt = new RRTOptimizer(3, new double[] {360, 360, 360}, cObsSpace, origin, dest, 1);
+            RRTOptimizer opt = new RRTOptimizer(6, new double[] { -180, -180, -180, -180, -180, -180 }, new double[] { 180, 180, 180, 180, 180, 180 }, cObsSpace, origin, dest, 2);
             controller = new NArticulatedPlanarController(robot);
             OptmizeForm form = new OptmizeForm(opt, controller);
             form.Show();
@@ -423,21 +428,23 @@ namespace WindowsGame1
 
        
         }
+        /*
         private void calc()
         {
+            return;
             controller = new NArticulatedPlanarController(robot);
 
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
 
             // Inicializa parâmetros
             int k = 50;
-            
-            CSpaceRRT tst = new CSpaceRRT(3, new double[] {360, 360, 360}, cObsSpace, k);
+
+            CSpaceRRT tst = new CSpaceRRT(6, new double[] { -180, -180, -180 }, new double[] { 180, 180, 180, }, cObsSpace, k);
 
             Node originNode;
             Node destNode;
 
-            // Chamada á função do algoritmo
+            // Chamada a função do algoritmo
             tst.generatePath(origin, dest, out originNode, out destNode);
 
 
@@ -490,26 +497,27 @@ namespace WindowsGame1
                 colorData[i * 360 + j] = Color.Red;
             }
              */
+        /*
             resultForm.GraphicsDevice.Textures[0] = null;
             resultForm.CSpace.SetData<Color>(colorData);
             resultForm.Draw();
 
         }
-
+    */
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            //if (isColliding())
-            //{
-            //    GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
-            //}
-            //else
-            //{
+            if (isColliding())
+            {
+                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
+            }
+            else
+            {
                 GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.BlueViolet);
-            //}
+            }
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);

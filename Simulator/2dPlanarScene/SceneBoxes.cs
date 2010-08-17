@@ -24,17 +24,23 @@ namespace Simples.Simulation.Planar2D
             :base(game)
         {
             
-            this._boxModel = game.Content.Load<Model>("teste"); ;
+            this._boxModel = game.Content.Load<Model>("cube"); ;
             this._camera = camera;
 
             obstacleList = new List<OrientedBoundingBox>();
             _boxes = new List<Matrix>();
-
+            /*
             createBox(180, 0, 10);
             createBox(100, 0, 10);
             createBox(150, 0, -150);
             createBox(-100, 0, 120);
             createBox(-200, 0, -100);
+            */
+            createBox(300, 0, 100);
+            createBox(200, 0, 10);
+            createBox(250, 0, -300);
+            createBox(-100, 0, 120);
+            createBox(-400, 0, -100);
 
             createBox(100, 0, 100);
 

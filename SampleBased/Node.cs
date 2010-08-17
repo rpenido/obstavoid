@@ -51,7 +51,8 @@ namespace Simples.SampleBased
 
             for (int i = 0; i < node.p.Length; i++)
             {
-                sum = sum + Math.Pow(p[i] - node.p[i], 2);
+                double diff = p[i] - node.p[i];
+                sum = sum + Math.Pow(diff, 2);
             }
 
             return Math.Sqrt(sum);

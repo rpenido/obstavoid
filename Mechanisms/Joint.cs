@@ -11,6 +11,8 @@ namespace Simples.Robotics.Mechanisms
     public class Joint
     {
         //protected Matrix world;
+        protected double minValue;
+        protected double maxValue;
         protected Link parentLink;
         protected Vector3 position;
         
@@ -25,8 +27,11 @@ namespace Simples.Robotics.Mechanisms
 
         protected virtual void setValue(double value)
         {
-            this.value = value;
-            setPending();
+            if ((value <= maxValue) && (value >= minValue))
+            {
+                this.value = value;
+                setPending();
+            }
         }        
         protected double getValue()
         {
@@ -68,10 +73,12 @@ namespace Simples.Robotics.Mechanisms
         {
         }
 
-        public Joint(Link parentLink, Vector3 position)
+        public Joint(Link parentLink, Vector3 position, double minValue, double maxValue)
         {
             this.parentLink = parentLink;
             this.position = position;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
             calcPending = true;
         }
         /*

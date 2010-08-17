@@ -21,8 +21,8 @@ namespace Simples.SampleBased
 
         public Boolean pathed = false;
 
-        public CSpacePRM(int dimensionCount, double[] dimensionSize, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
-            : base(dimensionCount, dimensionSize, cObsSpace)
+        public CSpacePRM(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
+            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, cObsSpace)
         {
             this.N = N;
             this.k = k;
@@ -64,14 +64,14 @@ namespace Simples.SampleBased
             for (int i = 1; i <= N; i++)
             {
                 double[] p = new double[dimensionCount];
-                double coord = (double)i / (double)N * (dimensionSize[0] - 1);
+                double coord = (double)i / (double)N * (dimensionHighLimit[0] - dimensionLowLimit[0]) + dimensionLowLimit[0];
 
                 p[0] = coord;
                 for (int j = 1; j < dimensionCount; j++)
                 {
                     double fnb = Math.Pow(a, j);
 
-                    coord = (i * fnb - Math.Floor(i * fnb)) * (dimensionSize[j] - 1);
+                    coord = (i * fnb - Math.Floor(i * fnb)) * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
                     p[j] = coord;
 
                 }
@@ -98,7 +98,7 @@ namespace Simples.SampleBased
                 for (int j = 0; j < dimensionCount; j++)
                 {
 
-                    p[j] = rand.NextDouble() * dimensionSize[j];
+                    p[j] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
                 }
 
                 if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
