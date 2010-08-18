@@ -24,7 +24,7 @@ namespace Simples.Simulation.Planar2D
             :base(game)
         {
             
-            this._boxModel = game.Content.Load<Model>("cube"); ;
+            this._boxModel = game.Content.Load<Model>("scene"); ;
             this._camera = camera;
 
             obstacleList = new List<OrientedBoundingBox>();
@@ -36,6 +36,7 @@ namespace Simples.Simulation.Planar2D
             createBox(-100, 0, 120);
             createBox(-200, 0, -100);
             */
+            /*
             createBox(300, 0, 100);
             createBox(200, 0, 10);
             createBox(250, 0, -300);
@@ -43,7 +44,7 @@ namespace Simples.Simulation.Planar2D
             createBox(-400, 0, -100);
 
             createBox(100, 0, 100);
-
+            */
         }
 
         public List<OrientedBoundingBox> BoundingBoxList
@@ -83,6 +84,23 @@ namespace Simples.Simulation.Planar2D
 
         public override void Draw(GameTime gameTime)
         {
+            Matrix[] transforms = new Matrix[_boxModel.Bones.Count];
+            _boxModel.CopyBoneTransformsTo(transforms);
+            foreach (ModelMesh mesh in _boxModel.Meshes)
+            {
+                
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = _camera.View;
+
+                    effect.Projection = _camera.Projection;
+                    effect.World = transforms[mesh.ParentBone.Index];
+                    mesh.Draw();
+                }
+                
+            }
             foreach (Matrix b in _boxes)
             {
                 drawBox(b);
@@ -112,6 +130,124 @@ namespace Simples.Simulation.Planar2D
                 }
                 mesh.Draw();
             }        
+        }
+
+        public TriangleData[] GetFaces(out Vector3[] vertexData)
+        {
+            
+            Matrix rootTransform = _boxModel.Root.Transform;
+
+            int totalNumFaces = 0;
+            int totalNumVertices = 0;
+
+            foreach (ModelMesh mesh in _boxModel.Meshes)
+            {
+                int numberVertices, numberIndices;
+                numberVertices =
+                    mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride;
+                if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits)
+                    numberIndices = mesh.IndexBuffer.SizeInBytes / sizeof(short);
+                else
+                    numberIndices = mesh.IndexBuffer.SizeInBytes / sizeof(int);
+
+                totalNumVertices += numberVertices;
+                totalNumFaces += numberIndices / 3;
+            }
+            // mesh vertices
+
+            vertexData = new Vector3[totalNumVertices];
+            TriangleData[] faces = new TriangleData[totalNumFaces];
+            int vertexCount = 0;
+            int faceCount = 0;
+            foreach (ModelMesh mesh in _boxModel.Meshes)
+            {
+                int numberVertices = mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride;
+                if (mesh.MeshParts[0].VertexStride == 16)
+                {
+                    VertexPositionColor[] meshVertices =
+                        new VertexPositionColor[numberVertices];
+                    mesh.VertexBuffer.GetData<VertexPositionColor>(meshVertices);
+
+                    for (int i = 0; i < numberVertices; i++)
+                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                }
+                if (mesh.MeshParts[0].VertexStride == 20)
+                {
+                    VertexPositionTexture[] meshVertices =
+                                               new VertexPositionTexture[numberVertices];
+                    mesh.VertexBuffer.GetData<VertexPositionTexture>(meshVertices);
+
+                    for (int i = 0; i < numberVertices; i++)
+                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                }
+                else if (mesh.MeshParts[0].VertexStride == 24)
+                {
+                    VertexPositionColorTexture[] meshVertices =
+                        new VertexPositionColorTexture[numberVertices];
+
+                    mesh.VertexBuffer.GetData<VertexPositionColorTexture>(meshVertices);
+
+                    for (int i = 0; i < numberVertices; i++)
+                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                }
+                else
+                    if (mesh.MeshParts[0].VertexStride == 32)
+                    {
+                        VertexPositionNormalTexture[] meshVertices =
+                            new VertexPositionNormalTexture[numberVertices];
+                        mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(meshVertices);
+
+                        for (int i = 0; i < numberVertices; i++)
+                            vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                    }
+                    else
+                        System.Diagnostics.Debug.Assert(false, "Unsupported vertex format!");
+
+                int numberFaces = 0;
+
+                if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits)
+                {
+                    short[] meshIndices =
+                            new short[mesh.IndexBuffer.SizeInBytes / sizeof(short)];
+                    mesh.IndexBuffer.GetData<short>(meshIndices);
+
+                    int count = 0;
+                    foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                    {
+                        for (int i = 0; i < meshPart.PrimitiveCount; i++)
+                        {
+                            int vertexOffset = vertexCount + meshPart.BaseVertex;
+                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset);
+                            count += 3;
+                            numberFaces++;
+                        }
+                    }
+                }
+                else
+                {
+                    int[] meshIndices =
+                            new int[mesh.IndexBuffer.SizeInBytes / sizeof(int)];
+                    mesh.IndexBuffer.GetData<int>(meshIndices);
+
+                    int count = 0;
+                    foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                    {
+                        for (int i = 0; i < meshPart.PrimitiveCount; i++)
+                        {
+                            int vertexOffset = vertexCount + meshPart.BaseVertex;
+                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset);
+                            count += 3;
+                            numberFaces++;
+                        }
+                    }
+                }
+
+                vertexCount += numberVertices;
+                faceCount += numberFaces;
+            }
+
+            return faces;            
+            
         }
     }
 }
