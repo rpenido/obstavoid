@@ -45,7 +45,7 @@ namespace Simples.Simulation.Planar2D
         public NArticulatedPlanar(IServiceProvider service, Vector3 linkTranslation, int linkCount, Matrix world, ICamera camera)
         {
             this.content = new ContentManager(service, "Content");
-            this.linkModel = content.Load<Model>("model1");
+            this.linkModel = content.Load<Model>("link");
             this.camera = camera;
             
             this.world = world;
@@ -59,12 +59,12 @@ namespace Simples.Simulation.Planar2D
             */
 
             Link baseLink = new Link(world);
-            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, world.Up, -180, 180);
+            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, Vector3.UnitZ, -180, 180);
             mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
-                Vector3 min = new Vector3(-10, -5, -10);
-                Vector3 max = new Vector3(120, 5, 10);
+                Vector3 min = new Vector3(-10, -10, -5);
+                Vector3 max = new Vector3(120, 10, 5);
 
                 //Vector3 min = new Vector3(-13, -8, -13);
                 //Vector3 max = new Vector3(123, 8, 13);
@@ -75,7 +75,7 @@ namespace Simples.Simulation.Planar2D
                 mechanism.Links.Add(link);
                 if (i != linkCount - 1)
                 {
-                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, world.Up, -180, +180);
+                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, Vector3.UnitZ, -180, +180);
                     mechanism.Joints.Add(nextJoint);
                 }                
             }

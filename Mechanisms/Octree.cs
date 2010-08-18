@@ -11,19 +11,24 @@ namespace Simples.Robotics.Mechanisms
     enum OctreePosition { FLB=0, FLT, FRB, FRT, BLB, BLT, BRB, BRT };
 
     public class OctreeNode
-    {
-        private const int maxLevel = 5;
+    {  
+        private const int maxLevel = 2;
         private OctreeNode[] octree;
-        public List<Vector3> vertices;
+        private OrientedBoundingBox obb;
+        public List<TriangleData> triangles;
         private Vector3 min;
         private Vector3 max;
         private int level;
+        public static Vector3[] vertexData;
 
         BasicEffect effect;
 
-        public void AddVertice(Vector3 vertice)
+        public void AddTriangle(TriangleData triangle)
         {
-            vertices.Add(vertice);
+            if (!triangles.Contains(triangle))
+            {
+                triangles.Add(triangle);
+            }
         }
 
         public OctreeNode(Vector3 min, Vector3 max, int level)
@@ -31,19 +36,51 @@ namespace Simples.Robotics.Mechanisms
             this.min = min;
             this.max = max;
             this.level = level;
-            vertices = new List<Vector3>();
+            this.obb = new OrientedBoundingBox(min, max);
+            triangles = new List<TriangleData>();
+        }
+
+        public bool IsColliding(Link link)
+        {
+            if (link.Intersects(obb))
+            {
+                if (octree != null)
+                {
+                    foreach (OctreeNode node in octree)
+                    {
+                        if (node.IsColliding(link))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (triangles.Count > 0)
+                {
+                    return true;
+                }
+                
+
+            }
+            return false;
+
+        }
+        public bool IsColliding(Mechanism mechanism)
+        {
+            foreach (Link link in mechanism.Links)
+            {
+                if (IsColliding(link))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Divide()
         {
-            if (vertices.Count == 0)
+            if (triangles.Count < 2)
                 return;
-            /*
-            if (vertices.Count == 0)
-            {
-                return;
-            }
-            */
+          
             octree = new OctreeNode[8];
             Vector3 step = (max - min)/2;
             int quadIndex = 0;
@@ -65,89 +102,20 @@ namespace Simples.Robotics.Mechanisms
                     }
                 }
             }
-            /*
-            Vector3 childMin;
-            Vector3 childMax;
-            childMin = min;
-            childMax = (max - min) / 2;
-            octree[(int)OctreePosition.BLB] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = min;
-            childMax = (max - min) / 2;
-            childMin.Z = (max.Z - min.Z) / 2;
-            childMax.Z = max.Z;
-            octree[(int)OctreePosition.BLT] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = min;
-            childMax = (max - min) / 2;
-            childMin.Y = (max.Y - min.Y) / 2;
-            childMax.Y = max.Y;
-            octree[(int)OctreePosition.BRB] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = (max - min) / 2;
-            childMax = max;
-            childMin.X = min.X;
-            childMax.X = (max.X - min.X) / 2;
-            octree[(int)OctreePosition.BRT] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = min;
-            childMax = (max - min) / 2;
-            childMin.X = (max.X - min.X) / 2;
-            childMax.X = max.X;
-            octree[(int)OctreePosition.FLB] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = (max - min) / 2;
-            childMax = max;
-            childMin.Y = min.Y;
-            childMax.Y = (max.Y - min.Y) / 2;
-            octree[(int)OctreePosition.FLT] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = (max - min) / 2;
-            childMax = max;
-            childMin.Z = min.Z;
-            childMax.Z = (max.Z - min.Z) / 2;
-            octree[(int)OctreePosition.FRB] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-            childMin = (max - min) / 2;
-            childMax = max;
-            octree[(int)OctreePosition.FRT] = new OctreeNode(
-                childMin,
-                childMax,
-                level + 1);
-
-
-            */
+            
             Vector3 mid = (max + min) / 2;
-            foreach (Vector3 vert in vertices)
+            foreach (TriangleData triangle in triangles)
             {
-                Vector3 pos = vert - mid;
-                bool[] bits = new bool[] { pos.X > 0, pos.Y > 0, pos.Z > 0 };
-                quadIndex = (Convert.ToByte(bits[0]) << 2) +
-                    (Convert.ToByte(bits[1]) << 1) +
-                    Convert.ToByte(bits[2]);
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 pos = vertexData[triangle.indices[i]] - mid;
+                    bool[] bits = new bool[] { pos.X > 0, pos.Y > 0, pos.Z > 0 };
+                    quadIndex = (Convert.ToByte(bits[0]) << 2) +
+                        (Convert.ToByte(bits[1]) << 1) +
+                        Convert.ToByte(bits[2]);
 
-                octree[quadIndex].AddVertice(vert);
+                    octree[quadIndex].AddTriangle(triangle);
+                }
             }
 
             if (level < maxLevel)

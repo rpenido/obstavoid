@@ -36,8 +36,6 @@ namespace WindowsGame1
         //private Model linkModel;
 
         private static float _STEP = 1;
-        
-        private Model teste;
 
         private NArticulatedPlanar robot;
 
@@ -56,7 +54,6 @@ namespace WindowsGame1
         private double[] dest;
 
         bool flagOptmize;
-        bool flagMove;
         OctreeNode oct;
 
         public Game1()
@@ -88,22 +85,19 @@ namespace WindowsGame1
             _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
 
             _camera = new OrbitCamera();
-            _camera.cameraAngleX = -90f;
             scene = new SceneBoxes(this, _camera);
 
-            //Debug.Assert(linkModel.Bones.Count == 2);
             robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
 
-            oct = new OctreeNode(new Vector3(-300, 0, -300), new Vector3(300, 100, 300), 0);
-            foreach (ModelMesh mesh in scene._boxModel.Meshes)
+            TriangleData[] triangles = scene.GetFaces(out OctreeNode.vertexData);
+
+            oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
+
+            
+
+            foreach (TriangleData face in triangles)
             {
-                int count = mesh.VertexBuffer.SizeInBytes / Marshal.SizeOf(Vector3.Up);
-                Vector3[] vertices = new Vector3[count];
-                mesh.VertexBuffer.GetData<Vector3>(vertices);
-                for (int i = 0; i < vertices.Length; i = i + 2)
-                {
-                    oct.AddVertice(vertices[i]);
-                }
+                oct.AddTriangle(face);
             }
             oct.Divide();
         }
@@ -157,7 +151,8 @@ namespace WindowsGame1
 
         private bool isColliding()
         {
-            return scene.isColliding(robot.Mechanism);
+            return oct.IsColliding(robot.Mechanism);
+            //return scene.isColliding(robot.Mechanism);
         }
 
         private void setPending(int index, List<Joint> joints)
@@ -290,19 +285,7 @@ namespace WindowsGame1
                 flagOptmize = false;
             }
             /*
-            if (state.IsKeyDown(Keys.F4))
-            {
-                if (flagMove == false)
-                {
-                    flagMove = true;
-                    move();
-                }
-            }
-            else
-            {
-                flagMove = false;
-            }
-            
+           
             if (state.IsKeyDown(Keys.F5))
             {
                 if (flag == false)
