@@ -36,15 +36,15 @@ namespace Simples.Simulation.Planar2D
             createBox(-100, 0, 120);
             createBox(-200, 0, -100);
             */
-            /*
-            createBox(300, 0, 100);
-            createBox(200, 0, 10);
-            createBox(250, 0, -300);
-            createBox(-100, 0, 120);
-            createBox(-400, 0, -100);
+            
+            createBox(300, 100, 0);
+            createBox(200, 10, 0);
+            createBox(250, -300, 0);
+            createBox(-100, 120, 0);
+            createBox(-400, 100, 0);
 
-            createBox(100, 0, 100);
-            */
+            createBox(100, 100, 0);
+            
         }
 
         public List<OrientedBoundingBox> BoundingBoxList
@@ -59,8 +59,8 @@ namespace Simples.Simulation.Planar2D
             Matrix matrix = Matrix.CreateWorld(origin, Vector3.Forward, Vector3.Up);
             _boxes.Add(matrix);
             
-            Vector3 min = new Vector3(0, 0, -50);
-            Vector3 max = new Vector3(50, 50, 0);
+            Vector3 min = new Vector3(0, 0, 0);
+            Vector3 max = new Vector3(50, 50, 50);
 
             OrientedBoundingBox bb = new OrientedBoundingBox(min, max);
             bb.Transforms = matrix;
@@ -101,10 +101,12 @@ namespace Simples.Simulation.Planar2D
                 }
                 
             }
+            /*
             foreach (Matrix b in _boxes)
             {
                 drawBox(b);
             }
+             */ 
         }
 
         private void drawBox(Matrix matrix)
