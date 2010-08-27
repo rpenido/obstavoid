@@ -151,8 +151,8 @@ namespace WindowsGame1
 
         private bool isColliding()
         {
-            return oct.IsColliding(robot.Mechanism);
-            //return scene.isColliding(robot.Mechanism);
+            //return oct.IsColliding(robot.Mechanism);
+            return scene.isColliding(robot.Mechanism);
         }
 
         private void setPending(int index, List<Joint> joints)

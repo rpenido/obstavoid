@@ -90,8 +90,6 @@ namespace Simples.Robotics.Mechanisms
                 {
                     for (float z = min.Z; z < max.Z; z += step.Z)
                     {
-                        if (quadIndex > 7)
-                            break;
                         Vector3 childMin2 = new Vector3(x, y, z);
                         Vector3 childMax2 = childMin2 + step;
                         octree[quadIndex] = new OctreeNode(
