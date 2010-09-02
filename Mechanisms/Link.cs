@@ -11,7 +11,8 @@ namespace Simples.Robotics.Mechanisms
     [Serializable]
     public class Link
     {
-        private List<OrientedBoundingBox> boundingBoxList;
+        //private
+        public List<OrientedBoundingBox> boundingBoxList;
 
         protected Joint joint;
 
@@ -58,7 +59,7 @@ namespace Simples.Robotics.Mechanisms
             foreach (OrientedBoundingBox obb in boundingBoxList)
             {
                 obb.Transforms = Transform * obb.BoxTransform;
-                if (obb.Intersects(other))
+                if (other.Intersects(obb))
                     return true;
             }
             return false;

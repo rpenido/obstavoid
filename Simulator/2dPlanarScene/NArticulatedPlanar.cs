@@ -87,11 +87,15 @@ namespace Simples.Simulation.Planar2D
             //fs.Close();
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, GraphicsDevice graphicsDevice)
         {
             for (int i = 0; i < Mechanism.Links.Count; i++)
             {
                 DrawLink(Mechanism.Links[i].Transform);
+                foreach (OrientedBoundingBox obb in Mechanism.Links[i].boundingBoxList)
+                {
+                    obb.Draw(graphicsDevice, camera.Projection, camera.View);
+                }
             }
         }
 
