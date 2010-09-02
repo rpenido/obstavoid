@@ -82,24 +82,6 @@ namespace WindowsGame1
             base.Initialize();
 
 
-            _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-
-            _camera = new OrbitCamera();
-            scene = new SceneBoxes(this, _camera);
-
-            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
-
-            TriangleData[] triangles = scene.GetFaces(out OctreeNode.vertexData);
-
-            oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
-
-            
-
-            foreach (TriangleData face in triangles)
-            {
-                oct.AddTriangle(face);
-            }
-            oct.Divide();
         }
 
         /// <summary>
@@ -116,6 +98,27 @@ namespace WindowsGame1
             //linkModel = Content.Load<Model>("model1");
             //cube = Content.Load<Model>("cube");
             //teste = Content.Load<Model>("Teste");
+
+            _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+
+            _camera = new OrbitCamera();
+            scene = new SceneBoxes(this, _camera);
+            Components.Add(scene);
+
+            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
+
+            TriangleData[] triangles = scene.GetFaces(out OctreeNode.vertexData);
+
+            oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
+
+
+
+            foreach (TriangleData face in triangles)
+            {
+                oct.AddTriangle(face);
+            }
+            oct.Divide();
+
            
         }
 
@@ -504,9 +507,13 @@ namespace WindowsGame1
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
-            scene.Draw(gameTime);
-            robot.Draw(gameTime);
-            oct.Draw(this, _camera.Projection, _camera.View);
+            //scene.Draw(gameTime);
+            robot.Draw(gameTime, GraphicsDevice);
+            foreach (OrientedBoundingBox obb in scene.BoundingBoxList)
+            {
+                obb.Draw(GraphicsDevice, _camera.Projection, _camera.View);
+            }
+            //oct.Draw(this, _camera.Projection, _camera.View);
 
             /*
             Matrix[] transforms = new Matrix[teste.Bones.Count];

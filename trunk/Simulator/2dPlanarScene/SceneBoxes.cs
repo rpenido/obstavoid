@@ -44,7 +44,7 @@ namespace Simples.Simulation.Planar2D
             createBox(-400, 100, 0);
 
             createBox(100, 100, 0);
-            
+            Initialize();
         }
 
         public List<OrientedBoundingBox> BoundingBoxList
@@ -84,6 +84,7 @@ namespace Simples.Simulation.Planar2D
 
         public override void Draw(GameTime gameTime)
         {
+            
             Matrix[] transforms = new Matrix[_boxModel.Bones.Count];
             _boxModel.CopyBoneTransformsTo(transforms);
             foreach (ModelMesh mesh in _boxModel.Meshes)
@@ -100,6 +101,12 @@ namespace Simples.Simulation.Planar2D
                     mesh.Draw();
                 }
                 
+            }
+             
+          
+            foreach (OrientedBoundingBox sceneBb in obstacleList)
+            {
+                sceneBb.Draw(GraphicsDevice, _camera.View, _camera.Projection);
             }
             /*
             foreach (Matrix b in _boxes)
