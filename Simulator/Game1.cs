@@ -61,8 +61,8 @@ namespace WindowsGame1
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             
-            graphics.PreferredBackBufferHeight = 1000;            
-            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferHeight = 600;            
+            graphics.PreferredBackBufferWidth = 800;
 
             mainGraphicDevice = GraphicsDevice;
             
