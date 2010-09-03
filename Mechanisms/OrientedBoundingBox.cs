@@ -27,7 +27,8 @@ namespace Simples.Robotics.Mechanisms
         protected Vector3 extents;
         protected Matrix transforms = Matrix.Identity;
         protected Matrix boxTransform = Matrix.Identity;
-
+        
+        [NonSerialized]
         BasicEffect effect;
 
         public OrientedBoundingBox()
