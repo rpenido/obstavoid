@@ -7,14 +7,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
+using System.Diagnostics;
 #endregion
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                          //
-// ALL this code has been taken from Minh @ Channel 9 http://channel9.msdn.com/Niners/Minh  //
-//                                                                                          //
-//////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace Simples.Robotics.Mechanisms
 {
     [Serializable]
@@ -79,38 +73,71 @@ namespace Simples.Robotics.Mechanisms
             set { boxTransform = value; }
         }
 
-        //======================================================================
-
         public static double GetExtentProjection(Vector3 axis, Matrix transform, Vector3 extents)
         {
+            /*
             double r0 = Math.Abs(Vector3.Dot(transform.Forward, axis)) * extents.Z;
             double r1 = Math.Abs(Vector3.Dot(transform.Left, axis)) * extents.X;
             double r2 = Math.Abs(Vector3.Dot(transform.Up, axis)) * extents.Y;
 
             return r0 + r1 + r2;
+            */
+            Debug.Assert(axis.Length() < 1.1f && axis.Length() > 0.9f);
+            return Math.Abs(Vector3.Dot(extents, axis));
         }
+
+        public static double GetExtentProjection(Vector3 axis, Matrix transform, Vector3[] edges)
+        {
+            double r0 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[0], transform), axis));
+            double r1 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[1], transform), axis));
+            double r2 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[2], transform), axis));
+
+            return r0 + r1 + r2;
+        }
+        
         public static bool IsSeparationAxis(Vector3 axis, Vector3 distance, Vector3 extents, Matrix transform,
             Vector3 otherExtents, Matrix otherTransform)
         {
-            if (axis.X == 0 && axis.Y == 0 && axis.Z == 0)
+            if (axis.Length() <= 0.1f)
             {
                 return false;
             }
+            axis.Normalize();
+
             double r, r1, r2;
             r = Math.Abs(Vector3.Dot(distance, axis));
             r1 = GetExtentProjection(axis, transform, extents);
             r2 = GetExtentProjection(axis, otherTransform, otherExtents);
-
+            
             return (r > r1 + r2);
                 
+        }
+        
+        public static bool IsSeparationAxis(Vector3 axis, Vector3 distance, Vector3 extents, Matrix transform,
+                    Vector3[] edges, Matrix otherTransform)
+        {
+            if (axis == Vector3.Zero)
+            {
+                return false;
+            }
+            axis.Normalize();
+
+            double r, r1, r2;
+            r = Math.Abs(Vector3.Dot(distance, axis));
+            r1 = GetExtentProjection(axis, transform, extents);
+            r2 = GetExtentProjection(axis, otherTransform, edges);
+
+            return (r > r1 + r2);
+
         }
 
         public bool Intersects(OrientedBoundingBox other)
         {
-            // Matrix to transform other OBB into my reference to allow me to be treated as an AABB
             Matrix toMe = other.Transforms * Matrix.Invert(transforms);
-
-            Vector3 extentsOther = other.Extents;
+            Vector3 scale, translation;
+            Quaternion rotation;
+            toMe.Decompose(out scale, out rotation, out translation);
+            Vector3 extentsOther = Vector3.Transform(other.Extents, rotation);
             Vector3 centerOther = Vector3.Transform(other.Center, toMe);
 
             Vector3 distance = centerOther - center;
@@ -272,10 +299,10 @@ namespace Simples.Robotics.Mechanisms
             if (IsSeparationAxis(toMe.Forward, distance, extents, transforms, extentsOther, toMe))
                 return false;
 
-            if (IsSeparationAxis(toMe.Forward, distance, extents, transforms, extentsOther, toMe))
+            if (IsSeparationAxis(toMe.Left, distance, extents, transforms, extentsOther, toMe))
                 return false;
 
-            if (IsSeparationAxis(toMe.Forward, distance, extents, transforms, extentsOther, toMe))
+            if (IsSeparationAxis(toMe.Up, distance, extents, transforms, extentsOther, toMe))
                 return false;
 
             if (IsSeparationAxis(Vector3.Cross(transforms.Forward, toMe.Forward), distance, extents, transforms, extentsOther, toMe))
@@ -302,6 +329,65 @@ namespace Simples.Robotics.Mechanisms
 
         public bool Intersects(TriangleData other)
         {
+            Matrix toMe = Matrix.Invert(transforms);
+
+            Vector3 centerOther = Vector3.Transform(other.Center, toMe);
+            Vector3 distance = centerOther - center;
+            /*
+             * 
+box vs tri axes
+---------------
+tri.normal
+box.dir0
+box.dir1
+box.dir2
+
+box.dir0 x tri.edge0
+box.dir0 x tri.edge1
+box.dir0 x tri.edge2
+
+box.dir1 x tri.edge0
+box.dir1 x tri.edge1
+box.dir1 x tri.edge2
+
+box.dir2 x tri.edge0
+box.dir2 x tri.edge1
+box.dir2 x tri.edge2*/
+
+            if (IsSeparationAxis(other.Normal, distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(transforms.Forward, distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(transforms.Left, distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(transforms.Up, distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, other.Edges[0]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, other.Edges[1]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, other.Edges[2]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(Vector3.Cross(transforms.Left, other.Edges[0]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Left, other.Edges[1]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Left, other.Edges[2]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+            if (IsSeparationAxis(Vector3.Cross(transforms.Up, other.Edges[0]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Up, other.Edges[1]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+            if (IsSeparationAxis(Vector3.Cross(transforms.Up, other.Edges[2]), distance, extents, transforms, other.Edges, toMe))
+                return false;
+
+             
             /*
              * tri vs tri axes
 ---------------

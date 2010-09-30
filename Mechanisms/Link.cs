@@ -59,7 +59,19 @@ namespace Simples.Robotics.Mechanisms
             foreach (OrientedBoundingBox obb in boundingBoxList)
             {
                 obb.Transforms = Transform * obb.BoxTransform;
+                //if (obb.Intersects(other))
                 if (other.Intersects(obb))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool Intersects(TriangleData other)
+        {
+            foreach (OrientedBoundingBox obb in boundingBoxList)
+            {
+                obb.Transforms = Transform * obb.BoxTransform;
+                if (obb.Intersects(other))
                     return true;
             }
             return false;

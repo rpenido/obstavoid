@@ -19,7 +19,7 @@ namespace Simples.Robotics.Mechanisms
         private Vector3 min;
         private Vector3 max;
         private int level;
-        public static Vector3[] vertexData;
+        public VertexList vertexList;
 
         BasicEffect effect;
 
@@ -42,6 +42,16 @@ namespace Simples.Robotics.Mechanisms
 
         public bool IsColliding(Link link)
         {
+            foreach (TriangleData tri in triangles)
+            {
+                if (link.Intersects(tri))
+                {
+                    return true;
+                }
+            }
+            return false;
+         
+            /*
             if (link.Intersects(obb))
             {
                 if (octree != null)
@@ -62,7 +72,7 @@ namespace Simples.Robotics.Mechanisms
 
             }
             return false;
-
+            */
         }
         public bool IsColliding(Mechanism mechanism)
         {
@@ -106,7 +116,7 @@ namespace Simples.Robotics.Mechanisms
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Vector3 pos = vertexData[triangle.indices[i]] - mid;
+                    Vector3 pos = triangle[i] - mid;
                     bool[] bits = new bool[] { pos.X > 0, pos.Y > 0, pos.Z > 0 };
                     quadIndex = (Convert.ToByte(bits[0]) << 2) +
                         (Convert.ToByte(bits[1]) << 1) +

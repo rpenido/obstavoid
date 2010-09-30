@@ -69,6 +69,7 @@ namespace Simples.Simulation.Planar2D
 
         public bool isColliding(Mechanism mechanism)
         {
+            
             foreach (Link link in mechanism.Links)
             {
                 foreach (OrientedBoundingBox sceneBb in obstacleList)
@@ -79,7 +80,7 @@ namespace Simples.Simulation.Planar2D
                     }
                 }
             }
-            return false;
+            return false;              
         }
 
         public override void Draw(GameTime gameTime)
@@ -141,9 +142,9 @@ namespace Simples.Simulation.Planar2D
             }        
         }
 
-        public TriangleData[] GetFaces(out Vector3[] vertexData)
+        public TriangleData[] GetFaces()
         {
-            
+            VertexList vertexList;
             Matrix rootTransform = _boxModel.Root.Transform;
 
             int totalNumFaces = 0;
@@ -162,9 +163,8 @@ namespace Simples.Simulation.Planar2D
                 totalNumVertices += numberVertices;
                 totalNumFaces += numberIndices / 3;
             }
-            // mesh vertices
 
-            vertexData = new Vector3[totalNumVertices];
+            vertexList = new VertexList(totalNumVertices);
             TriangleData[] faces = new TriangleData[totalNumFaces];
             int vertexCount = 0;
             int faceCount = 0;
@@ -178,7 +178,7 @@ namespace Simples.Simulation.Planar2D
                     mesh.VertexBuffer.GetData<VertexPositionColor>(meshVertices);
 
                     for (int i = 0; i < numberVertices; i++)
-                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                        vertexList[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
                 }
                 if (mesh.MeshParts[0].VertexStride == 20)
                 {
@@ -187,7 +187,7 @@ namespace Simples.Simulation.Planar2D
                     mesh.VertexBuffer.GetData<VertexPositionTexture>(meshVertices);
 
                     for (int i = 0; i < numberVertices; i++)
-                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                        vertexList[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
                 }
                 else if (mesh.MeshParts[0].VertexStride == 24)
                 {
@@ -197,7 +197,7 @@ namespace Simples.Simulation.Planar2D
                     mesh.VertexBuffer.GetData<VertexPositionColorTexture>(meshVertices);
 
                     for (int i = 0; i < numberVertices; i++)
-                        vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                        vertexList[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
                 }
                 else
                     if (mesh.MeshParts[0].VertexStride == 32)
@@ -207,7 +207,7 @@ namespace Simples.Simulation.Planar2D
                         mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(meshVertices);
 
                         for (int i = 0; i < numberVertices; i++)
-                            vertexData[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
+                            vertexList[i + vertexCount] = Vector3.Transform(meshVertices[i].Position, rootTransform);
                     }
                     else
                         System.Diagnostics.Debug.Assert(false, "Unsupported vertex format!");
@@ -226,7 +226,7 @@ namespace Simples.Simulation.Planar2D
                         for (int i = 0; i < meshPart.PrimitiveCount; i++)
                         {
                             int vertexOffset = vertexCount + meshPart.BaseVertex;
-                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset);
+                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset, vertexList);
                             count += 3;
                             numberFaces++;
                         }
@@ -244,7 +244,7 @@ namespace Simples.Simulation.Planar2D
                         for (int i = 0; i < meshPart.PrimitiveCount; i++)
                         {
                             int vertexOffset = vertexCount + meshPart.BaseVertex;
-                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset);
+                            faces[numberFaces + faceCount] = new TriangleData(count, meshIndices, vertexOffset, vertexList);
                             count += 3;
                             numberFaces++;
                         }
