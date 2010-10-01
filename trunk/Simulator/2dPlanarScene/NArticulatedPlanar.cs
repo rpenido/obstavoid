@@ -94,6 +94,7 @@ namespace Simples.Simulation.Planar2D
                 DrawLink(Mechanism.Links[i].Transform);
                 foreach (OrientedBoundingBox obb in Mechanism.Links[i].boundingBoxList)
                 {
+                    obb.Transforms = Mechanism.Links[i].Transform * obb.BoxTransform;
                     obb.Draw(graphicsDevice, camera.Projection, camera.View);
                 }
             }

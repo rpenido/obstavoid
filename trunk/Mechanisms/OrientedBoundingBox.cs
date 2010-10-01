@@ -75,15 +75,16 @@ namespace Simples.Robotics.Mechanisms
 
         public static double GetExtentProjection(Vector3 axis, Matrix transform, Vector3 extents)
         {
-            /*
+            
             double r0 = Math.Abs(Vector3.Dot(transform.Forward, axis)) * extents.Z;
             double r1 = Math.Abs(Vector3.Dot(transform.Left, axis)) * extents.X;
             double r2 = Math.Abs(Vector3.Dot(transform.Up, axis)) * extents.Y;
 
             return r0 + r1 + r2;
-            */
+            /*
             Debug.Assert(axis.Length() < 1.1f && axis.Length() > 0.9f);
             return Math.Abs(Vector3.Dot(extents, axis));
+            */
         }
 
         public static double GetExtentProjection(Vector3 axis, Matrix transform, Vector3[] edges)
@@ -133,11 +134,12 @@ namespace Simples.Robotics.Mechanisms
 
         public bool Intersects(OrientedBoundingBox other)
         {
-            Matrix toMe = other.Transforms * Matrix.Invert(transforms);
+            Matrix toMe = other.Transforms * Matrix.Invert(Transforms);
             Vector3 scale, translation;
             Quaternion rotation;
             toMe.Decompose(out scale, out rotation, out translation);
-            Vector3 extentsOther = Vector3.Transform(other.Extents, rotation);
+            //
+            Vector3 extentsOther = other.Extents;
             Vector3 centerOther = Vector3.Transform(other.Center, toMe);
 
             Vector3 distance = centerOther - center;
@@ -473,7 +475,6 @@ box.dir2 x tri.edge2
             {
                 effect = new BasicEffect(graphicsDevice, null);
 
-                effect.World = transforms;
                 effect.VertexColorEnabled = true;
                 effect.LightingEnabled = true;
 

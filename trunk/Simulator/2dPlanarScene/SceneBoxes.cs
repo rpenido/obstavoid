@@ -69,7 +69,6 @@ namespace Simples.Simulation.Planar2D
 
         public bool isColliding(Mechanism mechanism)
         {
-            
             foreach (Link link in mechanism.Links)
             {
                 foreach (OrientedBoundingBox sceneBb in obstacleList)
