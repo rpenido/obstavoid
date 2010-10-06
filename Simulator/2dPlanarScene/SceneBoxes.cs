@@ -18,7 +18,7 @@ namespace Simples.Simulation.Planar2D
         private List<OrientedBoundingBox> obstacleList;
         private List<Matrix> _boxes;
         public Model _boxModel;
-        
+        OctreeNode oct;
 
         public SceneBoxes(Game game, ICamera camera)
             :base(game)
@@ -44,6 +44,19 @@ namespace Simples.Simulation.Planar2D
             createBox(-400, 100, 0);
 
             createBox(100, 100, 0);
+
+            TriangleData[] triangles = GetFaces();
+
+            oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
+
+
+
+            foreach (TriangleData face in triangles)
+            {
+                oct.AddTriangle(face);
+            }
+            oct.Divide();
+
             Initialize();
         }
 
@@ -108,6 +121,8 @@ namespace Simples.Simulation.Planar2D
             {
                 sceneBb.Draw(GraphicsDevice, _camera.View, _camera.Projection);
             }
+
+            //oct.Draw(game, _camera.Projection, _camera.View);
             /*
             foreach (Matrix b in _boxes)
             {

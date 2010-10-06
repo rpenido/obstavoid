@@ -54,7 +54,7 @@ namespace WindowsGame1
         private double[] dest;
 
         bool flagOptmize;
-        OctreeNode oct;
+        //OctreeNode oct;
 
         public Game1()
         {
@@ -106,8 +106,8 @@ namespace WindowsGame1
             Components.Add(scene);
 
             robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
-
-            TriangleData[] triangles = scene.GetFaces();
+            /*
+            Tr*iangleData[] triangles = scene.GetFaces();
 
             oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
 
@@ -118,7 +118,7 @@ namespace WindowsGame1
                 oct.AddTriangle(face);
             }
             oct.Divide();
-
+            */
            
         }
 
