@@ -70,9 +70,14 @@ namespace Simples.Robotics.Mechanisms
                 if (edges == null)
                 {
                     edges = new Vector3[3];
+                    /*
                     edges[0] = this[1] - this[0];
                     edges[1] = this[2] - this[1];
                     edges[2] = this[0] - this[2];
+                    */
+                    edges[0] = this[0];
+                    edges[1] = this[1];
+                    edges[2] = this[2];
                 }
                 return edges;
             }
