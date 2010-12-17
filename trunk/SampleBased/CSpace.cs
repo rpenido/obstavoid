@@ -11,9 +11,10 @@ namespace Simples.SampleBased
         protected int dimensionCount;
         protected double[] dimensionLowLimit;
         protected double[] dimensionHighLimit;
+        protected double[] dimensionVelocity;
         protected CObsSpace cObsSpace;
 
-        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace)
+        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace)
         {
             if (dimensionCount != 2)
             {
@@ -90,23 +91,23 @@ namespace Simples.SampleBased
                     if (closedSet.Contains(y))
                         continue;
 
-                    double tentative_g_score = x.aDist + yEdge.dist;
-                    Boolean tentative_is_better = false;
+                    double score = x.aDist + yEdge.dist;
+                    Boolean scoreBetter = false;
                     if (!openSet.Contains(y))
                     {
-                        y.aTotalDist = tentative_g_score + y.calcDist(destNode);
+                        y.aTotalDist = score + y.calcDist(destNode);
                         searchAndInsert(openSet, y);
-                        tentative_is_better = true;
+                        scoreBetter = true;
                     }
-                    else if (tentative_g_score < y.aDist)
+                    else if (score < y.aDist)
                     {
-                        tentative_is_better = true;
+                        scoreBetter = true;
                     }
 
-                    if (tentative_is_better)
+                    if (scoreBetter)
                     {
                         y.aCameFrom = x;
-                        y.aDist = tentative_g_score;
+                        y.aDist = score;
                         y.aTotalDist = y.aDist + y.calcDist(destNode);
                     }
                 }

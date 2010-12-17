@@ -21,8 +21,8 @@ namespace Simples.SampleBased
 
         public Boolean pathed = false;
 
-        public CSpacePRM(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
-            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, cObsSpace)
+        public CSpacePRM(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
+            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace)
         {
             this.N = N;
             this.k = k;
