@@ -2,14 +2,55 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Simples.SampleBased
 {
     public class PathSmoothing
     {
-        private PathSmoothing()
+        private ManualResetEvent stopEvent;
+        private Thread workerThread;
+        private Node destNode;
+        private CObsSpace cObsSpace;
+
+        public Double MinDist
         {
+            get { return destNode.aTotalDist; }
         }
+
+        public PathSmoothing(Node destNode, CObsSpace cObsSpace)
+        {
+            this.destNode = destNode;
+            this.cObsSpace = cObsSpace;
+
+            workerThread = new Thread(calcLoop);
+            stopEvent = new ManualResetEvent(false);
+            
+            workerThread.Start();
+        }
+
+        public void Stop()
+        {
+            stopEvent.Set();
+            workerThread.Join();
+            stopEvent.Reset();
+        }
+
+        private void calcLoop()
+        {
+            while (true)
+            {
+                if (stopEvent.WaitOne(0))
+                {
+                    break;
+                }
+                else
+                {
+                    Smooth(destNode, cObsSpace);
+                }
+            }
+        }
+
 
         private static List<Edge> GetEdgeList(Node destNode)
         {
@@ -28,10 +69,15 @@ namespace Simples.SampleBased
             return edgeList;
         }
 
-
-        public static void Smooth(Node destNode, CObsSpace cObsSpace)
+        public static List<Edge> Smooth(Node destNode, CObsSpace cObsSpace)
         {
             List<Edge> edgeList = GetEdgeList(destNode);
+            Smooth(destNode, cObsSpace, edgeList);
+            return edgeList;
+        }
+
+        public static List<Edge> Smooth(Node destNode, CObsSpace cObsSpace, List<Edge> edgeList)
+        {
             Random random = new Random();
 
             int rand1, rand2;
@@ -70,7 +116,7 @@ namespace Simples.SampleBased
             node1 = new Node(p1);
             if (node1.calcDist(edge1.node1) < 0.1)
             {
-                return;
+                return edgeList;
             }
 
 
@@ -83,7 +129,7 @@ namespace Simples.SampleBased
             node2 = new Node(p2);
             if (node2.calcDist(edge2.node2) < 0.1)
             {
-                return;
+                return edgeList;
             }
 
             double dist;
@@ -115,6 +161,7 @@ namespace Simples.SampleBased
                 }
                 destNode.aTotalDist = totalDist;
             }
+            return edgeList;
 
         }
     }

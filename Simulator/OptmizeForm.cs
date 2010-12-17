@@ -15,6 +15,7 @@ namespace WindowsGame1
     public partial class OptmizeForm : Form
     {
         private RRTOptimizer optmizer;
+        private PathSmoothing smoothing;
         private List<double> results;
         private NArticulatedPlanarController controller;
 
@@ -54,8 +55,13 @@ namespace WindowsGame1
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            double minDist = optmizer.MinDist;
-            
+            //double minDist = optmizer.MinDist;
+            if (optmizer.bestDestNode != null)
+            {
+                double minDist = optmizer.bestDestNode.aTotalDist;
+                label1.Text = minDist.ToString("0.00");
+            }
+            /*
             results.Add(Math.Min(minDist, 1000));
             double[,] values = new double[results.Count, 2];
 
@@ -66,15 +72,17 @@ namespace WindowsGame1
             }
             chart1.RangeX.Max = results.Count;
             
-            label1.Text = minDist.ToString("0.00");
+          
 
             
             chart1.UpdateDataSeries("Test", values);
+             * */
         }
 
         private void OptmizeForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            optmizer.Stop();            
+            optmizer.Stop();
+            smoothing.Stop();
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -94,6 +102,9 @@ namespace WindowsGame1
 
         private void btnSmooth_Click(object sender, EventArgs e)
         {
+            btnSmooth.Enabled = false;
+            button1.Enabled = true;
+            timer1.Enabled = true;
             /*
             double[] p1 = new double[2]{0,0};
             double[] p2 = new double[2]{0,1};
@@ -112,11 +123,22 @@ namespace WindowsGame1
             edgeList.Add(new Edge(node1, node2, 1, EdgeState.Free));
             edgeList.Add(new Edge(node2, node3, 1, EdgeState.Free));
             */
-            for (int i = 0; i < 1000; i++)
+            smoothing = new PathSmoothing(optmizer.bestDestNode, optmizer.GetMechanism());
+            /*
+            for (int i = 0; i < 100000; i++)
             {
-                PathSmoothing.Smooth(optmizer.bestDestNode, optmizer.GetMechanism());
+                PathSmoothing.Smooth();
             }
-                label1.Text = optmizer.bestDestNode.aTotalDist.ToString("0.00");
+             */
+                //label1.Text = optmizer.bestDestNode.aTotalDist.ToString("0.00");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            btnSmooth.Enabled = false;
+            button1.Enabled = false;
+            timer1.Enabled = false;
+            smoothing.Stop();
         }
     }
 }

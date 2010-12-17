@@ -25,7 +25,9 @@ namespace Simples.SampleBased
         private int dimensionCount;
         private double[] dimensionLowLimit;
         private double[] dimensionHighLimit;
-        private int maxIterations = 1000;
+        private double[] dimensionVelocity;
+
+        private int maxIterations = 4000;
         private double[] origin;
         private double[] dest;
 
@@ -55,12 +57,13 @@ namespace Simples.SampleBased
         private FileStream fs;
         private StreamWriter sw;
 
-        public RRTOptimizer(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace,
-            double[] origin, double[] dest, int threadCount)
+        public RRTOptimizer(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity,
+            CObsSpace cObsSpace, double[] origin, double[] dest, int threadCount)
         {
             this.dimensionCount = dimensionCount;
             this.dimensionLowLimit = dimensionLowLimit;
             this.dimensionHighLimit = dimensionHighLimit;
+            this.dimensionVelocity = dimensionVelocity;
             this.origin = origin;
             this.dest = dest;
 
@@ -97,7 +100,7 @@ namespace Simples.SampleBased
         private void calc(CObsSpace cObsSpace)
         {
 
-            CSpaceRRT RRT = new CSpaceRRT(dimensionCount, dimensionLowLimit, dimensionHighLimit, cObsSpace, maxIterations);
+            CSpaceRRT RRT = new CSpaceRRT(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace, maxIterations);
             
             Node originNode, destNode;
             int iterations = RRT.generatePath(origin, dest, out originNode, out destNode);
@@ -111,7 +114,7 @@ namespace Simples.SampleBased
                     if (distance < minDist)
                     {
                         minDist = distance;
-                        maxIterations = iterations;
+                        //maxIterations = iterations;
                         bestDestNode = destNode;
                         t1 = RRT.startTree;
                         t2 = RRT.goalTree;
@@ -129,7 +132,7 @@ namespace Simples.SampleBased
                     noResultCount++;
                     if (noResultCount > 50)
                     {
-                        maxIterations *= 2;
+                        //maxIterations *= 2;
                         noResultCount = 0;
                     }                    
                 }

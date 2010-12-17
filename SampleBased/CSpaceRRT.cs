@@ -148,8 +148,8 @@ namespace Simples.SampleBased
         public ExplorationTree goalTree;
         int k;
 
-        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, CObsSpace cObsSpace, int k)
-            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, cObsSpace)
+        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace, int k)
+            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace)
         {
             this.k = k;
             this.sampleList = new List<double[]>();

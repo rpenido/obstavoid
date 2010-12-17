@@ -13,6 +13,7 @@ namespace Simples.Robotics.Mechanisms
         //protected Matrix world;
         protected double minValue;
         protected double maxValue;
+        protected double velocity;
         protected Link parentLink;
         protected Vector3 position;
         
@@ -73,22 +74,14 @@ namespace Simples.Robotics.Mechanisms
         {
         }
 
-        public Joint(Link parentLink, Vector3 position, double minValue, double maxValue)
+        public Joint(Link parentLink, Vector3 position, double minValue, double maxValue, double velocity)
         {
             this.parentLink = parentLink;
             this.position = position;
             this.minValue = minValue;
             this.maxValue = maxValue;
+            this.velocity = velocity;
             calcPending = true;
         }
-        /*
-        public Joint(Matrix world)
-        {
-            this.position = world.Translation;
-            this.world = world;
-        }
-        */
-
-
     }
 }

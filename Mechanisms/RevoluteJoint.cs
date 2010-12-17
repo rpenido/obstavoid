@@ -39,8 +39,8 @@ namespace Simples.Robotics.Mechanisms
             get { return Math.PI * Value / 180.0; }
         }
 
-        public RevoluteJoint(Link parentLink, Vector3 position, float angle, Vector3 axis, double minValue, double maxValue)
-            : base(parentLink, position, minValue, maxValue)
+        public RevoluteJoint(Link parentLink, Vector3 position, float angle, Vector3 axis, double minValue, double maxValue, double velocity)
+            : base(parentLink, position, minValue, maxValue, velocity)
         {
             this.Value = angle;
             this.axis = axis;

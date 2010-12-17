@@ -374,7 +374,7 @@ namespace WindowsGame1
         private void optmize()
         {
             CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-            RRTOptimizer opt = new RRTOptimizer(6, new double[] { -180, -180, -180, -180, -180, -180 }, new double[] { 180, 180, 180, 180, 180, 180 }, cObsSpace, origin, dest, 2);
+            RRTOptimizer opt = new RRTOptimizer(6, new double[] { -180, -180, -180, -180, -180, -180 }, new double[] { 180, 180, 180, 180, 180, 180 }, new double[] { 1,2,3,4,5,6}, cObsSpace, origin, dest, 2);
             controller = new NArticulatedPlanarController(robot);
             OptmizeForm form = new OptmizeForm(opt, controller);
             form.Show();

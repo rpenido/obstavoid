@@ -59,7 +59,7 @@ namespace Simples.Simulation.Planar2D
             */
 
             Link baseLink = new Link(world);
-            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, Vector3.UnitZ, -180, 180);
+            RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, Vector3.UnitZ, -180, 180, 1.0);
             mechanism.Joints.Add(nextJoint);
             for (int i = 0; i < linkCount; i++)
             {
@@ -75,7 +75,7 @@ namespace Simples.Simulation.Planar2D
                 mechanism.Links.Add(link);
                 if (i != linkCount - 1)
                 {
-                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, Vector3.UnitZ, -180, +180);
+                    nextJoint = new RevoluteJoint(link, linkTranslation, 0, Vector3.UnitZ, -180, +180, 2^(i+1));
                     mechanism.Joints.Add(nextJoint);
                 }                
             }
