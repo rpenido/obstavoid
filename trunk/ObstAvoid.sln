@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleBased", "SampleBased\SampleBased.csproj", "{C727D54D-3FBD-4572-9652-49AB1B59916F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulator", "Simulator\Simulator.csproj", "{F0189E23-8839-4A33-9CA3-F4C832F57077}"
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scene", "SceneRendering\Scene.csproj", "{06183F45-933B-4017-8A43-1554D3B4F43E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentPipelineSTLImporter", "ContentPipelineSTLImporter\ContentPipelineSTLImporter.csproj", "{F06CCA90-B3CC-452C-B7A5-A80B119F827D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatorContent", "Simulator\Content\SimulatorContent.contentproj", "{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,26 +111,6 @@ Global
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|x86.ActiveCfg = Release|x86
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|Xbox 360.ActiveCfg = Release|x86
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|Zune.ActiveCfg = Release|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Debug|x86.ActiveCfg = Debug|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Debug|Xbox 360.ActiveCfg = Debug|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Debug|Zune.ActiveCfg = Debug|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Release|Any CPU.ActiveCfg = Release|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Release|x86.ActiveCfg = Release|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Release|Xbox 360.ActiveCfg = Release|x86
-		{67AD03E5-EAD3-42F4-B7B2-952A2AC013D6}.Release|Zune.ActiveCfg = Release|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Debug|x86.ActiveCfg = Debug|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Debug|Xbox 360.ActiveCfg = Debug|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Debug|Zune.ActiveCfg = Debug|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Release|Any CPU.ActiveCfg = Release|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Release|x86.ActiveCfg = Release|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Release|Xbox 360.ActiveCfg = Release|x86
-		{B70ACCCD-A3AB-4E6A-BFC1-8CCBF9C716CA}.Release|Zune.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

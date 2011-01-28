@@ -116,10 +116,11 @@ namespace WindowsGame1
      
         public void Draw()
         {
+            /*
             spriteBatch.Begin();
 
             spriteBatch.Draw(cSpace, new Vector2(0, 0), Color.White);
-            /*
+            
             for (int i = 1; i < edges.Count; i++)
             {
                 Vector2 vector1 = (Vector2)edges[i - 1];
@@ -143,14 +144,14 @@ namespace WindowsGame1
                     SpriteEffects.None,
                     0);
             }
-            */
+            
 
             spriteBatch.End();
 
-            effect.Begin();
+            //effect.Begin();
             foreach (EffectPass p in effect.CurrentTechnique.Passes)
             {
-                p.Begin();
+                //p.Begin();
                 if (origin != null)
                 {
                     GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.PointList, origin, 0, 1);
@@ -169,11 +170,12 @@ namespace WindowsGame1
                 }
 
                 
-                p.End();
+                //p.End();
             }
-            effect.End();
+            //effect.End();
 
             GraphicsDevice.Present(this.pnlPanel.Handle);
+             */
         }
 
         private void pnlPanel_Paint(object sender, PaintEventArgs e)
@@ -188,11 +190,11 @@ namespace WindowsGame1
             parameters.BackBufferHeight = Math.Max(height, 1);
             parameters.BackBufferFormat = SurfaceFormat.Color;
 
-            parameters.EnableAutoDepthStencil = true;
-            parameters.AutoDepthStencilFormat = DepthFormat.Depth24;
-
+            //parameters.EnableAutoDepthStencil = true;
+            //parameters.AutoDepthStencilFormat = DepthFormat.Depth24;
+            /*
             graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter,
-                                                DeviceType.Hardware,
+                                                GraphicsProfile.Reach,
                                                 pnlPanel.IsHandleCreated ? pnlPanel.Handle : IntPtr.Zero,
                                                 parameters);
 
@@ -216,6 +218,7 @@ namespace WindowsGame1
 
             vertices = new List<VertexPositionColor>();
             path = new List<VertexPositionColor>();
+             * */
         }
     }
 }

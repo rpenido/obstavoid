@@ -498,11 +498,11 @@ namespace WindowsGame1
         {
             if (isColliding())
             {
-                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.Yellow);
+                GraphicsDevice.Clear(Color.Yellow);
             }
             else
             {
-                GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.BlueViolet);
+                GraphicsDevice.Clear(Color.BlueViolet);
             }
 
             // TODO: Add your drawing code here
