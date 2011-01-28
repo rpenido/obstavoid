@@ -8,7 +8,8 @@ namespace Simples.Robotics.Mechanisms
 {
     public class VertexList
     {
-        private Vector3[] vertexData;
+        //private Vector3[] vertexData;
+        private List<Vector3> vertexData;
 
         public Vector3 this[int index]
         {
@@ -16,21 +17,27 @@ namespace Simples.Robotics.Mechanisms
             set { vertexData[index] = value; }
         }
 
-
+        /*
         public VertexList(int size)
         {
             this.vertexData = new Vector3[size];
+        }
+         * */
+        public VertexList()
+        {
+            this.vertexData = new List<Vector3>();
         }
     }
 
     public class TriangleData
     {
-        private int[] indices;
-        private VertexList vertexList;
+        //private int[] indices;
+        private Vector3[] vertexList;
+        //private VertexList vertexList;
 
         public Vector3 this[int index]
         {
-            get { return vertexList[indices[index]]; }
+            get { return vertexList[index]; }
         }
 
         private Vector3 normal = Vector3.Zero;
@@ -83,7 +90,7 @@ namespace Simples.Robotics.Mechanisms
             }
 
         }
-
+        /*
         public TriangleData(int count, short[] meshIndices, int offset, VertexList vertexList)
         {
             this.vertexList = vertexList;
@@ -104,6 +111,11 @@ namespace Simples.Robotics.Mechanisms
             {
                 indices[i] = meshIndices[count + i] + offset;
             }
+        }
+        */
+        public TriangleData(ref Vector3[] vertices)
+        {
+            vertexList = vertices;
         }
     }
 }

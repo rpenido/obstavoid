@@ -544,12 +544,13 @@ box.dir2 x tri.edge2
 
             if (effect == null)
             {
-                effect = new BasicEffect(graphicsDevice, null);
+                effect = new BasicEffect(graphicsDevice);
 
                 effect.VertexColorEnabled = true;
-                effect.LightingEnabled = true;
+                //effect.LightingEnabled = true;
 
             }
+            
             effect.World = transforms;
             effect.View = view;
             effect.Projection = projection;
@@ -557,10 +558,11 @@ box.dir2 x tri.edge2
 
 
 
-            effect.Begin();
+
             foreach (EffectPass p in effect.CurrentTechnique.Passes)
             {
-                p.Begin();
+
+                p.Apply();
                 graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
                                  PrimitiveType.LineList,
                                  corners,
@@ -569,9 +571,7 @@ box.dir2 x tri.edge2
                                  indices,
                                  0,
                                  indices.Length / 2);
-                p.End();
             }
-            effect.End();
         }
 
     }

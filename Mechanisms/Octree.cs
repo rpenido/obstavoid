@@ -88,7 +88,7 @@ namespace Simples.Robotics.Mechanisms
 
         public void Divide()
         {
-            if (triangles.Count < 2)
+            if (triangles.Count < 5)
                 return;
           
             octree = new OctreeNode[8];
@@ -121,8 +121,8 @@ namespace Simples.Robotics.Mechanisms
                     quadIndex = (Convert.ToByte(bits[0]) << 2) +
                         (Convert.ToByte(bits[1]) << 1) +
                         Convert.ToByte(bits[2]);
-
-                    octree[quadIndex].AddTriangle(triangle);
+                        octree[quadIndex].AddTriangle(triangle);
+                    
                 }
             }
 
@@ -135,8 +135,11 @@ namespace Simples.Robotics.Mechanisms
             }
         }
 
-        public void Draw(Game game, Matrix projection, Matrix view)
+        public void Draw(GraphicsDevice graphicsDevice, Matrix projection, Matrix view)
         {
+            if (triangles.Count == 0)
+                return;
+
             int[] indices = new int[]
             {
                 0, 1,
@@ -168,12 +171,11 @@ namespace Simples.Robotics.Mechanisms
 
             if (effect == null)
             {
-                effect = new BasicEffect(game.GraphicsDevice, null);
+                effect = new BasicEffect(graphicsDevice);
 
                 effect.World = Matrix.Identity;
-                
+
                 effect.VertexColorEnabled = true;
-                effect.LightingEnabled = true;
                
             }
             effect.View = view;
@@ -182,11 +184,12 @@ namespace Simples.Robotics.Mechanisms
            
             
             
-            effect.Begin();
+            //effect.Begin();
             foreach (EffectPass p in effect.CurrentTechnique.Passes)
             {
-                p.Begin();
-                game.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
+                //p.Begin();
+                p.Apply();
+                graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
                                  PrimitiveType.LineList,
                                  corners,
                                  0,
@@ -194,14 +197,16 @@ namespace Simples.Robotics.Mechanisms
                                  indices,
                                  0,
                                  indices.Length / 2);                    
-                p.End();
+                
+                //p.End();
             }
-            effect.End();
+            //effect.End();
             if (octree != null)
             {
+              
                 foreach (OctreeNode oct in octree)
                 {
-                    oct.Draw(game, projection, view);
+                    oct.Draw(graphicsDevice, projection, view);
                 }
             }
 
