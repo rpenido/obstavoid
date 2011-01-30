@@ -55,6 +55,7 @@
     <Compile Include="CSpacePRM.cs" />
     <Compile Include="CSpaceRRT.cs" />
     <Compile Include="Edge.cs" />
+    <Compile Include="ExplorationTree.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="PathSmoothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
