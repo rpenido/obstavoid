@@ -134,7 +134,7 @@ namespace Simples.SampleBased
 
                 Edge edge = this.getEdge(edgeList, node, nodeCSpace);
 
-                if (edge.state != EdgeState.Free)
+                if (edge.State != EdgeState.Free)
                     continue;
 
                 if (node.childs.Contains(edge))
@@ -145,7 +145,7 @@ namespace Simples.SampleBased
                     node.childs.Add(edge);
                     edge.getNode(node).searchAndInsert(edge);
                 }
-                else if (edge.dist < node.childs.Last().dist)
+                else if (edge.Dist < node.childs.Last().Dist)
                 {
                     if (node.childs.Count == k)
                     {

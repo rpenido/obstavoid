@@ -30,7 +30,7 @@ namespace Simples.SampleBased
                 }
                 else
                 {
-                    int retval = edge1.dist.CompareTo(edge2.dist);
+                    int retval = edge1.Dist.CompareTo(edge2.Dist);
                     return retval;
                 }
             }
@@ -42,18 +42,18 @@ namespace Simples.SampleBased
 
     public class Edge
     {
-        public Node node1;
-        public Node node2;
-        public double dist;
-        public EdgeState state;
+        public Node Node1;
+        public Node Node2;
+        public double Dist;
+        public EdgeState State;
         public double[] vector;
 
         public Edge(Node node1, Node node2, double dist, EdgeState state)
         {
-            this.node1 = node1;
-            this.node2 = node2;
-            this.dist = dist;
-            this.state = state;
+            this.Node1 = node1;
+            this.Node2 = node2;
+            this.Dist = dist;
+            this.State = state;
 
             this.vector = new double[node1.p.Length];
             calcVector();
@@ -65,15 +65,15 @@ namespace Simples.SampleBased
 
         public void Dispose()
         {
-            node1 = null;
-            node2 = null;
+            Node1 = null;
+            Node2 = null;
 
         }
         public void calcVector()
         {
-            for (int i = 0; i < node1.p.Length; i++)
+            for (int i = 0; i < Node1.p.Length; i++)
             {
-                vector[i] = (node2.p[i] - node1.p[i]) / dist;
+                vector[i] = (Node2.p[i] - Node1.p[i]) / Dist;
                 if (double.IsNaN(vector[i]))
                 {
                     vector[i] = -1;
@@ -84,12 +84,77 @@ namespace Simples.SampleBased
 
         public Node getNode(Node node)
         {
-            if (node == this.node1)
-                return this.node2;
-            else if (node == this.node2)
-                return this.node1;
+            if (node == this.Node1)
+                return this.Node2;
+            else if (node == this.Node2)
+                return this.Node1;
             else
                 return null;
+        }
+
+        private double getProjection(double[] p)
+        {
+            double[] pVector = new double[p.Length];
+            double sum = 0;
+            for (int i = 0; i < p.Length; i++)
+            {
+                pVector[i] = (p[i] - Node1.p[i]) * vector[i];
+                sum += (p[i] - Node1.p[i]) * vector[i];
+            }
+
+            return sum;
+
+        }
+
+        public Node GetNearestNode(Node node, out double nodeDist, out bool split)
+        {
+            double scalarProjection;
+            Node edgeNode;
+
+            scalarProjection = getProjection(node.p);
+
+            if (scalarProjection <= 0)
+            {
+                edgeNode = Node1;
+                split = false;
+            }
+            else if (scalarProjection >= Dist)
+            {
+                edgeNode = Node2;
+                split = false;
+            }
+            else
+            {
+                double[] edgeP = new double[node.p.Length];
+
+                for (int i = 0; i < edgeP.Length; i++)
+                {
+                    edgeP[i] = Node1.p[i] + scalarProjection * vector[i];
+                }
+
+                edgeNode = new Node(edgeP);
+                split = true;
+            }
+
+            nodeDist = node.calcDist(edgeNode);
+            return edgeNode;
+        }
+
+        public Edge Split(Node midNode)
+        {
+            Node tempNode = Node2;
+            tempNode.removeChild(this);
+
+            Node2 = midNode;
+            Dist = Node1.calcDist(midNode);
+            midNode.addChild(this);
+
+            Edge newEdge = new Edge(midNode, tempNode, midNode.calcDist(tempNode), EdgeState.Free);
+            //edgeList.Add(newEdge);
+            midNode.addChild(newEdge);
+            tempNode.addChild(newEdge);
+
+            return newEdge;
         }
 
     }

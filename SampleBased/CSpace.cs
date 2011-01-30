@@ -41,9 +41,9 @@ namespace Simples.SampleBased
         {
             foreach (Edge edge in edgeList)
             {
-                if ((node1 == edge.node1) && (node2 == edge.node2))
+                if ((node1 == edge.Node1) && (node2 == edge.Node2))
                     return edge;
-                else if ((node1 == edge.node2) && (node2 == edge.node1))
+                else if ((node1 == edge.Node2) && (node2 == edge.Node1))
                     return edge;
             }
 
@@ -91,7 +91,7 @@ namespace Simples.SampleBased
                     if (closedSet.Contains(y))
                         continue;
 
-                    double score = x.aDist + yEdge.dist;
+                    double score = x.aDist + yEdge.Dist;
                     Boolean scoreBetter = false;
                     if (!openSet.Contains(y))
                     {

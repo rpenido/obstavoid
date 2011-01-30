@@ -111,10 +111,10 @@ namespace Simples.SampleBased
             double[] p1 = new double[destNode.p.Length];
             for (int i = 0; i < p1.Length; i++)
             {
-                p1[i] = edge1.node1.p[i] + edge1.vector[i] * edge1.dist * factor;
+                p1[i] = edge1.Node1.p[i] + edge1.vector[i] * edge1.Dist * factor;
             }
             node1 = new Node(p1);
-            if (node1.calcDist(edge1.node1) < 0.1)
+            if (node1.calcDist(edge1.Node1) < 0.1)
             {
                 return edgeList;
             }
@@ -124,10 +124,10 @@ namespace Simples.SampleBased
             double[] p2 = new double[destNode.p.Length];
             for (int i = 0; i < p2.Length; i++)
             {
-                p2[i] = edge2.node1.p[i] + edge2.vector[i] * edge2.dist * factor;
+                p2[i] = edge2.Node1.p[i] + edge2.vector[i] * edge2.Dist * factor;
             }
             node2 = new Node(p2);
-            if (node2.calcDist(edge2.node2) < 0.1)
+            if (node2.calcDist(edge2.Node2) < 0.1)
             {
                 return edgeList;
             }
@@ -137,14 +137,14 @@ namespace Simples.SampleBased
             {
                 node2.aCameFrom = node1;
 
-                node1.aCameFrom = edge1.node1;
-                edge1.node2 = node1;
-                edge1.dist = edge1.node1.calcDist(node1);
+                node1.aCameFrom = edge1.Node1;
+                edge1.Node2 = node1;
+                edge1.Dist = edge1.Node1.calcDist(node1);
 
 
-                edge2.node1 = node2;
-                edge2.node2.aCameFrom = node2;
-                edge2.dist = node2.calcDist(edge2.node2);
+                edge2.Node1 = node2;
+                edge2.Node2.aCameFrom = node2;
+                edge2.Dist = node2.calcDist(edge2.Node2);
 
 
                 edgeList.RemoveRange(rand1 + 1, rand2 - (rand1 + 1));
@@ -157,7 +157,7 @@ namespace Simples.SampleBased
                 double totalDist = 0;
                 foreach (Edge edge in edgeList)
                 {
-                    totalDist += edge.dist;
+                    totalDist += edge.Dist;
                 }
                 destNode.aTotalDist = totalDist;
             }
