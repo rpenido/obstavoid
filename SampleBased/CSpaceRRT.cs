@@ -9,14 +9,14 @@ namespace Simples.SampleBased
 
     public class CSpaceRRT : CSpace
     {
-        Random rand = new Random();
+        
         public List<double[]> sampleList;
         public ExplorationTree startTree;
         public ExplorationTree goalTree;
         int k;
 
-        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace, int k)
-            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace)
+        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CObsSpace cObsSpace, int k)
+            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionWeight, cObsSpace)
         {
             this.k = k;
             this.sampleList = new List<double[]>();
@@ -58,7 +58,7 @@ namespace Simples.SampleBased
 
 
         }
-
+        /*
         public Node growTree(ExplorationTree T)
         {
             double[] p = new double[dimensionCount];
@@ -70,47 +70,41 @@ namespace Simples.SampleBased
 
             return growTree(T, new Node(p));
         }
-
+        */
         public int generatePath(double[] origin, double[] dest,
             out Node originNode, out Node destNode)
         {
             originNode = new Node(origin);
-            startTree = new ExplorationTree(originNode);
+            startTree = new ExplorationTree(cObsSpace, dimensionCount, dimensionLowLimit,
+                dimensionHighLimit, dimensionWeight, originNode);
 
             destNode = new Node(dest);
-            goalTree = new ExplorationTree(destNode);
+            goalTree = new ExplorationTree(cObsSpace, dimensionCount, dimensionLowLimit,
+                dimensionHighLimit, dimensionWeight, destNode);
 
 
             Node qs;
             Node qs2;
-            //qs = growTree(startTree, destNode);
-
-            //if (qs == destNode)
-            //{
-            //    return;
-            //}
 
             ExplorationTree T1 = startTree;
             ExplorationTree T2 = goalTree;
             int i;
             for (i = 0; i < k; i++)
             {
-                qs = growTree(T1);
-                qs2 = growTree(T2, qs);
+                qs = T1.Grow();
+                qs2 = T2.Grow(qs);
 
                 if (qs == qs2)
                     break;
 
                 if (T1.size > T2.size)
                 {
-                    ExplorationTree temp;
-                    temp = T1;
+                    ExplorationTree temp = T1;
                     T1 = T2;
                     T2 = temp;
                 }
 
             }
-
 
 
             A_Star(originNode, destNode);
