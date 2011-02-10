@@ -145,7 +145,7 @@ namespace Simples.SampleBased
                     node.childs.Add(edge);
                     edge.getNode(node).searchAndInsert(edge);
                 }
-                else if (edge.Dist < node.childs.Last().Dist)
+                else if (edge.WeightedDistance < node.childs.Last().WeightedDistance)
                 {
                     if (node.childs.Count == k)
                     {

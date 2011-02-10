@@ -47,10 +47,11 @@ namespace Simples.SampleBased
 
         }
 
-        public bool checkPath(Node node1, ref Node node2, out double dist)
+        public bool checkPath(Node node1, ref Node node2)
+        //public bool checkPath(Node node1, ref Node node2, out double dist)
         {
             Boolean collision = false;
-            dist = node1.calcDist(node2);
+            double dist = node1.calcDist(node2);
             int step = 1;
             double[] p = new double[node1.p.Length];
             double[] lastP = new double[node1.p.Length];
@@ -92,9 +93,10 @@ namespace Simples.SampleBased
 
         public Edge createEdge(Node node1, Node node2)
         {
-            double dist;
+            //double dist;
             EdgeState state;
-            Boolean freePath = !checkPath(node1, ref node2, out dist);
+            //Boolean freePath = !checkPath(node1, ref node2, out dist);
+            Boolean freePath = !checkPath(node1, ref node2);
             if (freePath)
             {
                 state = EdgeState.Free;
@@ -104,7 +106,7 @@ namespace Simples.SampleBased
                 state = EdgeState.Obstacle;
             }
 
-            return new Edge(node1, node2, dist, state);
+            return new Edge(node1, node2, state);
         }
 
         public abstract object Clone();

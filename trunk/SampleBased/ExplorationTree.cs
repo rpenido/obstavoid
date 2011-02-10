@@ -122,9 +122,9 @@ namespace Simples.SampleBased
             Node gs = node;
 
 
-            double dist;
+            //double dist;
 
-            cObsSpace.checkPath(gn, ref gs, out dist);
+            cObsSpace.checkPath(gn, ref gs);
 
             Boolean sameNode;
             sameNode = true;
@@ -138,7 +138,7 @@ namespace Simples.SampleBased
             if (!sameNode)
             {
                 nodeList.Add(gs);
-                Edge newEdge = new Edge(gn, gs, dist, EdgeState.Free);
+                Edge newEdge = new Edge(gn, gs, EdgeState.Free);
                 edgeList.Add(newEdge);
                 gn.addChild(newEdge);
                 gs.addChild(newEdge);

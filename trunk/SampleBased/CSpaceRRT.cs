@@ -21,7 +21,7 @@ namespace Simples.SampleBased
             this.k = k;
             this.sampleList = new List<double[]>();
         }
-
+        /*
         public Node growTree(ExplorationTree T, Node a)
         {
             //sampleList.Add(a.p);
@@ -29,9 +29,10 @@ namespace Simples.SampleBased
             Node gs = a;
 
 
-            double dist;
+            //double dist;
 
-            cObsSpace.checkPath(gn, ref gs, out dist);
+            //cObsSpace.checkPath(gn, ref gs, out dist);
+            cObsSpace.checkPath(gn, ref gs);
 
             Boolean sameNode;
             sameNode = true;
@@ -45,7 +46,8 @@ namespace Simples.SampleBased
             if (!sameNode)
             {
                 T.nodeList.Add(gs);
-                Edge newEdge = new Edge(gn, gs, dist, EdgeState.Free);
+                //Edge newEdge = new Edge(gn, gs, dist, EdgeState.Free);
+                Edge newEdge = new Edge(gn, gs, EdgeState.Free);
                 T.edgeList.Add(newEdge);
                 gn.addChild(newEdge);
                 gs.addChild(newEdge);
@@ -58,7 +60,7 @@ namespace Simples.SampleBased
 
 
         }
-        /*
+        
         public Node growTree(ExplorationTree T)
         {
             double[] p = new double[dimensionCount];

@@ -30,7 +30,7 @@ namespace Simples.SampleBased
                 }
                 else
                 {
-                    int retval = edge1.Dist.CompareTo(edge2.Dist);
+                    int retval = edge1.WeightedDistance.CompareTo(edge2.WeightedDistance);
                     return retval;
                 }
             }
@@ -42,17 +42,71 @@ namespace Simples.SampleBased
 
     public class Edge
     {
-        public Node Node1;
-        public Node Node2;
-        public double Dist;
+        private Node node1;
+        private Node node2;
+        private double? distance = null;
+        private double? weightedDistance = null;
         public EdgeState State;
         public double[] vector;
 
-        public Edge(Node node1, Node node2, double dist, EdgeState state)
+        public double Distance
+        {
+            get
+            {
+                if (distance == null)
+                {
+                    distance = Node1.calcDist(Node2);
+                }
+                return (double)distance;
+            }
+        }
+
+        public Node Node1
+        {
+            get
+            {
+                return node1;
+            }
+            set
+            {
+                node1 = value;
+                distance = null;
+                weightedDistance = null;
+            }
+        }
+
+        public Node Node2
+        {
+            get
+            {
+                return node2;
+            }
+            set
+            {
+                node2 = value;
+                distance = null;
+                weightedDistance = null;
+            }
+        }
+
+        public double WeightedDistance
+        {
+            get
+            {
+                if (weightedDistance == null)
+                {
+                    weightedDistance = Node1.calcDist(Node2);
+                }
+                return (double)weightedDistance;
+            }
+
+        }
+
+        public Edge(Node node1, Node node2, EdgeState state)
         {
             this.Node1 = node1;
             this.Node2 = node2;
-            this.Dist = dist;
+            //this.Dist = dist;
             this.State = state;
 
             this.vector = new double[node1.p.Length];
@@ -73,7 +127,7 @@ namespace Simples.SampleBased
         {
             for (int i = 0; i < Node1.p.Length; i++)
             {
-                vector[i] = (Node2.p[i] - Node1.p[i]) / Dist;
+                vector[i] = (Node2.p[i] - Node1.p[i]) / Distance;
                 if (double.IsNaN(vector[i]))
                 {
                     vector[i] = -1;
@@ -118,7 +172,7 @@ namespace Simples.SampleBased
                 edgeNode = Node1;
                 split = false;
             }
-            else if (scalarProjection >= Dist)
+            else if (scalarProjection >= Distance)
             {
                 edgeNode = Node2;
                 split = false;
@@ -146,10 +200,10 @@ namespace Simples.SampleBased
             tempNode.removeChild(this);
 
             Node2 = midNode;
-            Dist = Node1.calcDist(midNode);
+            //Dist = Node1.calcDist(midNode);
             midNode.addChild(this);
 
-            Edge newEdge = new Edge(midNode, tempNode, midNode.calcDist(tempNode), EdgeState.Free);
+            Edge newEdge = new Edge(midNode, tempNode, EdgeState.Free);
             //edgeList.Add(newEdge);
             midNode.addChild(newEdge);
             tempNode.addChild(newEdge);
