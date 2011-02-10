@@ -11,10 +11,10 @@ namespace Simples.SampleBased
         protected int dimensionCount;
         protected double[] dimensionLowLimit;
         protected double[] dimensionHighLimit;
-        protected double[] dimensionVelocity;
+        protected double[] dimensionWeight;
         protected CObsSpace cObsSpace;
 
-        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace)
+        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CObsSpace cObsSpace)
         {
             if (dimensionCount != 2)
             {
@@ -31,7 +31,7 @@ namespace Simples.SampleBased
 
             this.dimensionCount = dimensionCount;
             this.dimensionLowLimit = dimensionLowLimit;
-            this.dimensionHighLimit = dimensionHighLimit;
+            this.dimensionHighLimit = dimensionWeight;
             this.cObsSpace = cObsSpace;
 
         }
