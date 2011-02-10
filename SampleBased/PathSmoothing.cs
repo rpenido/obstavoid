@@ -61,7 +61,7 @@ namespace Simples.SampleBased
             currentNode = destNode;
             while (currentNode.aCameFrom != null)
             {
-                Edge edge = new Edge(currentNode.aCameFrom, currentNode, currentNode.calcDist(currentNode.aCameFrom), EdgeState.Free);
+                Edge edge = new Edge(currentNode.aCameFrom, currentNode, EdgeState.Free);
                 edgeList.Insert(0, edge);
 
                 currentNode = currentNode.aCameFrom;
@@ -111,7 +111,7 @@ namespace Simples.SampleBased
             double[] p1 = new double[destNode.p.Length];
             for (int i = 0; i < p1.Length; i++)
             {
-                p1[i] = edge1.Node1.p[i] + edge1.vector[i] * edge1.Dist * factor;
+                p1[i] = edge1.Node1.p[i] + edge1.vector[i] * edge1.Distance * factor;
             }
             node1 = new Node(p1);
             if (node1.calcDist(edge1.Node1) < 0.1)
@@ -124,7 +124,7 @@ namespace Simples.SampleBased
             double[] p2 = new double[destNode.p.Length];
             for (int i = 0; i < p2.Length; i++)
             {
-                p2[i] = edge2.Node1.p[i] + edge2.vector[i] * edge2.Dist * factor;
+                p2[i] = edge2.Node1.p[i] + edge2.vector[i] * edge2.Distance * factor;
             }
             node2 = new Node(p2);
             if (node2.calcDist(edge2.Node2) < 0.1)
@@ -132,24 +132,24 @@ namespace Simples.SampleBased
                 return edgeList;
             }
 
-            double dist;
-            if (!cObsSpace.checkPath(node1, ref node2, out dist) && dist > 0.1)
+            //double dist;
+            if (!cObsSpace.checkPath(node1, ref node2) && node1.calcDist(node2) > 0.1)
             {
                 node2.aCameFrom = node1;
 
                 node1.aCameFrom = edge1.Node1;
                 edge1.Node2 = node1;
-                edge1.Dist = edge1.Node1.calcDist(node1);
+                //edge1.Dist = edge1.Node1.calcDist(node1);
 
 
                 edge2.Node1 = node2;
                 edge2.Node2.aCameFrom = node2;
-                edge2.Dist = node2.calcDist(edge2.Node2);
+                //edge2.Dist = node2.calcDist(edge2.Node2);
 
 
                 edgeList.RemoveRange(rand1 + 1, rand2 - (rand1 + 1));
 
-                Edge newEdge = new Edge(node1, node2, dist, EdgeState.Free);
+                Edge newEdge = new Edge(node1, node2, EdgeState.Free);
 
 
                 edgeList.Insert(rand1 + 1, newEdge);
@@ -157,7 +157,7 @@ namespace Simples.SampleBased
                 double totalDist = 0;
                 foreach (Edge edge in edgeList)
                 {
-                    totalDist += edge.Dist;
+                    totalDist += edge.WeightedDistance;
                 }
                 destNode.aTotalDist = totalDist;
             }

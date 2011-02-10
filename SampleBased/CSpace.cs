@@ -91,7 +91,7 @@ namespace Simples.SampleBased
                     if (closedSet.Contains(y))
                         continue;
 
-                    double score = x.aDist + yEdge.Dist;
+                    double score = x.aDist + yEdge.WeightedDistance;
                     Boolean scoreBetter = false;
                     if (!openSet.Contains(y))
                     {
