@@ -40,15 +40,18 @@ namespace SceneRendering
             meshBuilder = MeshBuilder.StartMesh("");
             meshBuilder.SwapWindingOrder = true;
             /***/
+
+            int normalsChannelIndex = meshBuilder.CreateVertexChannel<Vector3>(VertexChannelNames.Normal(0));;
             int[] verticesIndex = new int[faceCount*3];                
             for (int i = 0; i < faceCount; i++)
             {                
                 
                 Vector3 normal = new Vector3(sr.ReadSingle(),
                     sr.ReadSingle(), sr.ReadSingle());
-                
+                meshBuilder.SetVertexChannelData(normalsChannelIndex, normal);
                 for (int j = i*3; j < (i*3)+3; j++)
                 {
+                    
                     Vector3 vertice = new Vector3(sr.ReadSingle(),
                         sr.ReadSingle(), sr.ReadSingle());
 
@@ -67,10 +70,6 @@ namespace SceneRendering
 
             MeshContent mesh = meshBuilder.FinishMesh();
             root.Children.Add(mesh);
-
-
-                
-
 
            return root;
         }
