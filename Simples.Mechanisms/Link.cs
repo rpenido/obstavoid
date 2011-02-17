@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     [Serializable]
     public class Link
-    {
-        //private
+    {        
         public List<OrientedBoundingBox> boundingBoxList;
 
-        protected Joint joint;
+        private Joint joint;
+        private Model model = null;
+
+        public Model Model
+        {
+            get { return model; }
+            set { model = value; }
+        }
 
         private Matrix transform;
         public Matrix Transform
@@ -59,7 +66,6 @@ namespace Simples.Robotics.Mechanisms
             foreach (OrientedBoundingBox obb in boundingBoxList)
             {
                 obb.Transforms = Transform * obb.BoxTransform;
-                //if (obb.Intersects(other))
                 if (other.Intersects(obb))
                     return true;
             }

@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml.Serialization;
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     [Serializable]
     public class Joint
@@ -23,7 +23,6 @@ namespace Simples.Robotics.Mechanisms
             calcPending = true;
         }
 
-        #region Property:Value
         protected double value;
 
         protected virtual void setValue(double value)
@@ -34,18 +33,19 @@ namespace Simples.Robotics.Mechanisms
                 setPending();
             }
         }        
+
         protected double getValue()
         {
             return value;
         }
+        
         public double Value
         {
             get { return getValue(); }
             set { setValue(value); }
         }
-        #endregion
+        
 
-        #region Property:Transform
         protected Matrix transform;
         public Matrix Transform
         {
@@ -56,21 +56,13 @@ namespace Simples.Robotics.Mechanisms
         {
             if (calcPending)
             {
-                //if (parentLink != null)
-                //{
-                    transform = Matrix.CreateTranslation(position) * parentLink.Transform;
-                //}
-                //else
-                //{
-                //    transform = world;
-                //}
+                transform = Matrix.CreateTranslation(position) * parentLink.Transform;
                 calcPending = false;
             }
             return transform;
         }
-        #endregion
 
-        public Joint()
+        private Joint()
         {
         }
 
@@ -81,7 +73,7 @@ namespace Simples.Robotics.Mechanisms
             this.minValue = minValue;
             this.maxValue = maxValue;
             this.velocity = velocity;
-            calcPending = true;
+            setPending();
         }
     }
 }
