@@ -20,6 +20,7 @@ using Simples.Mechanisms;
 
 namespace Simples.Mechanisms.NArticulatedPlanar
 {
+    [Serializable]
     public class NArticulatedPlanarMechanism: Mechanism
     {
         private Model linkModel;
@@ -27,13 +28,7 @@ namespace Simples.Mechanisms.NArticulatedPlanar
         {
             get { return linkModel; }
         }
-/*
-        private Mechanism mechanism;
-        public Mechanism Mechanism
-        {
-            get { return mechanism; }
-        }
-*/
+
         private Matrix world;
         private Vector3 linkTranslation;
 
