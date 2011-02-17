@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using AForge.Controls;
-using Simples.SampleBased;
-using Simples.Simulation.Planar2D;
+using Simples.PathPlan.SamplesBased;
+using Simples.PathPlan.SamplesBased.RRT;
+using Simples.Mechanisms.NArticulatedPlanar;
 
 namespace WindowsGame1
 {
@@ -123,7 +124,7 @@ namespace WindowsGame1
             edgeList.Add(new Edge(node1, node2, 1, EdgeState.Free));
             edgeList.Add(new Edge(node2, node3, 1, EdgeState.Free));
             */
-            smoothing = new PathSmoothing(optmizer.bestDestNode, optmizer.GetMechanism());
+            smoothing = new PathSmoothing(optmizer.bestDestNode, optmizer.CSpace);
             /*
             for (int i = 0; i < 100000; i++)
             {

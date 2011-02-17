@@ -11,11 +11,15 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
-using Simples.Scene.Camera;
-using Simples.Robotics.Mechanisms;
-using Simples.SampleBased;
-using Simples.Simulation.Planar2D;
+using Simples.Camera;
+using Simples.Mechanisms;
+using Simples.Mechanisms.SampleBased;
+using Simples.PathPlan.SamplesBased;
+using Simples.PathPlan.SamplesBased.RRT;
+using Simples.Simulation;
 using System.Runtime.InteropServices;
+using Simples.Mechanisms.NArticulatedPlanar;
+using Simples.Mechanisms.Draw;
 
 namespace WindowsGame1
 {
@@ -31,15 +35,17 @@ namespace WindowsGame1
 
         NArticulatedPlanarController controller;
 
-        Matrix _world;
-        private OrbitCamera _camera;
+        Matrix world;
+        private OrbitCamera camera;
         //private Model linkModel;
 
         private static float _STEP = 1;
 
-        private NArticulatedPlanar robot;
+        private NArticulatedPlanarMechanism robot;
+        private DrawableMechanism  drawableRobot;
 
-        private SceneBoxes scene;
+        private MechanismEnviroment enviroment;
+        private DrawableEnviroment drawableEnviroment;
 
         bool reset = true;
         private float oldMouseX, oldMouseY;
@@ -90,35 +96,24 @@ namespace WindowsGame1
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            //spriteBatch = new SpriteBatch(GraphicsDevice);
+            world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+            camera = new OrbitCamera();
 
-            // TODO: use this.Content to load your game content here
+            Model linkModel = Content.Load<Model>("model1");
+            Vector3 minBound = new Vector3(-10, -10, -5);
+            Vector3 maxBound = new Vector3(120, 10, 5);
 
-            //linkModel = Content.Load<Model>("model1");
-            //cube = Content.Load<Model>("cube");
-            //teste = Content.Load<Model>("Teste");
+            robot = new NArticulatedPlanarMechanism(linkModel, new Vector3(100, 0, 0), minBound,
+                maxBound, 6, world);
+            drawableRobot = new DrawableMechanism(this, robot, camera);
+            Components.Add(drawableRobot);
 
-            _world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-
-            _camera = new OrbitCamera();
-            scene = new SceneBoxes(this, _camera);
-            Components.Add(scene);
-
-            robot = new NArticulatedPlanar(this.Services, new Vector3(100, 0, 0), 6, _world, _camera);
-            /*
-            Tr*iangleData[] triangles = scene.GetFaces();
-
-            oct = new OctreeNode(new Vector3(-450, -450, 0), new Vector3(550, 550, 100), 0);
-
-
-
-            foreach (TriangleData face in triangles)
-            {
-                oct.AddTriangle(face);
-            }
-            oct.Divide();
-            */
+        
+            Model sceneModel = Content.Load<Model>("scene"); ;
+            
+            enviroment = new MechanismEnviroment(sceneModel);
+            drawableEnviroment = new DrawableEnviroment(this, enviroment, camera);
+            Components.Add(drawableEnviroment);
            
         }
 
@@ -154,8 +149,7 @@ namespace WindowsGame1
 
         private bool isColliding()
         {
-            //return oct.IsColliding(robot.Mechanism);
-            return scene.isColliding(robot.Mechanism);
+            return enviroment.IsColliding(robot);
         }
 
         private void setPending(int index, List<Joint> joints)
@@ -171,67 +165,67 @@ namespace WindowsGame1
             KeyboardState state = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
 
-            _camera.Zoom = 2500 + mState.ScrollWheelValue;
+            camera.Zoom = 2500 + mState.ScrollWheelValue;
 
             if (state.IsKeyDown(Keys.D1) || state.IsKeyDown(Keys.Down))
             {
-                robot.Mechanism.Joints[0].Value += _STEP;
-                setPending(0, robot.Mechanism.Joints);
+                robot.Joints[0].Value += _STEP;
+                setPending(0, robot.Joints);
             }
             if (state.IsKeyDown(Keys.D2) || state.IsKeyDown(Keys.Up))
             {
 
-                robot.Mechanism.Joints[0].Value -= _STEP;
-                setPending(0, robot.Mechanism.Joints);
+                robot.Joints[0].Value -= _STEP;
+                setPending(0, robot.Joints);
 
             }
 
             if (state.IsKeyDown(Keys.D3) || state.IsKeyDown(Keys.Right))
             {
-                robot.Mechanism.Joints[1].Value += _STEP;
-                setPending(1, robot.Mechanism.Joints);
+                robot.Joints[1].Value += _STEP;
+                setPending(1, robot.Joints);
             }
             if (state.IsKeyDown(Keys.D4) || state.IsKeyDown(Keys.Left))
             {
 
-                robot.Mechanism.Joints[1].Value -= _STEP;
-                setPending(1, robot.Mechanism.Joints);
+                robot.Joints[1].Value -= _STEP;
+                setPending(1, robot.Joints);
 
             }
 
             if (state.IsKeyDown(Keys.D5))
             {
-                robot.Mechanism.Joints[2].Value += _STEP;
-                setPending(2, robot.Mechanism.Joints);
+                robot.Joints[2].Value += _STEP;
+                setPending(2, robot.Joints);
             }
             if (state.IsKeyDown(Keys.D6))
             {
-                robot.Mechanism.Joints[2].Value -= _STEP;
-                setPending(2, robot.Mechanism.Joints);
+                robot.Joints[2].Value -= _STEP;
+                setPending(2, robot.Joints);
             }
             
             if (state.IsKeyDown(Keys.D7))
             {
-                robot.Mechanism.Joints[3].Value += _STEP;
-                setPending(3, robot.Mechanism.Joints);
+                robot.Joints[3].Value += _STEP;
+                setPending(3, robot.Joints);
             }
             if (state.IsKeyDown(Keys.D8))
             {
-                robot.Mechanism.Joints[3].Value -= _STEP;
-                setPending(3, robot.Mechanism.Joints);
+                robot.Joints[3].Value -= _STEP;
+                setPending(3, robot.Joints);
             }
-            /*
+            
             if (state.IsKeyDown(Keys.D9))
             {
-                robot.Mechanism.Joints[4].Value += _STEP;
-                setPending(4, robot.Mechanism.Joints);
+                robot.Joints[4].Value += _STEP;
+                setPending(4, robot.Joints);
             }
             if (state.IsKeyDown(Keys.D0))
             {
-                robot.Mechanism.Joints[4].Value -= _STEP;
-                setPending(4, robot.Mechanism.Joints);
+                robot.Joints[4].Value -= _STEP;
+                setPending(4, robot.Joints);
             }
-            */
+            
             if (reset)
             {
                 oldMouseX = mState.X;
@@ -245,8 +239,8 @@ namespace WindowsGame1
             }
             else
             {
-                _camera.cameraAngleX += (oldMouseY - mState.Y);
-                _camera.cameraAngleY += (oldMouseX - mState.X);
+                camera.cameraAngleX += (oldMouseY - mState.Y);
+                camera.cameraAngleY += (oldMouseX - mState.X);
 
                 oldMouseX = mState.X;
                 oldMouseY = mState.Y;
@@ -254,10 +248,10 @@ namespace WindowsGame1
             
             if (state.IsKeyDown(Keys.F1))
             {
-                origin = new double[robot.Mechanism.Joints.Count];
-                for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
+                origin = new double[robot.Joints.Count];
+                for (int i = 0; i < robot.Joints.Count; i++)
                 {
-                    origin[i] = robot.Mechanism.Joints[i].Value;
+                    origin[i] = robot.Joints[i].Value;
                 }
                 if (resultForm != null)
                 {
@@ -267,10 +261,10 @@ namespace WindowsGame1
 
             if (state.IsKeyDown(Keys.F2))
             {
-                dest = new double[robot.Mechanism.Joints.Count];
-                for (int i = 0; i < robot.Mechanism.Joints.Count; i++)
+                dest = new double[robot.Joints.Count];
+                for (int i = 0; i < robot.Joints.Count; i++)
                 {
-                    dest[i] = robot.Mechanism.Joints[i].Value;
+                    dest[i] = robot.Joints[i].Value;
                 }
             }
             
@@ -334,13 +328,13 @@ namespace WindowsGame1
 
             for (int i = 0; i < 360; i++)
             {
-                robot.Mechanism.Joints[0].Value = i;
-                robot.Mechanism.Joints[0].setPending();
+                robot.Joints[0].Value = i;
+                robot.Joints[0].setPending();
                 for (int j = 0; j < 360; j++)
                 {
-                    robot.Mechanism.Joints[1].Value = j;
-                    robot.Mechanism.Joints[1].setPending();
-                    if (scene.isColliding(robot.Mechanism))
+                    robot.Joints[1].Value = j;
+                    robot.Joints[1].setPending();
+                    if (enviroment.IsColliding(robot))
                     {
                         colorData[(i)*360+j] = Color.Black;
                     }
@@ -373,8 +367,20 @@ namespace WindowsGame1
         }
         private void optmize()
         {
-            CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-            RRTOptimizer opt = new RRTOptimizer(6, new double[] { -180, -180, -180, -180, -180, -180 }, new double[] { 180, 180, 180, 180, 180, 180 }, new double[] { 1,2,3,4,5,6}, cObsSpace, origin, dest, 2);
+            int threadCount = 2;
+            MechanismCSpace[] cMechanismPool = new MechanismCSpace[threadCount];
+            CSpace[] cSpacePool = new CSpace[threadCount];
+                
+                
+            
+            for (int i = 0; i < threadCount; i++)
+            {
+                cMechanismPool[i] = new MechanismCSpace(robot, enviroment);
+                cSpacePool[i] = cMechanismPool[i].CSpace;
+
+            }
+            
+            RRTOptimizer opt = new RRTOptimizer(origin, dest, cSpacePool, threadCount);
             controller = new NArticulatedPlanarController(robot);
             OptmizeForm form = new OptmizeForm(opt, controller);
             form.Show();
@@ -384,9 +390,9 @@ namespace WindowsGame1
         {
             controller = new NArticulatedPlanarController(robot);
             controller.Clear();
-            robot.Mechanism.Joints[0].Value = dest[0];
-            robot.Mechanism.Joints[1].Value = dest[1];
-            robot.Mechanism.Joints[2].Value = dest[2];
+            robot.Joints[0].Value = dest[0];
+            robot.Joints[1].Value = dest[1];
+            robot.Joints[2].Value = dest[2];
             //controller.AddPoint(new double[] {90, 328, 24});
             
             controller.AddPoint(new double[] { 121.16, 316.06, 19.78 });
@@ -414,82 +420,7 @@ namespace WindowsGame1
 
        
         }
-        /*
-        private void calc()
-        {
-            return;
-            controller = new NArticulatedPlanarController(robot);
-
-            CObsSpace cObsSpace = new MechanismCObsSpace(robot.Mechanism, scene);
-
-            // Inicializa parâmetros
-            int k = 50;
-
-            CSpaceRRT tst = new CSpaceRRT(6, new double[] { -180, -180, -180 }, new double[] { 180, 180, 180, }, cObsSpace, k);
-
-            Node originNode;
-            Node destNode;
-
-            // Chamada a função do algoritmo
-            tst.generatePath(origin, dest, out originNode, out destNode);
-
-
-            Node previousNode = destNode;
-            Node currentNode = destNode.aCameFrom;
-
-            resultForm.ClearEdges();
-
-            foreach (Edge edge in tst.goalTree.edgeList)
-            {
-                resultForm.AddEdge(edge.node1.p, edge.node2.p, Color.LimeGreen);
-            }
-
-            foreach (Edge edge in tst.startTree.edgeList)
-            {
-                resultForm.AddEdge(edge.node1.p, edge.node2.p, Color.Red);
-            }
-
-            controller.Clear();
-            robot.Mechanism.Joints[0].Value = dest[0];
-            robot.Mechanism.Joints[1].Value = dest[1];
-            robot.Mechanism.Joints[2].Value = dest[2];
-            //List<Vector2> list = new List<Vector2>();
-            resultForm.AddPointToPath(dest, Color.Blue);
-            while (currentNode != null)
-            {
-                //list.Add(new Vector2(currentNode.p[0], currentNode.p[1]));
-                //resultForm.AddPointToPath(currentNode.p, Color.Blue);
-                controller.AddPoint(currentNode.p);
-                previousNode = currentNode;
-                currentNode = currentNode.aCameFrom;
-            }
-            controller.running = true;
-
-            
-            Color[] colorData = new Color[360 * 360];
-            resultForm.CSpace.GetData<Color>(colorData);
-            /*
-            foreach (Node node in tst.goalTree.nodeList)
-            {
-                int i = node.p[0];
-                int j = node.p[1];
-                colorData[i*360+j] = Color.Red;
-            }
-
-            foreach (Node node in tst.startTree.nodeList)
-            {
-                int i = node.p[0];
-                int j = node.p[1];
-                colorData[i * 360 + j] = Color.Red;
-            }
-             */
-        /*
-            resultForm.GraphicsDevice.Textures[0] = null;
-            resultForm.CSpace.SetData<Color>(colorData);
-            resultForm.Draw();
-
-        }
-    */
+   
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -508,11 +439,13 @@ namespace WindowsGame1
             // TODO: Add your drawing code here
             base.Draw(gameTime);
             //scene.Draw(gameTime);
-            robot.Draw(gameTime, GraphicsDevice);
-            foreach (OrientedBoundingBox obb in scene.BoundingBoxList)
+            //drawableRobot.Draw(gameTime, GraphicsDevice);
+            /*
+            foreach (OrientedBoundingBox obb in enviroment.BoundingBoxList)
             {
                 obb.Draw(GraphicsDevice, _camera.Projection, _camera.View);
             }
+            */
             //oct.Draw(this, _camera.Projection, _camera.View);
 
             /*
