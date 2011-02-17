@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampleBased;
+using Simples.PathPlan.SamplesBased;
 
-namespace Simples.SampleBased
+namespace Simples.PathPlan.SamplesBased.RRT
 {
 
-    public class CSpaceRRT : CSpace
+    public class CSpaceRRT
     {
         
         public List<double[]> sampleList;
@@ -15,74 +15,24 @@ namespace Simples.SampleBased
         public ExplorationTree goalTree;
         int k;
 
-        public CSpaceRRT(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CObsSpace cObsSpace, int k)
-            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionWeight, cObsSpace)
+        private CSpace cSpace;
+
+        public CSpaceRRT(CSpace cSpace, int k)
         {
+            this.cSpace = cSpace;
+
             this.k = k;
             this.sampleList = new List<double[]>();
         }
-        /*
-        public Node growTree(ExplorationTree T, Node a)
-        {
-            //sampleList.Add(a.p);
-            Node gn = T.getNearestNode(a);
-            Node gs = a;
 
-
-            //double dist;
-
-            //cObsSpace.checkPath(gn, ref gs, out dist);
-            cObsSpace.checkPath(gn, ref gs);
-
-            Boolean sameNode;
-            sameNode = true;
-            for (int i = 0; i < gs.p.Length; i++)
-            {
-                sameNode = (gs.p[i] == gn.p[i]);
-                if (!sameNode)
-                    break;
-            }
-
-            if (!sameNode)
-            {
-                T.nodeList.Add(gs);
-                //Edge newEdge = new Edge(gn, gs, dist, EdgeState.Free);
-                Edge newEdge = new Edge(gn, gs, EdgeState.Free);
-                T.edgeList.Add(newEdge);
-                gn.addChild(newEdge);
-                gs.addChild(newEdge);
-                return gs;
-            }
-            else
-            {
-                return gn;
-            }
-
-
-        }
-        
-        public Node growTree(ExplorationTree T)
-        {
-            double[] p = new double[dimensionCount];
-
-            for (int i = 0; i < dimensionCount; i++)
-            {
-                p[i] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
-            }
-
-            return growTree(T, new Node(p));
-        }
-        */
         public int generatePath(double[] origin, double[] dest,
             out Node originNode, out Node destNode)
         {
             originNode = new Node(origin);
-            startTree = new ExplorationTree(cObsSpace, dimensionCount, dimensionLowLimit,
-                dimensionHighLimit, dimensionWeight, originNode);
+            startTree = new ExplorationTree(cSpace, originNode);
 
             destNode = new Node(dest);
-            goalTree = new ExplorationTree(cObsSpace, dimensionCount, dimensionLowLimit,
-                dimensionHighLimit, dimensionWeight, destNode);
+            goalTree = new ExplorationTree(cSpace, destNode);
 
 
             Node qs;
@@ -109,7 +59,7 @@ namespace Simples.SampleBased
             }
 
 
-            A_Star(originNode, destNode);
+            CSpace.A_Star(originNode, destNode);
             return i;
         }
 

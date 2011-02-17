@@ -2,56 +2,220 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampleBased;
+using Simples.PathPlan.SamplesBased;
 
-namespace Simples.SampleBased
+namespace Simples.PathPlan.SamplesBased
 {
-    public abstract class CSpace
-    {
-        protected int dimensionCount;
-        protected double[] dimensionLowLimit;
-        protected double[] dimensionHighLimit;
-        protected double[] dimensionWeight;
-        protected CObsSpace cObsSpace;
+    public delegate bool CollisionCheck(double[] p);
 
-        protected CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CObsSpace cObsSpace)
+    public class CSpace
+    {
+        private Random rand = new Random();
+
+        private int dimensionCount;
+        private double[] dimensionLowLimit;
+        private double[] dimensionHighLimit;
+        private double[] dimensionWeight;
+        private CollisionCheck collisionCheck;
+
+        public CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CollisionCheck collisionCheck)
         {
-            if (dimensionCount != 2)
+            
+            if (dimensionLowLimit.Length != dimensionCount)
             {
-                new Exception("The dimensionCount must be 2");
+                throw new ArgumentException ("The dimensionLowLimit must have the same length of the dimensionCount value");
             }
-            else if (dimensionLowLimit.Length != dimensionCount)
+            
+            if (dimensionHighLimit.Length != dimensionCount)
             {
-                new Exception("The dimensionLowLimit must have the same length of the dimensionCount value");
+                throw new ArgumentException("The dimensionHighLimit must have the same length of the dimensionCount value");
             }
-            else if (dimensionHighLimit.Length != dimensionCount)
+
+            if (dimensionWeight.Length != dimensionCount)
             {
-                new Exception("The dimensionHighLimit must have the same length of the dimensionCount value");
+                throw new ArgumentException("The dimensionWeight must have the same length of the dimensionCount value");
+            }
+            
+            if (dimensionWeight.Length != dimensionCount)
+            {
+                throw new ArgumentNullException("collisionCheck");
             }
 
             this.dimensionCount = dimensionCount;
             this.dimensionLowLimit = dimensionLowLimit;
-            this.dimensionHighLimit = dimensionWeight;
-            this.cObsSpace = cObsSpace;
-
+            this.dimensionHighLimit = dimensionHighLimit;
+            this.dimensionWeight = dimensionWeight;
+            this.collisionCheck = collisionCheck;
         }
 
-
-        public Edge getEdge(List<Edge> edgeList, Node node1, Node node2)
+        public bool CheckCollision(double[] p)
         {
-            foreach (Edge edge in edgeList)
+            return collisionCheck(p);
+        }
+
+        public List<double[]> GenerateLatticeSampleList(int sampleCount)
+        {
+            double a = (Math.Sqrt(5) + 1) / 2;
+
+            List<double[]> sampleList = new List<double[]>(sampleCount);
+
+
+            for (int i = 1; i <= sampleCount; i++)
             {
-                if ((node1 == edge.Node1) && (node2 == edge.Node2))
-                    return edge;
-                else if ((node1 == edge.Node2) && (node2 == edge.Node1))
-                    return edge;
+                double[] p = new double[dimensionCount];
+                double coord = (double)i / (double)sampleCount * (dimensionHighLimit[0] - dimensionLowLimit[0]) + dimensionLowLimit[0];
+
+                p[0] = coord;
+                for (int j = 1; j < dimensionCount; j++)
+                {
+                    double fnb = Math.Pow(a, j);
+
+                    coord = (i * fnb - Math.Floor(i * fnb)) * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
+                    p[j] = coord;
+
+                }
+
+                if (CheckCollision(p))
+                {
+                    sampleList.Add(p);
+                }
             }
 
-            Edge newEdge = cObsSpace.createEdge(node1, node2);
-            edgeList.Add(newEdge);
-            return newEdge;
+            return sampleList;
         }
 
+        public List<double[]> GenerateRandomSampleList(int sampleCount)
+        {
+            List<double[]> sampleList = new List<double[]>(sampleCount);
+         
+            for (int i = 1; i <= sampleCount; i++)
+            {
+                double[] p = new double[dimensionCount];
+
+                for (int j = 0; j < dimensionCount; j++)
+                {
+
+                    p[j] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
+                }
+
+                if (CheckCollision(p))
+                {
+                    sampleList.Add(p);
+                }
+            }
+
+            return sampleList;
+        }
+
+        public double[] GenerateSample()
+        {
+            double[] p = new double[dimensionCount];
+
+            for (int i = 0; i < dimensionCount; i++)
+            {
+                p[i] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
+            }
+
+            return p;
+        }
+
+        public bool CheckPath(Node node1, ref Node node2)
+        {
+            Boolean collision = false;
+            double dist = CalcDist(node1, node2);
+            int step = 1;
+            double[] p = new double[node1.p.Length];
+            double[] lastP = new double[node1.p.Length];
+
+            for (int j = 0; j < p.Length; j++)
+            {
+                p[j] = node1.p[j];
+                lastP[j] = p[j];
+            }
+
+            for (int i = step; i < dist; i = i + step)
+            {
+                double stepPercent = i / dist;
+                for (int j = 0; j < p.Length; j++)
+                {
+                    double dimValue = node1.p[j] + (node2.p[j] - node1.p[j]) * stepPercent;
+                    p[j] = dimValue;
+                }
+
+                collision = CheckCollision(p);
+
+                if (collision)
+                {
+                    node2 = new Node(lastP);
+                    dist = CalcDist(node1, node2);
+                    return true;
+                }
+                else
+                {
+                    for (int j = 0; j < p.Length; j++)
+                    {
+                        lastP[j] = p[j];
+                    }
+
+                }
+            }
+            return false;
+        }
+
+
+        public static double CalcDist(Node node1, Node node2)
+        {
+            if (node1.p.Length != node2.p.Length)
+            {
+                throw new ArgumentException("node1.p must have the same length that node2.p");
+            }
+            double sum = 0;
+
+            for (int i = 0; i < node1.p.Length; i++)
+            {
+                double diff = node1.p[i] - node2.p[i];
+                sum = sum + Math.Pow(diff, 2);
+            }
+
+            return Math.Sqrt(sum);
+        }
+
+        public double CalcWeightedDist(Node node1, Node node2)
+        {
+            return CalcDist(node1, node2);
+        }
+
+        public double CalcWeightedDist(Edge edge)
+        {
+            return CalcWeightedDist(edge.Node1, edge.Node2);
+        }
+
+        
+        public static double CalcDist(Edge edge)
+        {
+            return CalcDist(edge.Node1, edge.Node2);
+        }
+         
+
+        public Edge CreateEdge(Node node1, Node node2)
+        {
+            EdgeState state;
+
+            Boolean freePath = !(CheckPath(node1, ref node2));
+
+            if (freePath)
+            {
+                state = EdgeState.Free;
+            }
+            else
+            {
+                state = EdgeState.Obstacle;
+            }
+
+            return new Edge(node1, node2, state);
+        }        
+        
+        
         private static void searchAndInsert(List<Node> nodeList, Node node)
         {
             int index = nodeList.BinarySearch(node, NodeComparer.nc);
@@ -61,8 +225,8 @@ namespace Simples.SampleBased
                 nodeList.Insert(~index, node);
             }
         }
-
-        protected static void A_Star(Node originNode, Node destNode)
+        
+        public static void A_Star(Node originNode, Node destNode)
         {
             List<Node> closedSet = new List<Node>();
             List<Node> openSet = new List<Node>();
@@ -71,7 +235,7 @@ namespace Simples.SampleBased
             Node y;
 
             originNode.aDist = 0;
-            originNode.aTotalDist = originNode.calcDist(destNode);
+            originNode.aTotalDist = CalcDist(originNode, destNode);
 
             openSet.Add(originNode);
 
@@ -87,15 +251,15 @@ namespace Simples.SampleBased
 
                 foreach (Edge yEdge in x.childs)
                 {
-                    y = yEdge.getNode(x);
+                    y = yEdge.GetOtherNode(x);
                     if (closedSet.Contains(y))
                         continue;
 
-                    double score = x.aDist + yEdge.WeightedDistance;
+                    double score = x.aDist + yEdge.Distance;
                     Boolean scoreBetter = false;
                     if (!openSet.Contains(y))
                     {
-                        y.aTotalDist = score + y.calcDist(destNode);
+                        y.aTotalDist = score + CalcDist(y, destNode);
                         searchAndInsert(openSet, y);
                         scoreBetter = true;
                     }
@@ -108,13 +272,11 @@ namespace Simples.SampleBased
                     {
                         y.aCameFrom = x;
                         y.aDist = score;
-                        y.aTotalDist = y.aDist + y.calcDist(destNode);
+                        y.aTotalDist = y.aDist + CalcDist(y, destNode);
                     }
                 }
             }
         }
-
-
 
     }
 }

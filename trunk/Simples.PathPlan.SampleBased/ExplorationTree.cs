@@ -3,48 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Simples.SampleBased
+namespace Simples.PathPlan.SamplesBased
 {
 
     public class ExplorationTree
     {
         Random rand = new Random();
-        private CObsSpace cObsSpace;
 
-        private int dimensionCount;
-        private double[] dimensionLowLimit;
-        private double[] dimensionHighLimit;
-        private double[] dimensionWeight;
+        private CSpace cSpace;
         
-        public List<Node> nodeList;
-        public List<Edge> edgeList;
+        private List<Node> nodeList;
+        private List<Edge> edgeList;
 
         public int size
         {
             get { return nodeList.Count; }
         }
 
-        private double[] generateSample()
+       
+
+        internal ExplorationTree(CSpace cSpace, Node rootNode)
         {
-            double[] p = new double[dimensionCount];
-
-            for (int i = 0; i < dimensionCount; i++)
-            {
-                p[i] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
-            }
-
-            return p;
-        }
-
-        public ExplorationTree(CObsSpace cObsSpace, int dimensionCount, double[] dimensionLowLimit,
-            double[] dimensionHighLimit, double[] dimensionWeight, Node rootNode)
-        {
-            this.cObsSpace = cObsSpace;
-
-            this.dimensionCount = dimensionCount;
-            this.dimensionLowLimit = dimensionLowLimit;
-            this.dimensionHighLimit = dimensionHighLimit;
-            this.dimensionWeight = dimensionWeight;
+            this.cSpace = cSpace;
 
             this.nodeList = new List<Node>();
             this.edgeList = new List<Edge>();
@@ -117,14 +97,11 @@ namespace Simples.SampleBased
 
         public Node Grow(Node node)
         {
-            //sampleList.Add(a.p);
             Node gn = getNearestNode(node);
             Node gs = node;
 
 
-            //double dist;
-
-            cObsSpace.checkPath(gn, ref gs);
+            cSpace.CheckPath(gn, ref gs);
 
             Boolean sameNode;
             sameNode = true;
@@ -152,10 +129,12 @@ namespace Simples.SampleBased
 
         public Node Grow()
         {
-            double[] p = generateSample();
+            double[] p = cSpace.GenerateSample();
 
             return Grow(new Node(p));
         }
+
+
     }
 
 }
