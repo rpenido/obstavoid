@@ -2,28 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.SampleBased;
+using Simples.PathPlan.SamplesBased;
 
-namespace Simples.SampleBased
+namespace Simples.PathPlan.SamplesBased.PRM
 {
     public enum PRMSampleMethod { Random, Lattice }
 
-    public class CSpacePRM : CSpace
+    public class CSpacePRM
     {
         public int N;
         public int k;
         public PRMSampleMethod sampleMethod;
 
-        public List<double[]> sampleList;
-        public List<Node> nodeList;
-        public List<Edge> edgeList;
+        private List<double[]> sampleList;
+        private List<Node> nodeList;
+        private List<Edge> edgeList;
+
+        private CSpace cSpace;
 
 
         public Boolean pathed = false;
 
-        public CSpacePRM(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity, CObsSpace cObsSpace, int N, int k, PRMSampleMethod sampleMethod)
-            : base(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace)
+        public CSpacePRM(CSpace cSpace, int N, int k, PRMSampleMethod sampleMethod)
         {
+            this.cSpace = cSpace;
+
             this.N = N;
             this.k = k;
 
@@ -47,6 +50,21 @@ namespace Simples.SampleBased
 
         }
 
+        public Edge getEdge(List<Edge> edgeList, Node node1, Node node2)
+        {
+            foreach (Edge edge in edgeList)
+            {
+                if ((node1 == edge.Node1) && (node2 == edge.Node2))
+                    return edge;
+                else if ((node1 == edge.Node2) && (node2 == edge.Node1))
+                    return edge;
+            }
+
+            Edge newEdge = cSpace.CreateEdge(node1, node2);
+            edgeList.Add(newEdge);
+            return newEdge;
+        }
+
         public void addNode(Node node, int k)
         {
             nodeList.Add(node);
@@ -54,62 +72,6 @@ namespace Simples.SampleBased
         }
 
 
-        public List<double[]> generateSample()
-        {
-            double a = (Math.Sqrt(5) + 1) / 2;
-
-            sampleList = new List<double[]>();
-
-
-            for (int i = 1; i <= N; i++)
-            {
-                double[] p = new double[dimensionCount];
-                double coord = (double)i / (double)N * (dimensionHighLimit[0] - dimensionLowLimit[0]) + dimensionLowLimit[0];
-
-                p[0] = coord;
-                for (int j = 1; j < dimensionCount; j++)
-                {
-                    double fnb = Math.Pow(a, j);
-
-                    coord = (i * fnb - Math.Floor(i * fnb)) * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
-                    p[j] = coord;
-
-                }
-
-                if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
-                {
-                    sampleList.Add(p);
-                }
-            }
-
-            return sampleList;
-
-        }
-
-        public List<double[]> generateRandomSample()
-        {
-            sampleList = new List<double[]>();
-            Random rand = new Random();
-
-            for (int i = 1; i <= N; i++)
-            {
-                double[] p = new double[dimensionCount];
-
-                for (int j = 0; j < dimensionCount; j++)
-                {
-
-                    p[j] = rand.NextDouble() * (dimensionHighLimit[i] - dimensionLowLimit[i]) + dimensionLowLimit[i];
-                }
-
-                if (!((cObsSpace != null) && (cObsSpace.CheckCollision(p))))
-                {
-                    sampleList.Add(p);
-                }
-            }
-
-            return sampleList;
-
-        }
 
         private void generateCFreeSpace()
         {
@@ -143,20 +105,20 @@ namespace Simples.SampleBased
                 if (node.childs.Count == 0)
                 {
                     node.childs.Add(edge);
-                    edge.getNode(node).searchAndInsert(edge);
+                    edge.GetOtherNode(node).addChild(edge);
                 }
-                else if (edge.WeightedDistance < node.childs.Last().WeightedDistance)
+                else if (edge.Distance < node.childs.Last().Distance)
                 {
                     if (node.childs.Count == k)
                     {
                         Edge oldEdge = node.childs.Last();
-                        Node oldNode = oldEdge.getNode(node);
+                        Node oldNode = oldEdge.GetOtherNode(node);
                         oldNode.removeChild(oldEdge);
                         node.removeChild(oldEdge);
                     }
 
-                    node.searchAndInsert(edge);
-                    edge.getNode(node).searchAndInsert(edge);
+                    node.addChild(edge);
+                    edge.GetOtherNode(node).addChild(edge);
                 }
             }
 
@@ -171,10 +133,10 @@ namespace Simples.SampleBased
                 switch (sampleMethod)
                 {
                     case PRMSampleMethod.Lattice:
-                        generateSample();
+                        sampleList = cSpace.GenerateLatticeSampleList(N);
                         break;
                     case PRMSampleMethod.Random:
-                        generateRandomSample();
+                        sampleList = cSpace.GenerateRandomSampleList(N);
                         break;
                 }
             }
@@ -188,7 +150,7 @@ namespace Simples.SampleBased
             destNode = new Node(dest);
             addNode(destNode, k);
 
-            A_Star(originNode, destNode);
+            CSpace.A_Star(originNode, destNode);
         }
 
     }

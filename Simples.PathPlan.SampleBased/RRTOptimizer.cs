@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO;
-using Simples.SampleBased;
+using Simples.PathPlan.SamplesBased;
 
-namespace Simples.SampleBased
+namespace Simples.PathPlan.SamplesBased.RRT
 {
     struct Result
     {
@@ -22,11 +22,6 @@ namespace Simples.SampleBased
 
     public class RRTOptimizer
     {
-        private int dimensionCount;
-        private double[] dimensionLowLimit;
-        private double[] dimensionHighLimit;
-        private double[] dimensionVelocity;
-
         private int maxIterations = 4000;
         private double[] origin;
         private double[] dest;
@@ -39,50 +34,49 @@ namespace Simples.SampleBased
 
         private ManualResetEvent stopEvent;
         private Thread[] threadPool;
-        private CObsSpace[] mechanismPool;
-
-        public CObsSpace GetMechanism()
-        {
-            return mechanismPool[0];
-        }
+        private CSpace[] cSpacePool;
 
         public double MinDist
         {
+            get { return minDist; }        
+        }
+
+        public CSpace CSpace
+        {
             get
             {
-                    return minDist;
+                if (cSpacePool.Length == 0)
+                {
+                    throw new Exception("cSpacePool.Length == 0");
+                }
+                return cSpacePool[0];
             }
         }
 
         private FileStream fs;
         private StreamWriter sw;
 
-        public RRTOptimizer(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionVelocity,
-            CObsSpace cObsSpace, double[] origin, double[] dest, int threadCount)
+        public RRTOptimizer(double[] origin, double[] dest, CSpace[] cSpacePool, int threadCount)
         {
-            this.dimensionCount = dimensionCount;
-            this.dimensionLowLimit = dimensionLowLimit;
-            this.dimensionHighLimit = dimensionHighLimit;
-            this.dimensionVelocity = dimensionVelocity;
+            if (cSpacePool.Length != threadCount)
+            {
+                throw new ArgumentException("The cSpacePool must have the same length of the threadCount value");
+            }
+            this.cSpacePool = cSpacePool;
+
             this.origin = origin;
             this.dest = dest;
 
             this.threadCount = threadCount;
             this.threadPool = new Thread[threadCount];
-            this.mechanismPool = new CObsSpace[threadCount];
 
             fs = new FileStream("result.csv", FileMode.Append);
             sw = new StreamWriter(fs);
 
             stopEvent = new ManualResetEvent(false);
-
-            for (int i = 0; i < threadCount; i++)
-            {
-                mechanismPool[i] = cObsSpace.Clone() as CObsSpace;          
-            }
         }
 
-        private void calcLoop(object cObsSpace)
+        private void calcLoop(object cSpace)
         {
             while (true)
             {
@@ -92,15 +86,14 @@ namespace Simples.SampleBased
                 }
                 else
                 {
-                    calc(cObsSpace as CObsSpace);
+                    calc(cSpace as CSpace);
                 }
             }
         }
 
-        private void calc(CObsSpace cObsSpace)
+        private void calc(CSpace cSpace)
         {
-
-            CSpaceRRT RRT = new CSpaceRRT(dimensionCount, dimensionLowLimit, dimensionHighLimit, dimensionVelocity, cObsSpace, maxIterations);
+            CSpaceRRT RRT = new CSpaceRRT(cSpace, maxIterations);
             
             Node originNode, destNode;
             int iterations = RRT.generatePath(origin, dest, out originNode, out destNode);
@@ -145,7 +138,7 @@ namespace Simples.SampleBased
             for (int i = 0; i < threadCount; i++ )
             {
                 threadPool[i] = new Thread(calcLoop);
-                threadPool[i].Start(mechanismPool[i]);
+                threadPool[i].Start(cSpacePool[i]);
             }
         }
 
