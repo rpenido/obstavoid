@@ -14,7 +14,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     [Serializable]
     public class Mechanism: ICloneable
