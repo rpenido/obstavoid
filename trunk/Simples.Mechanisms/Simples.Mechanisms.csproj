@@ -117,6 +117,7 @@
     <Compile Include="Joint.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Mechanism.cs" />
+    <Compile Include="MechanismEnviroment.cs" />
     <Compile Include="Octree.cs" />
     <Compile Include="OrientedBoundingBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
