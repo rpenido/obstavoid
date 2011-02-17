@@ -1,6 +1,6 @@
 using System;
 
-namespace WindowsGame1
+namespace Simples.Simulation
 {
     static class Program
     {

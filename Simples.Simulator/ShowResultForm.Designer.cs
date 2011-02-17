@@ -1,4 +1,4 @@
-﻿namespace WindowsGame1
+﻿namespace Simples.Simulation
 {
     partial class ShowResultForm
     {

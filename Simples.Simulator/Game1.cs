@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 using Simples.Mechanisms.NArticulatedPlanar;
 using Simples.Mechanisms.Draw;
 
-namespace WindowsGame1
+namespace Simples.Simulation
 {
     /// <summary>
     /// This is the main type for your game
