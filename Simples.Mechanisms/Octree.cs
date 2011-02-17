@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using System.Collections;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     enum OctreePosition { FLB=0, FLT, FRB, FRT, BLB, BLT, BRB, BRT };
 

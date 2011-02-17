@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using System.Diagnostics;
 #endregion
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     [Serializable]
     public class OrientedBoundingBox

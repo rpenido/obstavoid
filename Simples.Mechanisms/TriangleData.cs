@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Simples.Robotics.Mechanisms
+namespace Simples.Mechanisms
 {
     public class VertexList
     {
