@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Simples.Scene.Camera
+namespace Simples.Camera
 {
     public class OrbitCamera: ICamera
     {
