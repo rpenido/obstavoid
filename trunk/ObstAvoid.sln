@@ -1,17 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleBased", "SampleBased\SampleBased.csproj", "{C727D54D-3FBD-4572-9652-49AB1B59916F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.PathPlan.SampleBased", "SampleBased\Simples.PathPlan.SampleBased.csproj", "{C727D54D-3FBD-4572-9652-49AB1B59916F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulator", "Simulator\Simulator.csproj", "{F0189E23-8839-4A33-9CA3-F4C832F57077}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Simulator", "Simulator\Simples.Simulator.csproj", "{F0189E23-8839-4A33-9CA3-F4C832F57077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mechanisms", "Mechanisms\Mechanisms.csproj", "{20ED3525-A99F-4225-8B9B-C4E356455480}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms", "Mechanisms\Simples.Mechanisms.csproj", "{20ED3525-A99F-4225-8B9B-C4E356455480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scene", "SceneRendering\Scene.csproj", "{06183F45-933B-4017-8A43-1554D3B4F43E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Camera", "SceneRendering\Simples.Camera.csproj", "{06183F45-933B-4017-8A43-1554D3B4F43E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentPipelineSTLImporter", "ContentPipelineSTLImporter\ContentPipelineSTLImporter.csproj", "{F06CCA90-B3CC-452C-B7A5-A80B119F827D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatorContent", "Simulator\Content\SimulatorContent.contentproj", "{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms.SampleBased", "Simples.Mechanisms.SampledBased\Simples.Mechanisms.SampleBased.csproj", "{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms.NArticulatedPlanar", "Simples.Mechanisms.NArticulatedPlanar\Simples.Mechanisms.NArticulatedPlanar.csproj", "{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms.Draw", "Simples.Mechanisms.Draw\Simples.Mechanisms.Draw.csproj", "{0C179635-C01F-41E9-84C1-1D91E3ADA682}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +117,48 @@ Global
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|x86.ActiveCfg = Release|x86
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|Xbox 360.ActiveCfg = Release|x86
 		{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}.Release|Zune.ActiveCfg = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|x86.ActiveCfg = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|x86.Build.0 = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Debug|Zune.ActiveCfg = Debug|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|Any CPU.ActiveCfg = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|Mixed Platforms.Build.0 = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|x86.ActiveCfg = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|x86.Build.0 = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|Xbox 360.ActiveCfg = Release|x86
+		{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}.Release|Zune.ActiveCfg = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|x86.ActiveCfg = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|x86.Build.0 = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Debug|Zune.ActiveCfg = Debug|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|Any CPU.ActiveCfg = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|x86.ActiveCfg = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|x86.Build.0 = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|Xbox 360.ActiveCfg = Release|x86
+		{0BAD6AA6-62A1-41C6-9255-CA50A3217EB6}.Release|Zune.ActiveCfg = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|x86.ActiveCfg = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|x86.Build.0 = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Debug|Zune.ActiveCfg = Debug|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|Any CPU.ActiveCfg = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|x86.ActiveCfg = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|x86.Build.0 = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|Xbox 360.ActiveCfg = Release|x86
+		{0C179635-C01F-41E9-84C1-1D91E3ADA682}.Release|Zune.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
