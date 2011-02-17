@@ -97,7 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mechanisms\Simples.Mechanisms.csproj">
+    <ProjectReference Include="..\Simples.Mechanisms\Simples.Mechanisms.csproj">
       <Project>{20ED3525-A99F-4225-8B9B-C4E356455480}</Project>
       <Name>Simples.Mechanisms</Name>
     </ProjectReference>
