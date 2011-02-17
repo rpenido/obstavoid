@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace WindowsGame1
+namespace Simples.Simulation
 {
     public partial class ShowResultForm : Form
     {
