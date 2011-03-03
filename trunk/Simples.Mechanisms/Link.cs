@@ -15,8 +15,11 @@ namespace Simples.Mechanisms
         public List<OrientedBoundingBox> boundingBoxList;
 
         private Joint joint;
-        private Model model = null;
 
+        [NonSerializedAttribute]
+        private Model model = null;
+        
+        
         public Model Model
         {
             get { return model; }
@@ -60,7 +63,7 @@ namespace Simples.Mechanisms
         {
             boundingBoxList.Add(boudingBox);
         }
-
+        /*
         public bool Intersects(OrientedBoundingBox other)
         {
             foreach (OrientedBoundingBox obb in boundingBoxList)
@@ -71,7 +74,7 @@ namespace Simples.Mechanisms
             }
             return false;
         }
-
+        */
         public bool Intersects(TriangleData other)
         {
             foreach (OrientedBoundingBox obb in boundingBoxList)

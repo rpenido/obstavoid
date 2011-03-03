@@ -50,30 +50,9 @@ namespace Simples.Mechanisms
                 }
             }
             return false;
-         
-            /*
-            if (link.Intersects(obb))
-            {
-                if (octree != null)
-                {
-                    foreach (OctreeNode node in octree)
-                    {
-                        if (node.IsColliding(link))
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if (triangles.Count > 0)
-                {
-                    return true;
-                }
-                
-
-            }
-            return false;
-            */
+                  
         }
+
         public bool IsColliding(Mechanism mechanism)
         {
             foreach (Link link in mechanism.Links)
@@ -157,7 +136,7 @@ namespace Simples.Mechanisms
             };
 
             VertexPositionColor[] corners = new VertexPositionColor[8];
-            corners[0] = new VertexPositionColor(min, Color.Beige);
+            corners[0] = new VertexPositionColor(min, Color.Red);
             corners[1] = new VertexPositionColor(new Vector3(max.X, min.Y, min.Z), Color.Red);
             corners[2] = new VertexPositionColor(new Vector3(min.X, max.Y, min.Z), Color.Red);
             corners[3] = new VertexPositionColor(new Vector3(min.X, min.Y, max.Z), Color.Red);
@@ -184,10 +163,10 @@ namespace Simples.Mechanisms
            
             
             
-            //effect.Begin();
+            
             foreach (EffectPass p in effect.CurrentTechnique.Passes)
             {
-                //p.Begin();
+            
                 p.Apply();
                 graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
                                  PrimitiveType.LineList,
@@ -198,9 +177,9 @@ namespace Simples.Mechanisms
                                  0,
                                  indices.Length / 2);                    
                 
-                //p.End();
+            
             }
-            //effect.End();
+            
             if (octree != null)
             {
               

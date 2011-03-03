@@ -53,7 +53,7 @@ namespace Simples.Mechanisms
                 return normal;
             }
         }
-
+        
         private Vector3 center = Vector3.Zero;
         public Vector3 Center
         {
@@ -68,7 +68,7 @@ namespace Simples.Mechanisms
                 return center;
             }
         }
-
+        
         private Vector3[] edges;
         public Vector3[] Edges
         {
@@ -77,14 +77,15 @@ namespace Simples.Mechanisms
                 if (edges == null)
                 {
                     edges = new Vector3[3];
-                    /*
+                    
                     edges[0] = this[1] - this[0];
                     edges[1] = this[2] - this[1];
                     edges[2] = this[0] - this[2];
-                    */
+                    /*
                     edges[0] = this[0];
                     edges[1] = this[1];
                     edges[2] = this[2];
+                     */
                 }
                 return edges;
             }
