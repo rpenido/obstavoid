@@ -49,8 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CObsSpace.cs" />
-    <Compile Include="CObsSpace2d.cs" />
     <Compile Include="CSpace.cs" />
     <Compile Include="CSpacePRM.cs" />
     <Compile Include="CSpaceRRT.cs" />
