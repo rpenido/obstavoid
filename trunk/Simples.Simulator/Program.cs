@@ -1,6 +1,6 @@
 using System;
 
-namespace Simples.Simulation
+namespace Simples.Simulator
 {
     static class Program
     {

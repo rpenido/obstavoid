@@ -11,7 +11,7 @@ using Simples.PathPlan.SamplesBased;
 using Simples.PathPlan.SamplesBased.RRT;
 using Simples.Mechanisms.NArticulatedPlanar;
 
-namespace Simples.Simulation
+namespace Simples.Simulator
 {
     public partial class OptmizeForm : Form
     {

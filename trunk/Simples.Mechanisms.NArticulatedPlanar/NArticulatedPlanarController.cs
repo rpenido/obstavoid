@@ -9,12 +9,12 @@ namespace Simples.Mechanisms.NArticulatedPlanar
     public class NArticulatedPlanarController
     {
         private static float VELOCITY = 50.0f;
-        private NArticulatedPlanarMechanism robot;
+        private Mechanism robot;
         private List<double[]> pointList;
         public bool running = false;
         private bool doNotInterpolate = true;
 
-        public NArticulatedPlanarController(NArticulatedPlanarMechanism robot)
+        public NArticulatedPlanarController(Mechanism robot)
         {
             this.robot = robot;
             pointList = new List<double[]>();

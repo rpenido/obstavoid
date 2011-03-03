@@ -1,4 +1,4 @@
-﻿namespace Simples.Simulation
+﻿namespace Simples.Simulator
 {
     partial class ShowResultForm
     {
