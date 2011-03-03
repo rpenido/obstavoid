@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms", "Simpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Camera", "Simples.Camera\Simples.Camera.csproj", "{06183F45-933B-4017-8A43-1554D3B4F43E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatorContent", "Simples.Simulator\Content\SimulatorContent.contentproj", "{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.SimulatorContent", "Simples.Simulator\Content\Simples.SimulatorContent.contentproj", "{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simples.Mechanisms.SampleBased", "Simples.Mechanisms.SampledBased\Simples.Mechanisms.SampleBased.csproj", "{BCC82FFE-A3D9-4653-B7CF-93BACCB5FEB6}"
 EndProject
