@@ -45,6 +45,7 @@ namespace Simples.Simulator
 
         bool reset = true;
         private float oldMouseX, oldMouseY;
+        private int oldScrollValue;
 
 
         private double[] origin;
@@ -159,11 +160,12 @@ namespace Simples.Simulator
             KeyboardState state = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
 
-            camera.Zoom = 2500 + mState.ScrollWheelValue;
+            camera.Zoom += mState.ScrollWheelValue - oldScrollValue;
+            oldScrollValue = mState.ScrollWheelValue;
+
             if (state.IsKeyDown(Keys.Home))
             {
-                camera.cameraAngleX = 0;
-                camera.cameraAngleY = 0;
+                camera.GoHome();
             }
 
             if (state.IsKeyDown(Keys.D1) || state.IsKeyDown(Keys.Down))

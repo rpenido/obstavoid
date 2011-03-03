@@ -194,7 +194,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Simples.Camera\Simples.Camera.csproj">
       <Project>{06183F45-933B-4017-8A43-1554D3B4F43E}</Project>
-      <Name>Scene</Name>
+      <Name>Simples.Camera</Name>
     </ProjectReference>
     <ProjectReference Include="..\Simples.Mechanisms.Draw\Simples.Mechanisms.Draw.csproj">
       <Project>{0C179635-C01F-41E9-84C1-1D91E3ADA682}</Project>
@@ -216,9 +216,9 @@
       <Project>{C727D54D-3FBD-4572-9652-49AB1B59916F}</Project>
       <Name>Simples.PathPlan.SampleBased</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\SimulatorContent.contentproj">
+    <ProjectReference Include="Content\Simples.SimulatorContent.contentproj">
       <Project>{EC918CA8-91B8-4FAB-A2D1-4EF8D6C3B7DE}</Project>
-      <Name>SimulatorContent %28Content%29</Name>
+      <Name>Simples.SimulatorContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
