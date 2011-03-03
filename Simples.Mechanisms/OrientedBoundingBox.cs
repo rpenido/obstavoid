@@ -37,8 +37,6 @@ namespace Simples.Mechanisms
             UpdateFromMinMax();
         }
 
-        //======================================================================
-
         public Vector3 Min
         {
             get { return min; }
@@ -71,51 +69,29 @@ namespace Simples.Mechanisms
         public static double GetExtentProjection(Vector3 axis, Matrix transform, Vector3[] extents)
         {
             Quaternion rotation = Quaternion.CreateFromRotationMatrix(transform);
-            /*
-            double r0 = Math.Abs(Vector3.Dot(transform.Forward, axis)* extents.Z);
-            double r1 = Math.Abs(Vector3.Dot(transform.Left, axis) * extents.X);
-            double r2 = Math.Abs(Vector3.Dot(transform.Up, axis) * extents.Y);
-            */
+
             double r0 = Math.Abs(Vector3.Dot(Vector3.Transform(extents[0], rotation), axis));
             double r1 = Math.Abs(Vector3.Dot(Vector3.Transform(extents[1], rotation), axis));
             double r2 = Math.Abs(Vector3.Dot(Vector3.Transform(extents[2], rotation), axis)); 
-            /*
-            double r = Math.Max(r0, r1);
-            r = Math.Max(r, r2);
-            return r;
-            */
-            return r0 + r1 + r2; 
-            /*
-            Debug.Assert(axis.Length() < 1.1f && axis.Length() > 0.9f);
-            return Math.Abs(Vector3.Dot(extents, axis));
-            */
+
+            return r0 + r1 + r2;            
         }
         
-        public static double GetExtentProjection2(Vector3 axis, Matrix transform, Vector3[] vertices)
+        public static double GetEdgeProjection(Vector3 axis, Matrix transform, Vector3[] edge)
         {
             double min = double.PositiveInfinity;
             double max = double.NegativeInfinity;
 
-            foreach (Vector3 vert in vertices)
+            foreach (Vector3 edg in edge)
             {
-                double proj = Math.Abs(Vector3.Dot(vert, axis));
+                double proj = Math.Abs(Vector3.Dot(edg, axis));
                 min = Math.Min(min, proj);
                 max = Math.Max(max, proj);
             }
-            return (max - min)/2;
-            /*
-            Quaternion rotation = Quaternion.CreateFromRotationMatrix(transform);
-
-            double r0 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[0], rotation), axis));
-            double r1 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[1], rotation), axis));
-            double r2 = Math.Abs(Vector3.Dot(Vector3.Transform(edges[2], rotation), axis));             
-
-            double r = Math.Max(r0, r1);
-            r = Math.Max(r, r2);
-            return r;*/
+            return (max - min)/2;       
         }
         
-        public static bool IsSeparationAxis(Vector3 axis, Vector3 distance, Vector3[] extents, Matrix transform,
+        public static bool IsSeparationAxisBoxBox(Vector3 axis, Vector3 distance, Vector3[] extents, Matrix transform,
             Vector3[] otherExtents, Matrix otherTransform)
         {
             if (axis.Length() <= 0.1f)
@@ -133,7 +109,7 @@ namespace Simples.Mechanisms
                 
         }
         
-        public static bool IsSeparationAxis2(Vector3 axis, Vector3 distance, Vector3[] extents, Matrix transform,
+        public static bool IsSeparationAxisTriBox(Vector3 axis, Vector3 distance, Vector3[] extents, Matrix transform,
                     Vector3[] edges, Matrix otherTransform)
         {
             if (axis == Vector3.Zero)
@@ -145,246 +121,59 @@ namespace Simples.Mechanisms
             double r, r1, r2;
             r = Math.Abs(Vector3.Dot(distance, axis));
             r1 = GetExtentProjection(axis, transform, extents);
-            r2 = GetExtentProjection2(axis, otherTransform, edges);
+            r2 = GetEdgeProjection(axis, otherTransform, edges);
 
             return (r > r1 + r2);
-
         }
         
         public bool Intersects(OrientedBoundingBox other)
         {
-            //Matrix toMe = other.Transforms * Matrix.Invert(Transforms);Matrix toMe = other.Transforms * Matrix.Invert(Transforms);
             Matrix m = Transforms;
             Matrix otherM = other.Transforms;
-            //Vector3 scale, translation;
-            //Quaternion rotation;
-            //toMe.Decompose(out scale, out rotation, out translation);
-            //
+
             Vector3[] extentsOther = other.extents;
             Vector3 myCenter = Vector3.Transform(center, m);
             Vector3 centerOther = Vector3.Transform(other.Center, otherM);
 
-            Vector3 distance = centerOther - myCenter;
-            
-            /******************* Old Code ***************************
-            Matrix3 rotations = new Matrix3(toMe);
-            Matrix3 absRotations = Utility.Abs(rotations);
+            Vector3 distance = centerOther - myCenter;            
 
-           
-            
-            
-            float r, r0, r1, r01;
-            //--- Test case 1 - X axis            
-
-            r = Math.Abs(distance.X);
-            r1 = Vector3.Dot(extentsOther, absRotations.Column(0));
-            r01 = extents.X + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(m.Forward, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 1 - Y axis
-            r = Math.Abs(distance.Y);
-            r1 = Vector3.Dot(extentsOther, absRotations.Column(1));
-            r01 = extents.Y + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(m.Left, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 1 - Z axis
-            r = Math.Abs(distance.Z);
-            r1 = Vector3.Dot(extentsOther, absRotations.Column(2));
-            r01 = extents.Z + r1;
-
-            if (r > r01)
-                return false;
-            
-
-         
-            
-            //--- Test case 2 - X axis            
-            r = Math.Abs(Vector3.Dot(rotations.Row(0), distance));
-            r0 = Vector3.Dot(extents, absRotations.Row(0));
-            r01 = r0 + extentsOther.X;
-
-            if (r > r01)
-                return false;
-                        
-            //--- Test case 2 - Y axis
-            r = Math.Abs(Vector3.Dot(rotations.Row(1), distance));
-            r0 = Vector3.Dot(extents, absRotations.Row(1));
-            r01 = r0 + extentsOther.Y;
-
-            if (r > r01)
-                return false;
-            
-            
-            //--- Test case 2 - Z axis
-            r = Math.Abs(Vector3.Dot(rotations.Row(2), distance));
-            r0 = Vector3.Dot(extents, absRotations.Row(2));
-            r01 = r0 + extentsOther.Z;
-
-            if (r > r01)
-                return false;
-            
-            //--- Test case 3 # 1            
-            r = Math.Abs(distance.Z * rotations[0, 1] - distance.Y * rotations[0, 2]);
-            r0 = extents.Y * absRotations[0, 2] + extents.Z * absRotations[0, 1];
-            r1 = extentsOther.Y * absRotations[2, 0] + extentsOther.Z * absRotations[1, 0];
-            r01 = r0 + r1;
-
-            if (r > r01)
-                return false;
-            
-            
-            //--- Test case 3 # 2
-            r = Math.Abs(distance.Z * rotations[1, 1] - distance.Y * rotations[1, 2]);
-            r0 = extents.Y * absRotations[1, 2] + extents.Z * absRotations[1, 1];
-            r1 = extentsOther.X * absRotations[2, 0] + extentsOther.Z * absRotations[0, 0];
-            r01 = r0 + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(m.Up, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 3 # 3
-            r = Math.Abs(distance.Z * rotations[2, 1] - distance.Y * rotations[2, 2]);
-            r0 = extents.Y * absRotations[2, 2] + extents.Z * absRotations[2, 1];
-            r1 = extentsOther.X * absRotations[1, 0] + extentsOther.Y * absRotations[0, 0];
-            r01 = r0 + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(otherM.Forward, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 3 # 4
-            r = Math.Abs(distance.X * rotations[0, 2] - distance.Z * rotations[0, 0]);
-            r0 = extents.X * absRotations[0, 2] + extents.Z * absRotations[0, 0];
-            r1 = extentsOther.Y * absRotations[2, 1] + extentsOther.Z * absRotations[1, 1];
-            r01 = r0 + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(otherM.Left, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 3 # 5
-            r = Math.Abs(distance.X * rotations[1, 2] - distance.Z * rotations[1, 0]);
-            r0 = extents.X * absRotations[1, 2] + extents.Z * absRotations[1, 0];
-            r1 = extentsOther.X * absRotations[2, 1] + extentsOther.Z * absRotations[0, 1];
-            r01 = r0 + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(otherM.Up, distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 3 # 6
-            r = Math.Abs(distance.X * rotations[2, 2] - distance.Z * rotations[2, 0]);
-            r0 = extents.X * absRotations[2, 2] + extents.Z * absRotations[2, 0];
-            r1 = extentsOther.X * absRotations[1, 1] + extentsOther.Y * absRotations[0, 1];
-            r01 = r0 + r1;
-
-            if (r > r01)
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Forward, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Forward, otherM.Left), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Forward, otherM.Up), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Left, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Left, otherM.Left), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Left, otherM.Up), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Up, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Up, otherM.Left), distance, extents, transforms, extentsOther, otherM))
+                return false;
+            if (IsSeparationAxisBoxBox(Vector3.Cross(m.Up, otherM.Up), distance, extents, transforms, extentsOther, otherM))
                 return false;
 
-            //--- Test case 3 # 7
-            r = Math.Abs(distance.Y * rotations[0, 0] - distance.X * rotations[0, 1]);
-            r0 = extents.X * absRotations[0, 1] + extents.Y * absRotations[0, 0];
-            r1 = extentsOther.Y * absRotations[2, 2] + extentsOther.Z * absRotations[1, 2];
-            r01 = r0 + r1;
-
-            if (r > r01)
-                return false;
-
-            //--- Test case 3 # 8
-            r = Math.Abs(distance.Y * rotations[1, 0] - distance.X * rotations[1, 1]);
-            r0 = extents.X * absRotations[1, 1] + extents.Y * absRotations[1, 0];
-            r1 = extentsOther.X * absRotations[2, 2] + extentsOther.Z * absRotations[0, 2];
-            r01 = r0 + r1;
-
-            if (r > r01)
-                return false;
-
-            //--- Test case 3 # 9
-            r = Math.Abs(distance.Y * rotations[2, 0] - distance.X * rotations[2, 1]);
-            r0 = extents.X * absRotations[2, 1] + extents.Y * absRotations[2, 0];
-            r1 = extentsOther.X * absRotations[1, 2] + extentsOther.Y * absRotations[0, 2];
-            r01 = r0 + r1;
-
-            if (r > r01)
-                return false;
-            ********************* End Old Code ***************************/
-            
-            /*
-            if (IsSeparationAxis(transforms.Forward, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(transforms.Left, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(transforms.Up, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(toMe.Forward, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(toMe.Left, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(toMe.Up, distance, extents, transforms, extentsOther, toMe))
-                return false;
-
-            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, toMe.Forward), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, toMe.Left), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Forward, toMe.Up), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Left, toMe.Forward), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Left, toMe.Left), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Left, toMe.Up), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Up, toMe.Forward), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Up, toMe.Left), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(transforms.Up, toMe.Up), distance, extents, transforms, extentsOther, toMe))
-                return false;
-            */
-
-            if (IsSeparationAxis(m.Forward, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(m.Left, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(m.Up, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(otherM.Forward, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(otherM.Left, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(otherM.Up, distance, extents, transforms, extentsOther, otherM))
-                return false;
-
-            if (IsSeparationAxis(Vector3.Cross(m.Forward, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Forward, otherM.Left), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Forward, otherM.Up), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Left, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Left, otherM.Left), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Left, otherM.Up), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Up, otherM.Forward), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Up, otherM.Left), distance, extents, transforms, extentsOther, otherM))
-                return false;
-            if (IsSeparationAxis(Vector3.Cross(m.Up, otherM.Up), distance, extents, transforms, extentsOther, otherM))
-                return false;
             return true;
         }
 
@@ -392,17 +181,14 @@ namespace Simples.Mechanisms
         {
             Matrix m = Transforms;
             Matrix otherM = Matrix.Identity;
-            //Vector3 scale, translation;
-            //Quaternion rotation;
-            //toMe.Decompose(out scale, out rotation, out translation);
-            //
+
             Vector3[] extentsOther = other.Edges;
             Vector3 myCenter = Vector3.Transform(center, m);
             Vector3 centerOther = Vector3.Transform(other.Center, otherM);
 
             Vector3 distance = centerOther - myCenter;
-            /*
-             * 
+
+/*
 box vs tri axes
 ---------------
 tri.normal
@@ -420,39 +206,40 @@ box.dir1 x tri.edge2
 
 box.dir2 x tri.edge0
 box.dir2 x tri.edge1
-box.dir2 x tri.edge2*/
+box.dir2 x tri.edge2
+ */
 
-            if (IsSeparationAxis2(other.Normal, distance, extents, m, other.Edges, otherM))
-                return false;
-
-            if (IsSeparationAxis2(m.Forward, distance, extents, m, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(other.Normal, distance, extents, m, other.Edges, otherM))
                 return false;
 
-            if (IsSeparationAxis2(m.Left, distance, extents, m, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(m.Forward, distance, extents, m, other.Edges, otherM))
                 return false;
 
-            if (IsSeparationAxis2(m.Up, distance, extents, m, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(m.Left, distance, extents, m, other.Edges, otherM))
                 return false;
 
-            if (IsSeparationAxis2(Vector3.Cross(m.Forward, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
-                return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Forward, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
-                return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Forward, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(m.Up, distance, extents, m, other.Edges, otherM))
                 return false;
 
-            if (IsSeparationAxis2(Vector3.Cross(m.Left, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Forward, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
                 return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Left, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Forward, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
                 return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Left, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Forward, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
                 return false;
 
-            if (IsSeparationAxis2(Vector3.Cross(m.Up, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Left, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
                 return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Up, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Left, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
                 return false;
-            if (IsSeparationAxis2(Vector3.Cross(m.Up, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Left, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
+                return false;
+
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Up, other.Edges[0]), distance, extents, transforms, other.Edges, otherM))
+                return false;
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Up, other.Edges[1]), distance, extents, transforms, other.Edges, otherM))
+                return false;
+            if (IsSeparationAxisTriBox(Vector3.Cross(m.Up, other.Edges[2]), distance, extents, transforms, other.Edges, otherM))
                 return false;
 
              
@@ -475,29 +262,9 @@ tri0.edge2 x tri1.edge1
 tri0.edge2 x tri1.edge2
 
 
-box vs tri axes
----------------
-tri.normal
-box.dir0
-box.dir1
-box.dir2
-
-box.dir0 x tri.edge0
-box.dir0 x tri.edge1
-box.dir0 x tri.edge2
-
-box.dir1 x tri.edge0
-box.dir1 x tri.edge1
-box.dir1 x tri.edge2
-
-box.dir2 x tri.edge0
-box.dir2 x tri.edge1
-box.dir2 x tri.edge2
-
              */
             return true;
         }
-        //======================================================================
 
         protected void UpdateFromMinMax()
         {
@@ -510,7 +277,6 @@ box.dir2 x tri.edge2
 
         }
 
-        //======================================================================
         public void Draw(GraphicsDevice graphicsDevice, Matrix projection, Matrix view)
         {
             int[] indices = new int[]
@@ -530,7 +296,7 @@ box.dir2 x tri.edge2
             };
 
             VertexPositionColor[] corners = new VertexPositionColor[8];
-            corners[0] = new VertexPositionColor(min, Color.Beige);
+            corners[0] = new VertexPositionColor(min, Color.Red);
             corners[1] = new VertexPositionColor(new Vector3(max.X, min.Y, min.Z), Color.Red);
             corners[2] = new VertexPositionColor(new Vector3(min.X, max.Y, min.Z), Color.Red);
             corners[3] = new VertexPositionColor(new Vector3(min.X, min.Y, max.Z), Color.Red);
