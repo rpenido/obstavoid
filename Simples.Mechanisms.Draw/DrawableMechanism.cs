@@ -55,10 +55,12 @@ namespace Simples.Mechanisms.Draw
 
                     effect.View = camera.View;
                     effect.Projection = camera.Projection;
-                    effect.World = transforms[mesh.ParentBone.Index] *
+                    
+                    effect.World =  transforms[mesh.ParentBone.Index] *
                         link.Transform;
+                    mesh.Draw();
                 }
-                mesh.Draw();
+                
             }
             
         }
