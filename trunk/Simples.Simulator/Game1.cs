@@ -16,12 +16,11 @@ using Simples.Mechanisms;
 using Simples.Mechanisms.SampleBased;
 using Simples.PathPlan.SamplesBased;
 using Simples.PathPlan.SamplesBased.RRT;
-using Simples.Simulation;
 using System.Runtime.InteropServices;
 using Simples.Mechanisms.NArticulatedPlanar;
 using Simples.Mechanisms.Draw;
 
-namespace Simples.Simulation
+namespace WindowsGame1
 {
     /// <summary>
     /// This is the main type for your game
@@ -32,16 +31,13 @@ namespace Simples.Simulation
         GraphicsDevice mainGraphicDevice;
 
         ShowResultForm resultForm;
-
         NArticulatedPlanarController controller;
 
-        Matrix world;
         private OrbitCamera camera;
-        //private Model linkModel;
 
         private static float _STEP = 1;
 
-        private NArticulatedPlanarMechanism robot;
+        private Mechanism robot;
         private DrawableMechanism  drawableRobot;
 
         private MechanismEnviroment enviroment;
@@ -50,17 +46,14 @@ namespace Simples.Simulation
         bool reset = true;
         private float oldMouseX, oldMouseY;
 
-        //private int[] origin = new int[3] { 258, 113 , 0};
-        //private int[] dest = new int[3] { 22, 344, 0};
-
-        //private double[] origin = new double[3] { 34, 334, 48 };
-        //private double[] dest = new double[3] { 90, 328, 24 };
 
         private double[] origin;
         private double[] dest;
 
         bool flagOptmize;
         //OctreeNode oct;
+
+        private Model test;
 
         public Game1()
         {
@@ -96,20 +89,21 @@ namespace Simples.Simulation
         /// </summary>
         protected override void LoadContent()
         {
-            world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+            Matrix world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+            //Matrix world = Matrix.CreateWorld(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
             camera = new OrbitCamera();
-
-            Model linkModel = Content.Load<Model>("model1");
+           
+            Model linkModel = Content.Load<Model>("link");
             Vector3 minBound = new Vector3(-10, -10, -5);
             Vector3 maxBound = new Vector3(120, 10, 5);
 
-            robot = new NArticulatedPlanarMechanism(linkModel, new Vector3(100, 0, 0), minBound,
+            robot = NArticulatedPlanarMechanism.Create(linkModel, new Vector3(100, 0, 0), minBound,
                 maxBound, 6, world);
             drawableRobot = new DrawableMechanism(this, robot, camera);
             Components.Add(drawableRobot);
 
         
-            Model sceneModel = Content.Load<Model>("scene"); ;
+            Model sceneModel = Content.Load<Model>("scene");
             
             enviroment = new MechanismEnviroment(sceneModel);
             drawableEnviroment = new DrawableEnviroment(this, enviroment, camera);
@@ -166,6 +160,11 @@ namespace Simples.Simulation
             MouseState mState = Mouse.GetState();
 
             camera.Zoom = 2500 + mState.ScrollWheelValue;
+            if (state.IsKeyDown(Keys.Home))
+            {
+                camera.cameraAngleX = 0;
+                camera.cameraAngleY = 0;
+            }
 
             if (state.IsKeyDown(Keys.D1) || state.IsKeyDown(Keys.Down))
             {
@@ -367,7 +366,7 @@ namespace Simples.Simulation
         }
         private void optmize()
         {
-            int threadCount = 2;
+            int threadCount = 7;
             MechanismCSpace[] cMechanismPool = new MechanismCSpace[threadCount];
             CSpace[] cSpacePool = new CSpace[threadCount];
                 
@@ -393,7 +392,7 @@ namespace Simples.Simulation
             robot.Joints[0].Value = dest[0];
             robot.Joints[1].Value = dest[1];
             robot.Joints[2].Value = dest[2];
-            //controller.AddPoint(new double[] {90, 328, 24});
+            controller.AddPoint(new double[] {90, 328, 24});
             
             controller.AddPoint(new double[] { 121.16, 316.06, 19.78 });
             controller.AddPoint(new double[] { 143, 233.87, 127.61 });
