@@ -10,7 +10,7 @@ namespace Simples.PathPlan.SamplesBased
 
     public class CSpace
     {
-        private Random rand = new Random();
+        private static Random rand = new Random();
 
         private int dimensionCount;
         private double[] dimensionLowLimit;
