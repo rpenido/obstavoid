@@ -12,7 +12,20 @@ namespace Simples.Camera
         public float cameraAngleX = 0f;
         public float cameraAngleY = 0f;
 
-        public float Zoom = 2500;
+        private float zoom = 2500;
+        public float Zoom
+        {
+            get { return zoom; }
+            set { zoom = Math.Max(value,50); }
+        }
+
+        public void GoHome()
+        {
+            cameraAngleX = 0f;
+            cameraAngleY = 0f;
+
+            zoom = 2500;
+        }
         private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1, 1, 10000);
 
         private Matrix getView()
