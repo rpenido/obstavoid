@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Simples.Camera;
-using Simples.Mechanisms;
 
 namespace Simples.Mechanisms.Draw
 {
@@ -21,6 +20,7 @@ namespace Simples.Mechanisms.Draw
             this.camera = camera;
 
             Initialize();
+            
         }
 
         public override void Draw(GameTime gameTime)
