@@ -123,15 +123,20 @@ namespace Simples.PathPlan.SamplesBased
             }
             else
             {
-                return gn;
+                // Cannot grow in this direction
+                return null;
             }
         }
 
         public Node Grow()
-        {
-            double[] p = cSpace.GenerateSample();
-
-            return Grow(new Node(p));
+        {            
+            Node node;
+            do
+            {
+                double[] p = cSpace.GenerateSample();
+                node = Grow(new Node(p));
+            } while (node == null);
+            return node;
         }
 
 
