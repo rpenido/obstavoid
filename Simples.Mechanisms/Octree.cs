@@ -42,11 +42,26 @@ namespace Simples.Mechanisms
 
         public bool IsColliding(Link link)
         {
-            foreach (TriangleData tri in triangles)
+            if (link.Intersects(obb))
             {
-                if (link.Intersects(tri))
+                if (octree != null)
                 {
-                    return true;
+                    foreach (OctreeNode oct in octree)
+                    {
+                        bool collision = oct.IsColliding(link);
+                        if (collision)
+                            return true;
+                    }
+                }
+                else
+                {
+                    foreach (TriangleData tri in triangles)
+                    {
+                        if (link.Intersects(tri))
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
             return false;

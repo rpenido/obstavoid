@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using AForge.Controls;
-using Simples.PathPlan.SamplesBased;
-using Simples.PathPlan.SamplesBased.RRT;
+using Simples.PathPlan.SampleBased;
+using Simples.PathPlan.SampleBased.RRT;
 using Simples.Mechanisms.NArticulatedPlanar;
 
 namespace Simples.Simulator

@@ -9,7 +9,6 @@ namespace Simples.Mechanisms
 {
     public class MechanismEnviroment
     {
-        private List<OrientedBoundingBox> obstacleList;
         private Model sceneModel;
         private OctreeNode octree;
 
@@ -27,8 +26,6 @@ namespace Simples.Mechanisms
         {
 
             this.sceneModel = sceneModel;
-
-            obstacleList = new List<OrientedBoundingBox>();
 
             List<TriangleData> triangles = GetFaces();
 

@@ -54,7 +54,9 @@
     <Compile Include="CSpaceRRT.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="ExplorationTree.cs" />
+    <Compile Include="KdTree.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeList.cs" />
     <Compile Include="PathSmoothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RRTOptimizer.cs" />

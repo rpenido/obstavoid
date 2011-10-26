@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.PathPlan.SamplesBased;
 
-namespace Simples.PathPlan.SamplesBased
+namespace Simples.PathPlan.SampleBased
 {
     public delegate bool CollisionCheck(double[] p);
 
     public class CSpace
     {
-        private static Random rand = new Random();
+        private Random rand;
 
         private int dimensionCount;
         private double[] dimensionLowLimit;
@@ -18,7 +17,12 @@ namespace Simples.PathPlan.SamplesBased
         private double[] dimensionWeight;
         private CollisionCheck collisionCheck;
 
-        public CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CollisionCheck collisionCheck)
+        public int DimensionCount
+        {
+            get { return dimensionCount; }
+        }
+
+        public CSpace(int dimensionCount, double[] dimensionLowLimit, double[] dimensionHighLimit, double[] dimensionWeight, CollisionCheck collisionCheck, int randomSeed)
         {
             
             if (dimensionLowLimit.Length != dimensionCount)
@@ -46,6 +50,7 @@ namespace Simples.PathPlan.SamplesBased
             this.dimensionHighLimit = dimensionHighLimit;
             this.dimensionWeight = dimensionWeight;
             this.collisionCheck = collisionCheck;
+            this.rand = new Random(randomSeed);
         }
 
         public bool CheckCollision(double[] p)
@@ -53,11 +58,11 @@ namespace Simples.PathPlan.SamplesBased
             return collisionCheck(p);
         }
 
-        public List<double[]> GenerateLatticeSampleList(int sampleCount)
+        public Queue<double[]> GenerateLatticeSampleList(int sampleCount)
         {
             double a = (Math.Sqrt(5) + 1) / 2;
 
-            List<double[]> sampleList = new List<double[]>(sampleCount);
+            Queue<double[]> sampleList = new Queue<double[]>(sampleCount);
 
 
             for (int i = 1; i <= sampleCount; i++)
@@ -77,16 +82,16 @@ namespace Simples.PathPlan.SamplesBased
 
                 if (CheckCollision(p))
                 {
-                    sampleList.Add(p);
+                    sampleList.Enqueue(p);
                 }
             }
 
             return sampleList;
         }
 
-        public List<double[]> GenerateRandomSampleList(int sampleCount)
+        public Queue<double[]> GenerateRandomSampleList(int sampleCount)
         {
-            List<double[]> sampleList = new List<double[]>(sampleCount);
+            Queue<double[]> sampleList = new Queue<double[]>(sampleCount);
          
             for (int i = 1; i <= sampleCount; i++)
             {
@@ -100,7 +105,7 @@ namespace Simples.PathPlan.SamplesBased
 
                 if (CheckCollision(p))
                 {
-                    sampleList.Add(p);
+                    sampleList.Enqueue(p);
                 }
             }
 
@@ -118,7 +123,62 @@ namespace Simples.PathPlan.SamplesBased
 
             return p;
         }
+        /*
+        public bool CheckPath(Node node1, ref Node node2, float maxEdgeSize)
+        {
+            Boolean collision = false;
+            double dist = CalcDist(node1, node2);
+            int step = 1;
+            double[] p = new double[node1.p.Length];
+            double[] lastP = new double[node1.p.Length];
 
+            for (int j = 0; j < p.Length; j++)
+            {
+                p[j] = node1.p[j];
+                lastP[j] = p[j];
+            }
+
+            for (int i = step; i < dist; i = i + step)
+            {
+                double stepPercent = i / dist;
+                for (int j = 0; j < p.Length; j++)
+                {
+                    double dimValue = node1.p[j] + (node2.p[j] - node1.p[j]) * stepPercent;
+                    p[j] = dimValue;
+                }
+
+                collision = CheckCollision(p);
+
+                if (collision)
+                {
+                    node2 = new Node(lastP);
+                    //dist = CalcDist(node1, node2);
+                    return true;
+                }
+                else if (i > maxEdgeSize)
+                {
+                    node2 = new Node(p);
+                    return false;
+
+                }
+                else
+                {
+                    for (int j = 0; j < p.Length; j++)
+                    {
+                        lastP[j] = p[j];
+                    }
+
+                }
+            }
+            return false;
+        }
+        
+        public bool CheckPath(Node node1, ref Node node2)
+        {
+            CheckPath(node1, ref node2, float.PositiveInfinity);
+        }
+         * */
+    
         public bool CheckPath(Node node1, ref Node node2)
         {
             Boolean collision = false;
@@ -162,7 +222,6 @@ namespace Simples.PathPlan.SamplesBased
             return false;
         }
 
-
         public static double CalcDist(Node node1, Node node2)
         {
             if (node1.p.Length != node2.p.Length)
@@ -196,7 +255,7 @@ namespace Simples.PathPlan.SamplesBased
             return CalcDist(edge.Node1, edge.Node2);
         }
          
-
+        
         public Edge CreateEdge(Node node1, Node node2)
         {
             EdgeState state;

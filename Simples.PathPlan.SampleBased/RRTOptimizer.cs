@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO;
-using Simples.PathPlan.SamplesBased;
+using Simples.PathPlan.SampleBased;
 
-namespace Simples.PathPlan.SamplesBased.RRT
+namespace Simples.PathPlan.SampleBased.RRT
 {
     struct Result
     {
@@ -22,7 +22,7 @@ namespace Simples.PathPlan.SamplesBased.RRT
 
     public class RRTOptimizer
     {
-        private int maxIterations = 4000;
+        private int maxIterations = 1000;
         private double[] origin;
         private double[] dest;
 
@@ -96,7 +96,7 @@ namespace Simples.PathPlan.SamplesBased.RRT
             CSpaceRRT RRT = new CSpaceRRT(cSpace, maxIterations);
             
             Node originNode, destNode;
-            int iterations = RRT.generatePath(origin, dest, out originNode, out destNode);
+            int iterations = RRT.generatePath(origin, dest, out originNode, out destNode, GrowConnectionType.Node, true, 10.0, stopEvent);
 
             double distance = destNode.aTotalDist;
             if (distance != 0)

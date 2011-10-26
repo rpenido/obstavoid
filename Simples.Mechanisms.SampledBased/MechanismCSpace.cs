@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using Simples.Mechanisms;
 using Simples.Camera;
-using Simples.PathPlan.SamplesBased;
-using Simples.PathPlan.SamplesBased.RRT;
+using Simples.PathPlan.SampleBased;
+using Simples.PathPlan.SampleBased.RRT;
 
 
 namespace Simples.Mechanisms.SampleBased
@@ -21,7 +21,7 @@ namespace Simples.Mechanisms.SampleBased
             get { return cSpace; }
         }
 
-        public MechanismCSpace(Mechanism mechanism, MechanismEnviroment scene)
+        public MechanismCSpace(Mechanism mechanism, MechanismEnviroment scene, int randomSeed)
         {
             this.mechanism = (Mechanism)mechanism.Clone();
             this.enviroment = scene;
@@ -38,7 +38,7 @@ namespace Simples.Mechanisms.SampleBased
 
             }
 
-            this.cSpace = new CSpace(mechanism.Joints.Count, dimensionLowLimit, dimensionHighLimit, dimensionWeight, CheckCollision);
+            this.cSpace = new CSpace(mechanism.Joints.Count, dimensionLowLimit, dimensionHighLimit, dimensionWeight, CheckCollision, randomSeed);
         }
 
         public bool CheckCollision(double[] p)

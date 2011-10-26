@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Simples.PathPlan.SamplesBased
+namespace Simples.PathPlan.SampleBased
 {
     /*
     class EdgeComparer : IComparer<Edge>

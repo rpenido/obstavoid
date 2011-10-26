@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Simples.PathPlan.SamplesBased
+namespace Simples.PathPlan.SampleBased
 {
     public class PathSmoothing
     {

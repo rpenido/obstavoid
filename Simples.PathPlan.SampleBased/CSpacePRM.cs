@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.PathPlan.SamplesBased;
+using Simples.PathPlan.SampleBased;
 
-namespace Simples.PathPlan.SamplesBased.PRM
+namespace Simples.PathPlan.SampleBased.PRM
 {
     public enum PRMSampleMethod { Random, Lattice }
 
@@ -14,7 +14,7 @@ namespace Simples.PathPlan.SamplesBased.PRM
         public int k;
         public PRMSampleMethod sampleMethod;
 
-        private List<double[]> sampleList;
+        private Queue<double[]> sampleList;
         private List<Node> nodeList;
         private List<Edge> edgeList;
 

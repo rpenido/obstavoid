@@ -14,8 +14,8 @@ using System.Diagnostics;
 using Simples.Camera;
 using Simples.Mechanisms;
 using Simples.Mechanisms.SampleBased;
-using Simples.PathPlan.SamplesBased;
-using Simples.PathPlan.SamplesBased.RRT;
+using Simples.PathPlan.SampleBased;
+using Simples.PathPlan.SampleBased.RRT;
 using System.Runtime.InteropServices;
 using Simples.Mechanisms.NArticulatedPlanar;
 using Simples.Mechanisms.Draw;
@@ -60,7 +60,8 @@ namespace Simples.Simulator
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
+
+            graphics.PreferMultiSampling = false;
             graphics.PreferredBackBufferHeight = 600;            
             graphics.PreferredBackBufferWidth = 800;
 
@@ -68,30 +69,15 @@ namespace Simples.Simulator
             
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-
             base.Initialize();
-
-
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             Matrix world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-            //Matrix world = Matrix.CreateWorld(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
+            
             camera = new OrbitCamera();
            
             Model linkModel = Content.Load<Model>("link");
@@ -105,27 +91,17 @@ namespace Simples.Simulator
 
         
             Model sceneModel = Content.Load<Model>("scene");
-            
+
             enviroment = new MechanismEnviroment(sceneModel);
             drawableEnviroment = new DrawableEnviroment(this, enviroment, camera);
             Components.Add(drawableEnviroment);
            
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
@@ -258,6 +234,7 @@ namespace Simples.Simulator
                 {
                     resultForm.Origin = origin;
                 }
+                origin = new double[6] { 150, 0, 0, 0, 0, 0 };
             }
 
             if (state.IsKeyDown(Keys.F2))
@@ -267,6 +244,7 @@ namespace Simples.Simulator
                 {
                     dest[i] = robot.Joints[i].Value;
                 }
+                dest = new double[6] { 90, 0, 0, 0, 0, 0 };
             }
             
             if (state.IsKeyDown(Keys.F3))
@@ -351,24 +329,9 @@ namespace Simples.Simulator
             
         }
 
-        private void aa()
-        {
-            /*
-            Color[] colorData = new Color[360 * 360];
-            cSpace.GetData<Color>(colorData);
-
-            
-            int x = Math.Abs((int)robot.Mechanism.Joints[0].Value % 360);
-            int y = Math.Abs((int)robot.Mechanism.Joints[1].Value % 360);
-            colorData[x * 360 + y] = Color.Blue;
-
-            GraphicsDevice.Textures[0] = null;
-            cSpace.SetData<Color>(colorData);
-             * */
-        }
         private void optmize()
         {
-            int threadCount = 7;
+            int threadCount = 1;
             MechanismCSpace[] cMechanismPool = new MechanismCSpace[threadCount];
             CSpace[] cSpacePool = new CSpace[threadCount];
                 
@@ -376,9 +339,8 @@ namespace Simples.Simulator
             
             for (int i = 0; i < threadCount; i++)
             {
-                cMechanismPool[i] = new MechanismCSpace(robot, enviroment);
+                cMechanismPool[i] = new MechanismCSpace(robot, enviroment, 0);
                 cSpacePool[i] = cMechanismPool[i].CSpace;
-
             }
             
             RRTOptimizer opt = new RRTOptimizer(origin, dest, cSpacePool, threadCount);
@@ -449,24 +411,7 @@ namespace Simples.Simulator
             */
             //oct.Draw(this, _camera.Projection, _camera.View);
 
-            /*
-            Matrix[] transforms = new Matrix[teste.Bones.Count];
-            teste.CopyBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in teste.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _camera.View;
-
-                    effect.Projection = _camera.Projection;
-                    effect.World = transforms[mesh.ParentBone.Index];
-                }
-                mesh.Draw();
-            }        
-            */
+            
             /*
             if (resultForm != null)
                 resultForm.Draw(gameTime);
