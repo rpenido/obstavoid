@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Simples.PathPlan.SamplesBased;
+using System.Threading;
+using Simples.PathPlan.SampleBased;
 
-namespace Simples.PathPlan.SamplesBased.RRT
+namespace Simples.PathPlan.SampleBased.RRT
 {
 
     public class CSpaceRRT
     {
         
-        public List<double[]> sampleList;
+        private Queue<double[]> sampleList;
         public ExplorationTree startTree;
         public ExplorationTree goalTree;
         int k;
@@ -22,17 +23,16 @@ namespace Simples.PathPlan.SamplesBased.RRT
             this.cSpace = cSpace;
 
             this.k = k;
-            this.sampleList = new List<double[]>();
         }
 
         public int generatePath(double[] origin, double[] dest,
-            out Node originNode, out Node destNode)
+            out Node originNode, out Node destNode, GrowConnectionType connectionType, bool useKdTree, double maxEdgeSize, EventWaitHandle stopSignal)
         {
             originNode = new Node(origin);
-            startTree = new ExplorationTree(cSpace, originNode);
+            startTree = new ExplorationTree(cSpace, originNode, connectionType, useKdTree, maxEdgeSize);
 
             destNode = new Node(dest);
-            goalTree = new ExplorationTree(cSpace, destNode);
+            goalTree = new ExplorationTree(cSpace, destNode, connectionType, useKdTree, maxEdgeSize);
 
 
             Node qs;
@@ -49,7 +49,12 @@ namespace Simples.PathPlan.SamplesBased.RRT
                 if (qs == qs2)
                     break;
 
-                if (T1.size > T2.size)
+                if (stopSignal.WaitOne(0))
+                {
+                    break;
+                }
+
+                if (T1.Size > T2.Size)
                 {
                     ExplorationTree temp = T1;
                     T1 = T2;
@@ -60,6 +65,8 @@ namespace Simples.PathPlan.SamplesBased.RRT
 
 
             CSpace.A_Star(originNode, destNode);
+            T1 = null;
+            T2 = null;
             return i;
         }
 

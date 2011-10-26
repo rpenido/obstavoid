@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Simples.PathPlan.SamplesBased
+namespace Simples.PathPlan.SampleBased
 {
     
     class NodeComparer : IComparer<Node>
@@ -17,7 +17,7 @@ namespace Simples.PathPlan.SamplesBased
     }
     
 
-    public class Node
+    public class Node: IDisposable
     {
         public double[] p;
         public List<Edge> childs;
@@ -25,7 +25,7 @@ namespace Simples.PathPlan.SamplesBased
         public double aTotalDist;
         public Node aCameFrom = null;
 
-        internal Node(double[] p)
+        public Node(double[] p)
         {
             childs = new List<Edge>();
             this.p = p;

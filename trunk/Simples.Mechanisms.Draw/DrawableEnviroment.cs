@@ -45,7 +45,7 @@ namespace Simples.Mechanisms.Draw
 
             }
 
-            enviroment.Octree.Draw(GraphicsDevice, camera.Projection, camera.View);
+            //enviroment.Octree.Draw(GraphicsDevice, camera.Projection, camera.View);
 
         }
 

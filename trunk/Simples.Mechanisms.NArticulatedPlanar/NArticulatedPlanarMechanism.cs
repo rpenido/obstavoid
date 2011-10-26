@@ -22,30 +22,10 @@ namespace Simples.Mechanisms.NArticulatedPlanar
 {
     public static class NArticulatedPlanarMechanism
     {
-        /*
-        private Model linkModel;
-        public Model LinkModel
-        {
-            get { return linkModel; }
-        }
-
-        private Mechanism mechanism;
-        public Mechanism Mechanism
-        {
-            get { return mechanism; }
-        }
-
-        private Matrix world;
-        private Vector3 linkTranslation;
-*/
         public static Mechanism Create(Model linkModel, Vector3 linkTranslation, Vector3 boundboxMin, Vector3 boundboxMax, int linkCount, Matrix world)
-        //public static Mechanism Create(Model linkModel, Vector3 linkTranslation, Vector3 boundboxMin, Vector3 boundboxMax, int linkCount)
         {
             Mechanism mechanism = new Mechanism();
-            //this.linkModel = linkModel;
                 
-            //this.world = world;
-            //this.linkTranslation = linkTranslation;
             Link baseLink = new Link(world);
             RevoluteJoint nextJoint = new RevoluteJoint(baseLink, Vector3.Zero, 0.0f, Vector3.UnitZ, -180, 180, 1.0);
             mechanism.Joints.Add(nextJoint);

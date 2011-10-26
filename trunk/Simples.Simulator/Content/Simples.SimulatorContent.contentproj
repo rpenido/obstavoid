@@ -53,36 +53,12 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Simples.Content.Pipeline.STLImporter">
-      <HintPath>..\..\..\xna-stlimporter\bin\x86\Release\Simples.Content.Pipeline.STLImporter.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="model1.fbx">
-      <Name>model1</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="cube.fbx">
-      <Name>cube</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="white.bmp">
       <Name>white</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="teste.stl">
-      <Name>teste</Name>
-      <Importer>STLImporter</Importer>
-      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +96,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\xna-byuimporter\Simples.Content.Pipeline.BYUImporter.csproj">
+      <Project>{B53F395F-58C5-480D-BD5D-ACB4BD8F4C26}</Project>
+      <Name>Simples.Content.Pipeline.BYUImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\xna-stlimporter\Simples.Content.Pipeline.STLImporter.csproj">
+      <Project>{F06CCA90-B3CC-452C-B7A5-A80B119F827D}</Project>
+      <Name>Simples.Content.Pipeline.STLImporter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

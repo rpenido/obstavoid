@@ -63,7 +63,7 @@ namespace Simples.Mechanisms
         {
             boundingBoxList.Add(boudingBox);
         }
-        /*
+        
         public bool Intersects(OrientedBoundingBox other)
         {
             foreach (OrientedBoundingBox obb in boundingBoxList)
@@ -74,7 +74,7 @@ namespace Simples.Mechanisms
             }
             return false;
         }
-        */
+        
         public bool Intersects(TriangleData other)
         {
             foreach (OrientedBoundingBox obb in boundingBoxList)

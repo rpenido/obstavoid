@@ -120,6 +120,7 @@
     <Compile Include="MechanismEnviroment.cs" />
     <Compile Include="Octree.cs" />
     <Compile Include="OrientedBoundingBox.cs" />
+    <Compile Include="PrismaticJoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevoluteJoint.cs" />
     <Compile Include="TriangleData.cs" />
