@@ -1,0 +1,1 @@
+A project to generate robots paths with obstacle avoidance to a 6-degree industrial robot
